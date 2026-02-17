@@ -93,15 +93,18 @@ export default function PartyFormPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/dashboard/parties"
-          className="p-2 hover:bg-[#f0f2f6] rounded-lg transition-colors"
+          className="p-2 hover:bg-[#f0f2f6] dark:hover:bg-[#1E293B] rounded-lg transition-colors"
         >
-          <ArrowLeft size={20} className="text-neutral-500" />
+          <ArrowLeft
+            size={20}
+            className="text-neutral-500 dark:text-neutral-400"
+          />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-neutral-900">
+          <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">
             {isNew ? 'New Party' : 'Edit Party'}
           </h1>
-          <p className="text-neutral-500 mt-1">
+          <p className="text-neutral-500 dark:text-neutral-400 mt-1">
             {isNew ? 'Create a new party' : 'Update party details'}
           </p>
         </div>
@@ -114,11 +117,9 @@ export default function PartyFormPage() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
-        <div className="bg-white rounded-lg border border-[#e5e8ed] p-6 space-y-6">
+        <div className="bg-white dark:bg-[#0F172A] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] p-6 space-y-6">
           <div>
-            <Label>
-              Party Type
-            </Label>
+            <Label>Party Type</Label>
             <div className="flex gap-4">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -132,9 +133,11 @@ export default function PartyFormPage() {
                       party_type: e.target.value as 'Individual' | 'Legal'
                     })
                   }
-                  className="text-indigo-600 focus:ring-indigo-500 bg-[#f8f9fb] border-[#e0e4ea]"
+                  className="text-indigo-600 focus:ring-indigo-500 bg-[#f8f9fb] dark:bg-[#0F172A] border-[#e0e4ea] dark:border-[#334155]"
                 />
-                <span className="text-neutral-900">Individual</span>
+                <span className="text-neutral-900 dark:text-white">
+                  Individual
+                </span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -148,17 +151,17 @@ export default function PartyFormPage() {
                       party_type: e.target.value as 'Individual' | 'Legal'
                     })
                   }
-                  className="text-indigo-600 focus:ring-indigo-500 bg-[#f8f9fb] border-[#e0e4ea]"
+                  className="text-indigo-600 focus:ring-indigo-500 bg-[#f8f9fb] dark:bg-[#0F172A] border-[#e0e4ea] dark:border-[#334155]"
                 />
-                <span className="text-neutral-900">Legal Entity</span>
+                <span className="text-neutral-900 dark:text-white">
+                  Legal Entity
+                </span>
               </label>
             </div>
           </div>
 
           <div>
-            <Label>
-              Legal Name *
-            </Label>
+            <Label>Legal Name *</Label>
             <Input
               type="text"
               value={formData.legal_name}
@@ -175,9 +178,7 @@ export default function PartyFormPage() {
           </div>
 
           <div>
-            <Label>
-              Display Name
-            </Label>
+            <Label>Display Name</Label>
             <Input
               type="text"
               value={formData.display_name}
@@ -189,9 +190,7 @@ export default function PartyFormPage() {
           </div>
 
           <div>
-            <Label>
-              Tax ID
-            </Label>
+            <Label>Tax ID</Label>
             <Input
               type="text"
               value={formData.tax_id}
@@ -203,9 +202,7 @@ export default function PartyFormPage() {
           </div>
 
           <div>
-            <Label>
-              Address
-            </Label>
+            <Label>Address</Label>
             <Textarea
               className="min-h-[100px]"
               value={formData.address}
@@ -220,7 +217,7 @@ export default function PartyFormPage() {
         <div className="flex justify-end gap-3">
           <Link
             href="/dashboard/parties"
-            className="px-6 py-2 border border-[#e0e4ea] text-neutral-500 rounded-lg hover:bg-[#f0f2f6] transition-colors"
+            className="px-6 py-2 border border-[#e0e4ea] dark:border-[#334155] text-neutral-500 dark:text-neutral-400 rounded-lg hover:bg-[#f0f2f6] dark:hover:bg-[#1E293B] transition-colors"
           >
             Cancel
           </Link>

@@ -20,7 +20,13 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Input } from '@/ui/Input'
 import { Label } from '@/ui/Label'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/ui/Select'
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from '@/ui/Select'
 import PDFExportButton from '@/components/contracts/PDFExport'
 import ContractPreview from '@/components/contracts/ContractPreview'
 import ApproveContractButton from '@/components/contracts/ApproveContractButton'
@@ -524,15 +530,18 @@ export default function ContractFormPage() {
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard/contracts"
-            className="p-2 hover:bg-[#f0f2f6] rounded-lg transition-colors"
+            className="p-2 hover:bg-[#f0f2f6] dark:hover:bg-[#1E293B] rounded-lg transition-colors"
           >
-            <ArrowLeft size={20} className="text-neutral-500" />
+            <ArrowLeft
+              size={20}
+              className="text-neutral-500 dark:text-neutral-400"
+            />
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-neutral-900">
+            <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">
               {isNew ? 'Create Contract' : 'Edit Contract'}
             </h1>
-            <p className="text-neutral-500 mt-1">
+            <p className="text-neutral-500 dark:text-neutral-400 mt-1">
               {isNew ? 'Create a new contract' : 'Update contract details'}
             </p>
           </div>
@@ -567,16 +576,14 @@ export default function ContractFormPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
-        <div className="bg-white rounded-lg border border-[#e5e8ed] p-6 space-y-6">
-          <h2 className="text-xl font-semibold text-neutral-900">
+        <div className="bg-white dark:bg-[#0F172A] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] p-6 space-y-6">
+          <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
             Basic Information
           </h2>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>
-                Contract Number *
-              </Label>
+              <Label>Contract Number *</Label>
               <Input
                 type="text"
                 value={
@@ -585,7 +592,7 @@ export default function ContractFormPage() {
                 disabled
               />
               {isNew && (
-                <p className="text-xs text-neutral-400 mt-1">
+                <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1">
                   Contract number will be auto-generated in format:
                   CTR-YYYYMM-XXXX
                 </p>
@@ -593,9 +600,7 @@ export default function ContractFormPage() {
             </div>
 
             <div>
-              <Label>
-                Origin *
-              </Label>
+              <Label>Origin *</Label>
               <Select
                 value={formData.origin}
                 onValueChange={value =>
@@ -618,9 +623,7 @@ export default function ContractFormPage() {
           </div>
 
           <div>
-            <Label>
-              Title *
-            </Label>
+            <Label>Title *</Label>
             <Input
               type="text"
               value={formData.title}
@@ -632,9 +635,7 @@ export default function ContractFormPage() {
           </div>
 
           <div>
-            <Label>
-              Status
-            </Label>
+            <Label>Status</Label>
             <Select
               value={formData.current_status}
               onValueChange={value =>
@@ -658,8 +659,10 @@ export default function ContractFormPage() {
         </div>
 
         {/* Parties */}
-        <div className="bg-white rounded-lg border border-[#e5e8ed] p-6 space-y-4">
-          <h2 className="text-xl font-semibold text-neutral-900">Parties</h2>
+        <div className="bg-white dark:bg-[#0F172A] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] p-6 space-y-4">
+          <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
+            Parties
+          </h2>
 
           {/* Existing Parties */}
           {formData.parties.length > 0 && (
@@ -669,12 +672,15 @@ export default function ContractFormPage() {
                   return (
                     <div
                       key={index}
-                      className="flex gap-2 p-2 bg-white border border-indigo-500/50 rounded-lg"
+                      className="flex gap-2 p-2 bg-white dark:bg-[#0F172A] border border-indigo-500/50 rounded-lg"
                     >
                       <Select
                         value={newParty.party_id || 'none'}
                         onValueChange={value =>
-                          setNewParty({ ...newParty, party_id: value === 'none' ? '' : value })
+                          setNewParty({
+                            ...newParty,
+                            party_id: value === 'none' ? '' : value
+                          })
                         }
                       >
                         <SelectTrigger className="flex-1 px-3 py-1.5 text-sm">
@@ -706,7 +712,10 @@ export default function ContractFormPage() {
                       <Select
                         value={newParty.role || 'none'}
                         onValueChange={value =>
-                          setNewParty({ ...newParty, role: value === 'none' ? '' : value })
+                          setNewParty({
+                            ...newParty,
+                            role: value === 'none' ? '' : value
+                          })
                         }
                       >
                         <SelectTrigger className="flex-1 px-3 py-1.5 text-sm">
@@ -714,10 +723,18 @@ export default function ContractFormPage() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="none">Select Role</SelectItem>
-                          <SelectItem value="ผู้ว่าจ้าง">ผู้ว่าจ้าง (Employer)</SelectItem>
-                          <SelectItem value="ผู้รับจ้าง">ผู้รับจ้าง (Contractor)</SelectItem>
-                          <SelectItem value="พยาน 1">พยาน 1 (Witness 1)</SelectItem>
-                          <SelectItem value="พยาน 2">พยาน 2 (Witness 2)</SelectItem>
+                          <SelectItem value="ผู้ว่าจ้าง">
+                            ผู้ว่าจ้าง (Employer)
+                          </SelectItem>
+                          <SelectItem value="ผู้รับจ้าง">
+                            ผู้รับจ้าง (Contractor)
+                          </SelectItem>
+                          <SelectItem value="พยาน 1">
+                            พยาน 1 (Witness 1)
+                          </SelectItem>
+                          <SelectItem value="พยาน 2">
+                            พยาน 2 (Witness 2)
+                          </SelectItem>
                         </SelectContent>
                       </Select>
 
@@ -764,24 +781,24 @@ export default function ContractFormPage() {
                 return (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-3 bg-[#f8f9fb] rounded-lg"
+                    className="flex items-center justify-between p-3 bg-[#f8f9fb] dark:bg-[#1E293B] rounded-lg"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-neutral-900 font-medium">
+                      <span className="text-neutral-900 dark:text-white font-medium">
                         {getPartyName(party.party_id)}
                       </span>
                       {party.sign_label && (
-                        <span className="text-neutral-500 text-sm bg-white px-2 py-0.5 rounded">
+                        <span className="text-neutral-500 dark:text-neutral-400 text-sm bg-white dark:bg-[#0F172A] px-2 py-0.5 rounded">
                           {party.sign_label}
                         </span>
                       )}
                       {party.role && (
-                        <span className="text-indigo-600 text-sm">
+                        <span className="text-indigo-600 dark:text-indigo-400 text-sm">
                           {party.role}
                         </span>
                       )}
                       {party.signed_date && (
-                        <span className="text-neutral-400 text-xs">
+                        <span className="text-neutral-400 dark:text-neutral-500 text-xs">
                           ({party.signed_date})
                         </span>
                       )}
@@ -790,7 +807,7 @@ export default function ContractFormPage() {
                       <button
                         type="button"
                         onClick={() => editParty(index)}
-                        className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-[#f0f2f6] rounded transition-colors"
+                        className="p-1.5 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-[#f0f2f6] dark:hover:bg-[#1E293B] rounded transition-colors"
                         title="Edit Party"
                       >
                         <Pencil size={14} />
@@ -798,7 +815,7 @@ export default function ContractFormPage() {
                       <button
                         type="button"
                         onClick={() => removeParty(index)}
-                        className="p-1.5 text-neutral-500 hover:text-red-400 hover:bg-[#f0f2f6] rounded transition-colors"
+                        className="p-1.5 text-neutral-500 dark:text-neutral-400 hover:text-red-400 hover:bg-[#f0f2f6] dark:hover:bg-[#1E293B] rounded transition-colors"
                         title="Remove Party"
                       >
                         <X size={14} />
@@ -816,7 +833,10 @@ export default function ContractFormPage() {
               <Select
                 value={newParty.party_id || 'none'}
                 onValueChange={value =>
-                  setNewParty({ ...newParty, party_id: value === 'none' ? '' : value })
+                  setNewParty({
+                    ...newParty,
+                    party_id: value === 'none' ? '' : value
+                  })
                 }
               >
                 <SelectTrigger className="flex-1">
@@ -845,7 +865,10 @@ export default function ContractFormPage() {
               <Select
                 value={newParty.role || 'none'}
                 onValueChange={value =>
-                  setNewParty({ ...newParty, role: value === 'none' ? '' : value })
+                  setNewParty({
+                    ...newParty,
+                    role: value === 'none' ? '' : value
+                  })
                 }
               >
                 <SelectTrigger className="flex-1">
@@ -853,8 +876,12 @@ export default function ContractFormPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">Select Role</SelectItem>
-                  <SelectItem value="ผู้ว่าจ้าง">ผู้ว่าจ้าง (Employer)</SelectItem>
-                  <SelectItem value="ผู้รับจ้าง">ผู้รับจ้าง (Contractor)</SelectItem>
+                  <SelectItem value="ผู้ว่าจ้าง">
+                    ผู้ว่าจ้าง (Employer)
+                  </SelectItem>
+                  <SelectItem value="ผู้รับจ้าง">
+                    ผู้รับจ้าง (Contractor)
+                  </SelectItem>
                   <SelectItem value="พยาน 1">พยาน 1 (Witness 1)</SelectItem>
                   <SelectItem value="พยาน 2">พยาน 2 (Witness 2)</SelectItem>
                 </SelectContent>
@@ -881,9 +908,11 @@ export default function ContractFormPage() {
         </div>
 
         {/* Rules & Purpose */}
-        <div className="bg-white rounded-lg border border-[#e5e8ed] p-6 space-y-4">
-          <h2 className="text-xl font-semibold text-neutral-900">Rules & Purpose</h2>
-          <p className="text-sm text-neutral-500">
+        <div className="bg-white dark:bg-[#0F172A] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] p-6 space-y-4">
+          <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
+            Rules & Purpose
+          </h2>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
             Define the purpose and specific constraints for this contract. These
             rules will be stored and used for AI generation.
           </p>
@@ -904,7 +933,7 @@ export default function ContractFormPage() {
                 <button
                   onClick={handleAddRule}
                   type="button"
-                  className="p-2 bg-[#f3f5f8] hover:bg-[#e5e8ed] text-neutral-900 rounded-lg transition-colors"
+                  className="p-2 bg-[#f3f5f8] dark:bg-[#1E293B] hover:bg-[#e5e8ed] dark:hover:bg-[#334155] text-neutral-900 dark:text-white rounded-lg transition-colors"
                 >
                   <Plus size={20} />
                 </button>
@@ -917,7 +946,7 @@ export default function ContractFormPage() {
                     return (
                       <div
                         key={idx}
-                        className="flex items-center gap-2 bg-[#f8f9fb] border border-indigo-500/50 rounded-full pl-3 pr-1 py-1"
+                        className="flex items-center gap-2 bg-[#f8f9fb] dark:bg-[#1E293B] border border-indigo-500/50 rounded-full pl-3 pr-1 py-1"
                       >
                         <input
                           type="text"
@@ -927,7 +956,7 @@ export default function ContractFormPage() {
                             e.key === 'Enter' &&
                             (e.preventDefault(), handleAddRule())
                           }
-                          className="bg-transparent border-none text-neutral-900 text-sm focus:outline-none w-48"
+                          className="bg-transparent border-none text-neutral-900 dark:text-white text-sm focus:outline-none w-48"
                           autoFocus
                         />
                         <button
@@ -955,14 +984,14 @@ export default function ContractFormPage() {
                   return (
                     <span
                       key={idx}
-                      className="flex items-center gap-1.5 px-3 py-1 bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 rounded-full text-sm group transition-all"
+                      className="flex items-center gap-1.5 px-3 py-1 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 rounded-full text-sm group transition-all"
                     >
                       {rule}
-                      <div className="flex items-center gap-1 border-l border-[#e5e8ed] ml-1 pl-1">
+                      <div className="flex items-center gap-1 border-l border-[#e5e8ed] dark:border-[#1E293B] ml-1 pl-1">
                         <button
                           type="button"
                           onClick={() => editRule(idx)}
-                          className="hover:text-neutral-900 transition-colors p-0.5"
+                          className="hover:text-neutral-900 dark:hover:text-white transition-colors p-0.5"
                           title="Edit Rule"
                         >
                           <Pencil size={12} />
@@ -989,13 +1018,16 @@ export default function ContractFormPage() {
           <div className="lg:col-span-3 space-y-4">
             {/* AI Rules & Generation */}
             {/* AI Generation Trigger */}
-            <div className="bg-white rounded-lg border border-[#e5e8ed] p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="bg-white dark:bg-[#0F172A] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <h2 className="text-xl font-semibold text-neutral-900 flex items-center gap-2">
-                  <Sparkles className="text-indigo-600" size={20} />
+                <h2 className="text-xl font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
+                  <Sparkles
+                    className="text-indigo-600 dark:text-indigo-400"
+                    size={20}
+                  />
                   AI Assistant
                 </h2>
-                <p className="text-sm text-neutral-500 mt-1">
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
                   Generate content using the Parties and Rules defined above.
                 </p>
               </div>
@@ -1017,19 +1049,19 @@ export default function ContractFormPage() {
               </button>
             </div>
 
-            <div className="bg-white rounded-lg border border-[#e5e8ed] p-6 space-y-4">
+            <div className="bg-white dark:bg-[#0F172A] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] p-6 space-y-4">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-neutral-900">
+                <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
                   Contract Content
                 </h2>
-                <div className="flex bg-[#f8f9fb] p-1 rounded-lg border border-[#e5e8ed]">
+                <div className="flex bg-[#f8f9fb] dark:bg-[#1E293B] p-1 rounded-lg border border-[#e5e8ed] dark:border-[#1E293B]">
                   <button
                     type="button"
                     onClick={() => setActiveTab('edit')}
                     className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
                       activeTab === 'edit'
                         ? 'bg-indigo-600 text-white shadow'
-                        : 'text-neutral-500 hover:text-neutral-900'
+                        : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                     }`}
                   >
                     Edit Content
@@ -1040,7 +1072,7 @@ export default function ContractFormPage() {
                     className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
                       activeTab === 'preview'
                         ? 'bg-indigo-600 text-white shadow'
-                        : 'text-neutral-500 hover:text-neutral-900'
+                        : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                     }`}
                   >
                     Preview & Print
@@ -1050,7 +1082,7 @@ export default function ContractFormPage() {
 
               {/* Edit Mode */}
               <div className={activeTab === 'edit' ? 'block' : 'hidden'}>
-                <div className="bg-white rounded-lg text-black p-4 min-h-[500px] border border-[#e0e4ea]">
+                <div className="bg-white text-black p-4 min-h-[500px] border border-[#e0e4ea]">
                   <TipTapEditor
                     content={formData.content}
                     onChange={content => setFormData({ ...formData, content })}
@@ -1074,22 +1106,24 @@ export default function ContractFormPage() {
 
           {/* Version History Sidebar */}
           {!isNew && (
-            <div className="bg-white rounded-lg border border-[#e5e8ed] p-6 space-y-4 h-fit">
-              <h2 className="text-xl font-semibold text-neutral-900">
+            <div className="bg-white dark:bg-[#0F172A] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] p-6 space-y-4 h-fit">
+              <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
                 Version History
               </h2>
               <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
                 {versions.length === 0 ? (
-                  <p className="text-neutral-400 text-sm">No versions yet.</p>
+                  <p className="text-neutral-400 dark:text-neutral-500 text-sm">
+                    No versions yet.
+                  </p>
                 ) : (
                   versions.map(version => (
                     <div
                       key={version.id}
-                      className="p-3 bg-[#f8f9fb] rounded-lg border border-[#e5e8ed] hover:border-[#dce4ed] transition-colors cursor-pointer group"
+                      className="p-3 bg-[#f8f9fb] dark:bg-[#1E293B] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] hover:border-[#dce4ed] dark:hover:border-[#334155] transition-colors cursor-pointer group"
                       onClick={() => loadVersion(version)}
                     >
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-indigo-600 font-medium text-sm">
+                        <span className="text-indigo-600 dark:text-indigo-400 font-medium text-sm">
                           v{version.version_number}
                         </span>
                         {version.is_final && (
@@ -1098,7 +1132,7 @@ export default function ContractFormPage() {
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-neutral-400 mb-2">
+                      <div className="text-xs text-neutral-400 dark:text-neutral-500 mb-2">
                         {formatDateTimeShort(version.created_at)}
                       </div>
 
@@ -1108,7 +1142,7 @@ export default function ContractFormPage() {
                           href={version.file_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-xs text-neutral-500 hover:text-neutral-900 transition-colors p-1.5 bg-white rounded border border-[#e5e8ed] hover:border-[#dce4ed] w-fit"
+                          className="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors p-1.5 bg-white dark:bg-[#0F172A] rounded border border-[#e5e8ed] dark:border-[#1E293B] hover:border-[#dce4ed] dark:hover:border-[#334155] w-fit"
                           onClick={e => e.stopPropagation()}
                         >
                           <Download size={12} />
@@ -1127,7 +1161,7 @@ export default function ContractFormPage() {
         <div className="flex justify-end gap-3">
           <Link
             href="/dashboard/contracts"
-            className="px-6 py-2 border border-[#e0e4ea] text-neutral-500 rounded-lg hover:bg-[#f0f2f6] transition-colors"
+            className="px-6 py-2 border border-[#e0e4ea] dark:border-[#334155] text-neutral-500 dark:text-neutral-400 rounded-lg hover:bg-[#f0f2f6] dark:hover:bg-[#1E293B] transition-colors"
           >
             Cancel
           </Link>

@@ -32,10 +32,16 @@ interface PaginatedResponse<T> {
 }
 
 const statusColors: Record<string, string> = {
-  Draft: 'badge-default',
-  Active: 'badge-success',
-  Expired: 'badge-warning',
-  Terminated: 'badge-danger'
+  draft: 'badge-draft',
+  active: 'badge-approved',
+  expired: 'badge-warning',
+  terminated: 'badge-danger'
+}
+
+// Case-insensitive status color mapping
+const getStatusColor = (status: string) => {
+  const normalizedStatus = status?.toLowerCase() || 'draft'
+  return statusColors[normalizedStatus] || 'badge-default'
 }
 
 export default function ContractsPage() {
@@ -50,7 +56,14 @@ export default function ContractsPage() {
     isLoading,
     isError
   } = useQuery({
-    queryKey: ['contracts', filterStatus, filterOrigin, searchQuery, page, limit],
+    queryKey: [
+      'contracts',
+      filterStatus,
+      filterOrigin,
+      searchQuery,
+      page,
+      limit
+    ],
     queryFn: async () => {
       const params = new URLSearchParams()
       if (filterStatus) params.append('status', filterStatus)
@@ -89,7 +102,7 @@ export default function ContractsPage() {
     {
       header: 'Contract #',
       accessorKey: 'contract_number',
-      className: 'text-primary font-mono font-medium'
+      className: 'text-primary dark:text-white font-mono font-medium'
     },
     {
       header: 'Title',
@@ -99,7 +112,12 @@ export default function ContractsPage() {
     {
       header: 'Status',
       cell: item => (
-        <StatusBadge status={item.current_status} colorMap={statusColors} />
+        <StatusBadge
+          status={item.current_status}
+          colorMap={{
+            [item.current_status]: getStatusColor(item.current_status)
+          }}
+        />
       )
     },
     {
@@ -137,7 +155,11 @@ export default function ContractsPage() {
 
   const headerActions = (
     <Link href="/dashboard/contracts/new">
-      <Button variant="primary" size="md" className="!rounded-lg gap-2 w-full sm:w-auto">
+      <Button
+        variant="primary"
+        size="md"
+        className="!rounded-lg gap-2 w-full sm:w-auto"
+      >
         <PlusCircle size={20} />
         <span>New Contract</span>
       </Button>

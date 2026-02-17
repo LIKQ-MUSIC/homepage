@@ -56,6 +56,12 @@ const statusColors: Record<string, string> = {
   rejected: 'badge-danger'
 }
 
+// Case-insensitive status color mapping
+const getStatusColor = (status: string) => {
+  const normalizedStatus = status?.toLowerCase() || 'draft'
+  return statusColors[normalizedStatus] || 'badge-default'
+}
+
 const formatCurrency = (amount: number, currency: string = 'THB') => {
   try {
     return new Intl.NumberFormat('en-US', {
@@ -123,7 +129,9 @@ export default function QuotationsPage() {
       cell: item => (
         <StatusBadge
           status={item.status || 'Draft'}
-          colorMap={statusColors}
+          colorMap={{
+            [item.status || 'Draft']: getStatusColor(item.status || 'Draft')
+          }}
         />
       )
     },
@@ -181,7 +189,11 @@ export default function QuotationsPage() {
         </Button>
       </Link>
       <Link href="/dashboard/quotations/new">
-        <Button variant="primary" size="md" className="!rounded-lg gap-2 w-full sm:w-auto">
+        <Button
+          variant="primary"
+          size="md"
+          className="!rounded-lg gap-2 w-full sm:w-auto"
+        >
           <PlusCircle size={20} />
           <span>Create Quotation</span>
         </Button>

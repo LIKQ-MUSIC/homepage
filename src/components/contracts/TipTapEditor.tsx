@@ -41,7 +41,7 @@ export default function TipTapEditor({ content, onChange }: TipTapEditorProps) {
     editorProps: {
       attributes: {
         class:
-          'prose-sm max-w-none focus:outline-none min-h-[400px] font-sarabun text-black text-[14px] leading-snug prose-headings:text-black [&_h1]:text-black [&_h2]:text-black [&_h3]:text-black prose-h1:text-lg prose-h1:font-bold prose-h1:mb-2 prose-h1:mt-3 prose-h2:text-base prose-h2:font-semibold prose-h2:mb-1 prose-h2:mt-2 prose-h3:text-[14px] prose-h3:font-semibold prose-h3:mb-1 prose-h3:mt-2 prose-p:leading-snug prose-p:mb-1 prose-p:text-[14px] prose-strong:text-black prose-strong:font-semibold prose-li:text-[14px] prose-li:mb-0.5'
+          'prose-sm max-w-none focus:outline-none min-h-[400px] font-sarabun text-black dark:text-white text-[14px] leading-snug prose-headings:text-black dark:prose-headings:text-white [&_h1]:text-black dark:[&_h1]:text-white [&_h2]:text-black dark:[&_h2]:text-white [&_h3]:text-black dark:[&_h3]:text-white prose-h1:text-lg prose-h1:font-bold prose-h1:mb-2 prose-h1:mt-3 prose-h2:text-base prose-h2:font-semibold prose-h2:mb-1 prose-h2:mt-2 prose-h3:text-[14px] prose-h3:font-semibold prose-h3:mb-1 prose-h3:mt-2 prose-p:leading-snug prose-p:mb-1 prose-p:text-[14px] prose-strong:text-black dark:prose-strong:text-white prose-strong:font-semibold prose-li:text-[14px] prose-li:mb-0.5'
       }
     },
     immediatelyRender: false
@@ -62,15 +62,15 @@ export default function TipTapEditor({ content, onChange }: TipTapEditorProps) {
     <div className="relative">
       <BubbleMenu
         editor={editor}
-        className="flex overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-xl text-black"
+        className="flex overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-[#0F172A] shadow-xl text-black dark:text-white"
       >
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`p-2 hover:bg-zinc-100 ${
+          className={`p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 ${
             editor.isActive('bold')
-              ? 'text-indigo-600 bg-indigo-50'
-              : 'text-zinc-600'
+              ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
+              : 'text-zinc-600 dark:text-zinc-400'
           }`}
         >
           <Bold size={16} />
@@ -79,26 +79,26 @@ export default function TipTapEditor({ content, onChange }: TipTapEditorProps) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`p-2 hover:bg-zinc-100 ${
+          className={`p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 ${
             editor.isActive('italic')
-              ? 'text-indigo-600 bg-indigo-50'
-              : 'text-zinc-600'
+              ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
+              : 'text-zinc-600 dark:text-zinc-400'
           }`}
         >
           <Italic size={16} />
         </button>
 
-        <div className="w-px bg-zinc-200 mx-1 my-2" />
+        <div className="w-px bg-zinc-200 dark:bg-zinc-600 mx-1 my-2" />
 
         <button
           type="button"
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 1 }).run()
           }
-          className={`p-2 hover:bg-zinc-100 ${
+          className={`p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 ${
             editor.isActive('heading', { level: 1 })
-              ? 'text-indigo-600 bg-indigo-50'
-              : 'text-zinc-600'
+              ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
+              : 'text-zinc-600 dark:text-zinc-400'
           }`}
         >
           <Heading1 size={16} />
@@ -109,10 +109,10 @@ export default function TipTapEditor({ content, onChange }: TipTapEditorProps) {
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 2 }).run()
           }
-          className={`p-2 hover:bg-zinc-100 ${
+          className={`p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 ${
             editor.isActive('heading', { level: 2 })
-              ? 'text-indigo-600 bg-indigo-50'
-              : 'text-zinc-600'
+              ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
+              : 'text-zinc-600 dark:text-zinc-400'
           }`}
         >
           <Heading2 size={16} />
@@ -123,24 +123,24 @@ export default function TipTapEditor({ content, onChange }: TipTapEditorProps) {
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 3 }).run()
           }
-          className={`p-2 hover:bg-zinc-100 ${
+          className={`p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 ${
             editor.isActive('heading', { level: 3 })
-              ? 'text-indigo-600 bg-indigo-50'
-              : 'text-zinc-600'
+              ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
+              : 'text-zinc-600 dark:text-zinc-400'
           }`}
         >
           <Heading3 size={16} />
         </button>
 
-        <div className="w-px bg-zinc-200 mx-1 my-2" />
+        <div className="w-px bg-zinc-200 dark:bg-zinc-600 mx-1 my-2" />
 
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`p-2 hover:bg-zinc-100 ${
+          className={`p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 ${
             editor.isActive('bulletList')
-              ? 'text-indigo-600 bg-indigo-50'
-              : 'text-zinc-600'
+              ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
+              : 'text-zinc-600 dark:text-zinc-400'
           }`}
         >
           <List size={16} />
@@ -149,10 +149,10 @@ export default function TipTapEditor({ content, onChange }: TipTapEditorProps) {
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`p-2 hover:bg-zinc-100 ${
+          className={`p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 ${
             editor.isActive('orderedList')
-              ? 'text-indigo-600 bg-indigo-50'
-              : 'text-zinc-600'
+              ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20'
+              : 'text-zinc-600 dark:text-zinc-400'
           }`}
         >
           <ListOrdered size={16} />
@@ -160,7 +160,7 @@ export default function TipTapEditor({ content, onChange }: TipTapEditorProps) {
       </BubbleMenu>
 
       {/* Editor */}
-      <div className="text-black">
+      <div className="text-black dark:text-white">
         <EditorContent editor={editor} />
       </div>
     </div>

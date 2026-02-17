@@ -13,7 +13,7 @@ export const variantClasses: Record<ButtonVariant, string> = {
   success:
     'bg-success text-white hover:bg-success-hover active:bg-success-active',
   outline:
-    'border border-primary text-primary hover:bg-primary-light dark:border-white dark:text-white dark:hover:bg-white/10'
+    'border border-primary text-primary hover:bg-primary-light dark:border-[#334155] dark:text-neutral-300 dark:hover:bg-white/10'
 }
 
 export const buttonSizesClass: Record<ButtonSize, string> = {

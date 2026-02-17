@@ -129,7 +129,9 @@
 
   .card-base {
     @apply rounded-xl bg-white dark:bg-[#0F172A] border border-[#e5e8ed] dark:border-[#1E293B] duration-200;
-    box-shadow: 0 1px 3px rgba(21, 48, 81, 0.06), 0 1px 2px rgba(21, 48, 81, 0.04);
+    box-shadow:
+      0 1px 3px rgba(21, 48, 81, 0.06),
+      0 1px 2px rgba(21, 48, 81, 0.04);
   }
 
   .card-interactive {
@@ -194,6 +196,14 @@
     @apply bg-primary/10 text-primary dark:bg-primary/20 dark:text-blue-300;
   }
 
+  .badge-draft {
+    @apply bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600;
+  }
+
+  .badge-approved {
+    @apply bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 border border-green-300 dark:border-green-700;
+  }
+
   /* ---- Modal/Dialog Styling ---- */
 
   .modal-overlay {
@@ -210,7 +220,9 @@
 
   .stats-card {
     @apply rounded-xl bg-white dark:bg-[#0F172A] border border-[#e5e8ed] dark:border-[#1E293B] duration-200 p-6 border-l-4 border-l-primary;
-    box-shadow: 0 1px 3px rgba(21, 48, 81, 0.06), 0 1px 2px rgba(21, 48, 81, 0.04);
+    box-shadow:
+      0 1px 3px rgba(21, 48, 81, 0.06),
+      0 1px 2px rgba(21, 48, 81, 0.04);
   }
 
   .stats-icon-wrapper {
@@ -321,8 +333,16 @@ h4.ce-header {
 }
 
 @media (min-width: 768px) {
-  h1.ce-header { font-size: 2.25rem !important; }
-  h2.ce-header { font-size: 1.875rem !important; }
-  h3.ce-header { font-size: 1.5rem !important; }
-  h4.ce-header { font-size: 1.25rem !important; }
+  h1.ce-header {
+    font-size: 2.25rem !important;
+  }
+  h2.ce-header {
+    font-size: 1.875rem !important;
+  }
+  h3.ce-header {
+    font-size: 1.5rem !important;
+  }
+  h4.ce-header {
+    font-size: 1.25rem !important;
+  }
 }

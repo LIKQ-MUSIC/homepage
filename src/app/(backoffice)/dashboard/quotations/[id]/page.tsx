@@ -140,7 +140,7 @@ function SortableItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="grid grid-cols-12 gap-4 p-4 bg-[#f8f9fb] rounded-lg border border-[#e5e8ed] hover:border-[#dce4ed] transition-colors"
+      className="grid grid-cols-12 gap-4 p-4 bg-[#f8f9fb] dark:bg-[#1E293B] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] hover:border-[#dce4ed] dark:hover:border-[#334155] transition-colors"
     >
       {!isViewMode && (
         <div
@@ -148,7 +148,7 @@ function SortableItem({
           {...(isMounted ? attributes : {})}
           {...(isMounted ? listeners : {})}
         >
-          <GripVertical className="h-5 w-5 text-neutral-500 hover:text-neutral-600" />
+          <GripVertical className="h-5 w-5 text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300" />
         </div>
       )}
       <div
@@ -198,7 +198,7 @@ function SortableItem({
             onClick={() =>
               updateItem(index, 'quantity', Math.max(1, normalizedQuantity - 1))
             }
-            className="h-9 w-9 shrink-0 text-neutral-600 hover:text-neutral-900 border-[#e0e4ea] bg-white"
+            className="h-9 w-9 shrink-0 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white border-[#e0e4ea] dark:border-[#334155] bg-white dark:bg-[#0F172A] p-0"
             disabled={isViewMode || normalizedQuantity <= 1}
             aria-label="Decrease quantity"
           >
@@ -243,7 +243,7 @@ function SortableItem({
             onClick={() =>
               updateItem(index, 'quantity', normalizedQuantity + 1)
             }
-            className="h-9 w-9 shrink-0 text-neutral-600 hover:text-neutral-900 border-[#e0e4ea] bg-white"
+            className="h-9 w-9 shrink-0 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white border-[#e0e4ea] dark:border-[#334155] bg-white dark:bg-[#0F172A] p-0"
             disabled={isViewMode}
             aria-label="Increase quantity"
           >
@@ -264,7 +264,7 @@ function SortableItem({
             onClick={() =>
               updateItem(index, 'price', Math.max(0, safePrice - 1))
             }
-            className="h-9 w-9 shrink-0 text-neutral-600 hover:text-neutral-900 border-[#e0e4ea] bg-white"
+            className="h-9 w-9 shrink-0 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white border-[#e0e4ea] dark:border-[#334155] bg-white dark:bg-[#0F172A] p-0"
             disabled={isViewMode}
             aria-label="Decrease price"
           >
@@ -295,7 +295,7 @@ function SortableItem({
           <Button
             variant="outline"
             onClick={() => updateItem(index, 'price', safePrice + 1)}
-            className="h-9 w-9 shrink-0 text-neutral-600 hover:text-neutral-900 border-[#e0e4ea] bg-white"
+            className="h-9 w-9 shrink-0 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white border-[#e0e4ea] dark:border-[#334155] bg-white dark:bg-[#0F172A] p-0"
             disabled={isViewMode}
             aria-label="Increase price"
           >
@@ -303,8 +303,10 @@ function SortableItem({
           </Button>
         </div>
         <div className="mt-2 flex items-center justify-end gap-2">
-          <span className="text-xs text-neutral-400">Line total:</span>
-          <span className="text-sm font-semibold text-indigo-600 tabular-nums">
+          <span className="text-xs text-neutral-400 dark:text-neutral-500">
+            Line total:
+          </span>
+          <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 tabular-nums">
             {new Intl.NumberFormat('en-US', {
               style: 'currency',
               currency: safeCurrency,
@@ -323,7 +325,7 @@ function SortableItem({
           <button
             type="button"
             onClick={() => duplicateItem(index)}
-            className="p-2 text-neutral-500 hover:text-indigo-600 transition-colors hover:bg-indigo-500/10 rounded-lg"
+            className="p-2 text-neutral-500 dark:text-neutral-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors hover:bg-indigo-500/10 rounded-lg"
             title="Duplicate item"
             aria-label="Duplicate item"
           >
@@ -334,7 +336,7 @@ function SortableItem({
           <button
             type="button"
             onClick={() => removeItem(index)}
-            className="p-2 text-red-400 hover:text-red-300 transition-colors hover:bg-red-500/10 rounded-lg"
+            className="p-2 text-red-400 dark:text-red-500 hover:text-red-300 transition-colors hover:bg-red-500/10 rounded-lg"
             title="Remove item"
             aria-label="Remove item"
           >
@@ -751,12 +753,15 @@ export default function QuotationFormPage() {
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard/quotations"
-            className="p-2 hover:bg-[#f0f2f6] rounded-lg transition-colors"
+            className="p-2 hover:bg-[#f0f2f6] dark:hover:bg-[#1E293B] rounded-lg transition-colors"
           >
-            <ArrowLeft size={20} className="text-neutral-500" />
+            <ArrowLeft
+              size={20}
+              className="text-neutral-500 dark:text-neutral-400"
+            />
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-neutral-900">
+            <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">
               {showPreview
                 ? 'Print Preview'
                 : isNew
@@ -765,7 +770,7 @@ export default function QuotationFormPage() {
                     ? 'View Quotation'
                     : 'Edit Quotation'}
             </h1>
-            <p className="text-neutral-500 mt-1">
+            <p className="text-neutral-500 dark:text-neutral-400 mt-1">
               {showPreview
                 ? 'Review layout before export'
                 : isNew
@@ -785,7 +790,7 @@ export default function QuotationFormPage() {
           <button
             type="button"
             onClick={() => setShowPreview(!showPreview)}
-            className={`px-4 py-2 text-sm transition-colors rounded-lg flex items-center gap-2 ${showPreview ? 'bg-indigo-600 text-white' : 'text-neutral-500 hover:text-neutral-900 hover:bg-[#f0f2f6] border border-[#e0e4ea]'}`}
+            className={`px-4 py-2 text-sm transition-colors rounded-lg flex items-center gap-2 ${showPreview ? 'bg-indigo-600 text-white' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-[#f0f2f6] dark:hover:bg-[#1E293B] border border-[#e0e4ea] dark:border-[#334155]'}`}
           >
             {showPreview ? 'Back to Form' : 'A4 Preview'}
           </button>
@@ -797,7 +802,7 @@ export default function QuotationFormPage() {
               <button
                 type="button"
                 onClick={() => setIsViewMode(true)}
-                className="px-4 py-2 text-sm text-neutral-500 hover:text-neutral-900 transition-colors"
+                className="px-4 py-2 text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
               >
                 View Mode
               </button>
@@ -806,7 +811,7 @@ export default function QuotationFormPage() {
             <button
               type="button"
               onClick={() => setIsViewMode(false)}
-              className="px-4 py-2 text-sm text-indigo-600 hover:text-indigo-300 transition-colors"
+              className="px-4 py-2 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-300 transition-colors"
             >
               Edit Mode
             </button>
@@ -857,12 +862,12 @@ export default function QuotationFormPage() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl mx-auto">
           {/* Step 1: Basic Information */}
-          <div className="bg-white rounded-lg border border-[#e5e8ed] p-6 space-y-6">
+          <div className="bg-white dark:bg-[#0F172A] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] p-6 space-y-6">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white font-semibold text-sm">
                 1
               </div>
-              <h2 className="text-xl font-semibold text-neutral-900">
+              <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
                 Basic Information
               </h2>
             </div>
@@ -998,7 +1003,7 @@ export default function QuotationFormPage() {
                   placeholder="7"
                   disabled={isViewMode}
                 />
-                <p className="text-xs text-neutral-400 mt-1">
+                <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1">
                   Value Added Tax percentage
                 </p>
               </div>
@@ -1065,12 +1070,12 @@ export default function QuotationFormPage() {
           </div>
 
           {/* Step 2: Party & User References */}
-          <div className="bg-white rounded-lg border border-[#e5e8ed] p-6 space-y-6">
+          <div className="bg-white dark:bg-[#0F172A] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] p-6 space-y-6">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white font-semibold text-sm">
                 2
               </div>
-              <h2 className="text-xl font-semibold text-neutral-900">
+              <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
                 Party & User References
               </h2>
             </div>
@@ -1270,12 +1275,14 @@ export default function QuotationFormPage() {
           </div>
 
           {/* Step 3: Dates */}
-          <div className="bg-white rounded-lg border border-[#e5e8ed] p-6 space-y-6">
+          <div className="bg-white dark:bg-[#0F172A] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] p-6 space-y-6">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white font-semibold text-sm">
                 3
               </div>
-              <h2 className="text-xl font-semibold text-neutral-900">Dates</h2>
+              <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
+                Dates
+              </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1430,17 +1437,17 @@ export default function QuotationFormPage() {
           </div>
 
           {/* Step 4: Line Items */}
-          <div className="bg-white rounded-lg border border-[#e5e8ed] p-6 space-y-6">
-            <div className="flex items-center justify-between border-b border-[#e5e8ed] pb-2">
+          <div className="bg-white dark:bg-[#0F172A] rounded-lg border border-[#e5e8ed] dark:border-[#1E293B] p-6 space-y-6">
+            <div className="flex items-center justify-between border-b border-[#e5e8ed] dark:border-[#1E293B] pb-2">
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white font-semibold text-sm">
                   4
                 </div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-semibold text-neutral-900">
+                  <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
                     Line Items
                   </h2>
-                  <span className="px-2 py-0.5 bg-[#f3f5f8] text-neutral-500 text-xs rounded-full font-medium">
+                  <span className="px-2 py-0.5 bg-[#f3f5f8] dark:bg-[#1E293B] text-neutral-500 dark:text-neutral-400 text-xs rounded-full font-medium">
                     {formData.items.length}
                   </span>
                 </div>
@@ -1469,12 +1476,14 @@ export default function QuotationFormPage() {
 
             {/* Empty State */}
             {formData.items.length === 0 && (
-              <div className="text-center py-12 bg-[#f3f5f8] rounded-lg border border-dashed border-[#e5e8ed]">
-                <div className="w-12 h-12 bg-[#f3f5f8] rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Plus className="h-6 w-6 text-neutral-400" />
+              <div className="text-center py-12 bg-[#f3f5f8] dark:bg-[#1E293B] rounded-lg border border-dashed border-[#e5e8ed] dark:border-[#1E293B]">
+                <div className="w-12 h-12 bg-[#f3f5f8] dark:bg-[#0F172A] rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Plus className="h-6 w-6 text-neutral-400 dark:text-neutral-500" />
                 </div>
-                <p className="text-neutral-500 mb-2">No line items yet</p>
-                <p className="text-neutral-400 text-sm mb-4">
+                <p className="text-neutral-500 dark:text-neutral-400 mb-2">
+                  No line items yet
+                </p>
+                <p className="text-neutral-400 dark:text-neutral-500 text-sm mb-4">
                   Add your first item to get started
                 </p>
                 {!isViewMode && (
@@ -1534,12 +1543,14 @@ export default function QuotationFormPage() {
                 (formData.total_amount * formData.vat_rate) / 100
               const grandTotal = formData.total_amount + vatAmount
               return (
-                <div className="mt-6 pt-6 border-t border-[#e5e8ed]">
+                <div className="mt-6 pt-6 border-t border-[#e5e8ed] dark:border-[#1E293B]">
                   <div className="flex flex-col gap-3">
                     {/* Subtotal Row */}
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-neutral-500">Subtotal</span>
-                      <span className="text-neutral-600 font-medium tabular-nums">
+                      <span className="text-neutral-500 dark:text-neutral-400">
+                        Subtotal
+                      </span>
+                      <span className="text-neutral-600 dark:text-neutral-300 font-medium tabular-nums">
                         {new Intl.NumberFormat('en-US', {
                           style: 'currency',
                           currency: summaryCurrency,
@@ -1549,10 +1560,10 @@ export default function QuotationFormPage() {
                     </div>
                     {/* VAT Row */}
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-neutral-500">
+                      <span className="text-neutral-500 dark:text-neutral-400">
                         VAT ({formData.vat_rate}%)
                       </span>
-                      <span className="text-neutral-600 font-medium tabular-nums">
+                      <span className="text-neutral-600 dark:text-neutral-300 font-medium tabular-nums">
                         {new Intl.NumberFormat('en-US', {
                           style: 'currency',
                           currency: summaryCurrency,
@@ -1561,22 +1572,22 @@ export default function QuotationFormPage() {
                       </span>
                     </div>
                     {/* Divider */}
-                    <div className="border-t border-[#e5e8ed] my-2"></div>
+                    <div className="border-t border-[#e5e8ed] dark:border-[#1E293B] my-2"></div>
                     {/* Total Row - Aligned Layout */}
                     <div className="grid grid-cols-2 gap-4 items-end">
                       <div className="flex flex-col">
-                        <span className="text-sm text-neutral-400 mb-1">
+                        <span className="text-sm text-neutral-400 dark:text-neutral-500 mb-1">
                           Currency
                         </span>
-                        <span className="text-lg font-semibold text-neutral-900">
+                        <span className="text-lg font-semibold text-neutral-900 dark:text-white">
                           {summaryCurrency}
                         </span>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-sm text-neutral-400 mb-1">
+                        <span className="text-sm text-neutral-400 dark:text-neutral-500 mb-1">
                           Total Amount
                         </span>
-                        <span className="text-2xl font-bold text-neutral-900 tabular-nums">
+                        <span className="text-2xl font-bold text-neutral-900 dark:text-white tabular-nums">
                           {new Intl.NumberFormat('en-US', {
                             style: 'currency',
                             currency: summaryCurrency,
@@ -1595,7 +1606,7 @@ export default function QuotationFormPage() {
             <div className="flex justify-end gap-3">
               <Link
                 href="/dashboard/quotations"
-                className="px-6 py-2 border border-[#e0e4ea] text-neutral-500 rounded-lg hover:bg-[#f0f2f6] transition-colors"
+                className="px-6 py-2 border border-[#e0e4ea] dark:border-[#334155] text-neutral-500 dark:text-neutral-400 rounded-lg hover:bg-[#f0f2f6] dark:hover:bg-[#1E293B] transition-colors"
               >
                 Cancel
               </Link>

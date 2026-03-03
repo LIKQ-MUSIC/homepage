@@ -107,8 +107,8 @@ const DonationSection = () => {
   }, [])
 
   const handleDonate = async () => {
-    if (effectiveAmount < 20) {
-      setError('ยอดขั้นต่ำ 20 บาท')
+    if (effectiveAmount < 20 || effectiveAmount > 2000) {
+      setError('ยอดบริจาคต้องอยู่ระหว่าง 20 - 2,000 บาท')
       return
     }
 
@@ -331,6 +331,7 @@ const DonationSection = () => {
                     onChange={e => handleCustomChange(e.target.value)}
                     onFocus={() => setIsCustom(true)}
                     min={20}
+                    max={2000}
                     className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#B4A7D6] ${
                       isCustom
                         ? 'border-[#B4A7D6] bg-[#f5f3ff]'
@@ -481,7 +482,9 @@ const DonationSection = () => {
                 size="lg"
                 className="w-full dark:bg-primary dark:hover:bg-primary-hover"
                 onClick={handleDonate}
-                disabled={loading || effectiveAmount < 20}
+                disabled={
+                  loading || effectiveAmount < 20 || effectiveAmount > 2000
+                }
               >
                 {loading
                   ? 'กำลังดำเนินการ...'

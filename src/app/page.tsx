@@ -14,6 +14,8 @@ import WritingComposing from '@/ui/Icons/WritingComposing'
 import Arrange from '@/ui/Icons/Arrange'
 import AboutUs from '@/components/AboutUs'
 import BlogSection from '@/components/BlogSection'
+import ColorStory from '@/components/ColorStory'
+import DonationSection from '@/components/DonationSection'
 import { getAboutUsImages } from '@/services/about-us'
 
 import type { Metadata } from 'next'
@@ -135,9 +137,9 @@ export default async function Home() {
     }
   ]
   return (
-      <main className="min-h-screen bg-[#f8f9fb] text-neutral-900 font-sans overflow-x-hidden">
-        <Navbar />
-        <HeroCarousel images={aboutUsImages} />
+    <main className="min-h-screen bg-[#f8f9fb] text-neutral-900 font-sans overflow-x-hidden">
+      <Navbar />
+      <HeroCarousel images={aboutUsImages} />
 
       <AboutUs />
 
@@ -154,6 +156,10 @@ export default async function Home() {
       </Section>
 
       <Works items={worksData} />
+
+      <ColorStory />
+
+      <DonationSection />
 
       <BlogSection posts={latestPosts} />
 

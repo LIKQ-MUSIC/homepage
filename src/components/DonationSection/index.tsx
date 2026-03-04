@@ -62,6 +62,7 @@ const DonationSection = () => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('promptpay')
   const [donorName, setDonorName] = useState('')
   const [email, setEmail] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState('')
@@ -95,6 +96,7 @@ const DonationSection = () => {
     setPaymentMethod('promptpay')
     setDonorName('')
     setEmail('')
+    setPhoneNumber('')
     setLoading(false)
     setResult(null)
     setError('')
@@ -110,6 +112,18 @@ const DonationSection = () => {
     if (effectiveAmount < 20 || effectiveAmount > 2000) {
       setError('ยอดบริจาคต้องอยู่ระหว่าง 20 - 2,000 บาท')
       return
+    }
+
+    // Validate email and phone for credit card payments
+    if (paymentMethod === 'credit_card') {
+      if (!email) {
+        setError('กรุณากรอกอีเมลสำหรับการชำระเงินด้วยบัตรเครดิต')
+        return
+      }
+      if (!phoneNumber) {
+        setError('กรุณากรอกหมายเลขโทรศัพท์สำหรับการชำระเงินด้วยบัตรเครดิต')
+        return
+      }
     }
 
     setLoading(true)
@@ -145,6 +159,7 @@ const DonationSection = () => {
         paymentMethod,
         donorName: donorName || undefined,
         email: email || undefined,
+        phoneNumber: phoneNumber || undefined,
         ...(cardToken && { cardToken })
       })
 
@@ -441,8 +456,8 @@ const DonationSection = () => {
                 </div>
               )}
 
-              {/* Donor Info (Optional) */}
-              <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-3">
+              {/* Donor Info */}
+              <div className="mb-6 space-y-3">
                 <div>
                   <label className="block text-xs text-gray-400 mb-1">
                     ชื่อผู้บริจาค (ไม่บังคับ)
@@ -455,17 +470,31 @@ const DonationSection = () => {
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">
-                    อีเมล (ไม่บังคับ)
-                  </label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    placeholder="email@example.com"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">
+                      อีเมล {paymentMethod === 'credit_card' && <span className="text-red-500">*</span>}
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      placeholder="email@example.com"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">
+                      เบอร์โทร {paymentMethod === 'credit_card' && <span className="text-red-500">*</span>}
+                    </label>
+                    <input
+                      type="tel"
+                      value={phoneNumber}
+                      onChange={e => setPhoneNumber(e.target.value)}
+                      placeholder="0812345678"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]"
+                    />
+                  </div>
                 </div>
               </div>
 

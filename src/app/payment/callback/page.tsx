@@ -17,7 +17,7 @@ function PaymentCallbackContent() {
     const chargeId = searchParams.get('charge_id')
     const orderId = searchParams.get('order_id')
 
-    if (!chargeId) {
+    if (!orderId) {
       setStatus('failed')
       setMessage('ไม่พบข้อมูลการชำระเงิน')
       return

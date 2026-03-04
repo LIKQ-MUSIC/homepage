@@ -1,13 +1,15 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Button from '@/ui/Button'
 
-export default function PaymentCallbackPage() {
+function PaymentCallbackContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const [status, setStatus] = useState<'loading' | 'success' | 'failed'>('loading')
+  const [status, setStatus] = useState<'loading' | 'success' | 'failed'>(
+    'loading'
+  )
   const [message, setMessage] = useState('')
 
   useEffect(() => {
@@ -39,7 +41,9 @@ export default function PaymentCallbackPage() {
             <div className="flex justify-center mb-4">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#7B68AE]"></div>
             </div>
-            <h1 className="text-2xl font-bold text-[#153051] mb-2">กำลังตรวจสอบ...</h1>
+            <h1 className="text-2xl font-bold text-[#153051] mb-2">
+              กำลังตรวจสอบ...
+            </h1>
             <p className="text-gray-500">กรุณารอสักครู่</p>
           </>
         )}
@@ -60,10 +64,13 @@ export default function PaymentCallbackPage() {
                 </svg>
               </div>
             </div>
-            <h1 className="text-2xl font-bold text-green-700 mb-2">ชำระเงินสำเร็จ!</h1>
+            <h1 className="text-2xl font-bold text-green-700 mb-2">
+              ชำระเงินสำเร็จ!
+            </h1>
             <p className="text-gray-500 mb-6">{message}</p>
             <p className="text-sm text-gray-400 mb-6">
-              ขอบคุณสำหรับการสนับสนุน เราจะนำเงินของคุณไปใช้ในการผลิตผลงานดนตรีที่มีคุณภาพต่อไป
+              ขอบคุณสำหรับการสนับสนุน
+              เราจะนำเงินของคุณไปใช้ในการผลิตผลงานดนตรีที่มีคุณภาพต่อไป
             </p>
             <Button
               variant="primary"
@@ -93,7 +100,9 @@ export default function PaymentCallbackPage() {
                 </svg>
               </div>
             </div>
-            <h1 className="text-2xl font-bold text-red-700 mb-2">การชำระเงินล้มเหลว</h1>
+            <h1 className="text-2xl font-bold text-red-700 mb-2">
+              การชำระเงินล้มเหลว
+            </h1>
             <p className="text-gray-500 mb-6">{message}</p>
             <Button
               variant="primary"
@@ -107,5 +116,22 @@ export default function PaymentCallbackPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function PaymentCallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#f8f9fb] to-white px-4">
+          <div className="flex flex-col items-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#7B68AE] mb-4"></div>
+            <p className="text-[#153051] font-medium">กำลังโหลด...</p>
+          </div>
+        </div>
+      }
+    >
+      <PaymentCallbackContent />
+    </Suspense>
   )
 }

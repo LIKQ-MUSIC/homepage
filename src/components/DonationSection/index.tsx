@@ -16,7 +16,7 @@ declare global {
   }
 }
 
-const PRESET_AMOUNTS = [20, 50, 100, 200, 500, 1000]
+const PRESET_AMOUNTS = [20, 50, 100, 200, 500]
 
 const loadOmiseScript = (): Promise<void> => {
   return new Promise((resolve, reject) => {

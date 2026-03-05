@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Cards from 'react-credit-cards-2'
 import 'react-credit-cards-2/dist/es/styles-compiled.css'
@@ -16,7 +16,7 @@ declare global {
   }
 }
 
-const PRESET_AMOUNTS = [50, 100, 200, 500, 1000]
+const PRESET_AMOUNTS = [20, 50, 100, 200, 500, 1000]
 
 const loadOmiseScript = (): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -67,6 +67,10 @@ const DonationSection = () => {
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [paymentStatus, setPaymentStatus] = useState<
+    'pending' | 'successful' | 'failed'
+  >('pending')
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   // Credit card state
   const [cardNumber, setCardNumber] = useState('')
@@ -106,7 +110,51 @@ const DonationSection = () => {
     setCardExpiry('')
     setCardCvc('')
     setCardFocused('')
+    setPaymentStatus('pending')
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current)
+      pollingIntervalRef.current = null
+    }
   }, [])
+
+  // Polling for PromptPay status
+  useEffect(() => {
+    if (
+      submitted &&
+      paymentMethod === 'promptpay' &&
+      result?.data?.orderId &&
+      paymentStatus === 'pending'
+    ) {
+      const checkStatus = async () => {
+        try {
+          const { data } = await apiClient.get(
+            `/donations/${result.data.orderId}/status`
+          )
+          if (data.success && data.data?.status) {
+            const status = data.data.status
+            if (status === 'successful' || status === 'failed') {
+              setPaymentStatus(status)
+              if (pollingIntervalRef.current) {
+                clearInterval(pollingIntervalRef.current)
+                pollingIntervalRef.current = null
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Failed to check payment status:', error)
+        }
+      }
+
+      // Start polling every 3 seconds
+      pollingIntervalRef.current = setInterval(checkStatus, 3000)
+    }
+
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current)
+      }
+    }
+  }, [submitted, paymentMethod, result, paymentStatus])
 
   const handleDonate = async () => {
     if (effectiveAmount < 20 || effectiveAmount > 2000) {
@@ -196,26 +244,59 @@ const DonationSection = () => {
           </p>
         </div>
 
-        {/* Card */}
         <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6 md:p-10">
           {submitted && result?.success ? (
             /* Summary Screen */
             <div className="space-y-5">
-              <div className="flex items-center gap-2 mb-2 p-3 bg-blue-50 text-blue-700 rounded-lg">
-                <svg
-                  className="w-5 h-5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-                <span className="font-semibold text-sm">
-                  รอการชำระเงิน (กรุณาดำเนินการต่อ)
-                </span>
-              </div>
+              {paymentStatus === 'successful' ? (
+                <div className="flex items-center gap-2 mb-2 p-3 bg-green-50 text-green-700 rounded-lg">
+                  <svg
+                    className="w-5 h-5 text-green-600"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <path d="M22 4L12 14.01l-3-3" />
+                  </svg>
+                  <span className="font-semibold text-sm">
+                    ชำระเงินสำเร็จ ขอบคุณสำหรับการสนับสนุน
+                  </span>
+                </div>
+              ) : paymentStatus === 'failed' ? (
+                <div className="flex items-center gap-2 mb-2 p-3 bg-red-50 text-red-700 rounded-lg">
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="15" y1="9" x2="9" y2="15" />
+                    <line x1="9" y1="9" x2="15" y2="15" />
+                  </svg>
+                  <span className="font-semibold text-sm">
+                    การชำระเงินล้มเหลว กรุณาลองใหม่อีกครั้ง
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 mb-2 p-3 bg-blue-50 text-blue-700 rounded-lg">
+                  <svg
+                    className="w-5 h-5 animate-spin"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                  </svg>
+                  <span className="font-semibold text-sm">
+                    รอการชำระเงิน (กรุณาดำเนินการต่อ)
+                  </span>
+                </div>
+              )}
 
               <div className="space-y-3 p-4 rounded-xl bg-gray-50 border border-gray-100">
                 <div className="flex items-center justify-between">
@@ -288,11 +369,7 @@ const DonationSection = () => {
               {/* Authorize URI for Credit Card */}
               {result.data?.authorizeUri && (
                 <div className="text-center">
-                  <a
-                    href={result.data.authorizeUri}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={result.data.authorizeUri}>
                     <Button
                       variant="primary"
                       size="lg"

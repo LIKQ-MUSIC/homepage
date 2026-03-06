@@ -69,6 +69,75 @@ export async function signup(formData: FormData) {
   redirect('/dashboard')
 }
 
+export async function forgotPassword(formData: FormData) {
+  const email = formData.get('email') as string
+
+  try {
+    const response = await apiClient.post('/auth/forgot-password', {
+      email
+    })
+
+    if (!response.data.success) {
+      return { error: response.data.message || 'Failed to send reset link.' }
+    }
+
+    return { success: true }
+  } catch (error: any) {
+    console.error('Forgot password failed:', error)
+    return {
+      error:
+        error.response?.data?.message ||
+        'An error occurred. Please try again later.'
+    }
+  }
+}
+
+export async function updatePassword(formData: FormData) {
+  const password = formData.get('password') as string
+  const confirmPassword = formData.get('confirmPassword') as string
+
+  if (password !== confirmPassword) {
+    return { error: 'Passwords do not match.' }
+  }
+
+  try {
+    const supabase = await createClient()
+
+    const { error } = await supabase.auth.updateUser({
+      password: password
+    })
+
+    if (error) {
+      return { error: error.message }
+    }
+
+    // Optionally notify gateway
+    try {
+      const {
+        data: { session }
+      } = await supabase.auth.getSession()
+      if (session) {
+        await apiClient.post(
+          '/auth/update-password',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${session.access_token}`
+            }
+          }
+        )
+      }
+    } catch (e) {
+      console.warn('Failed to notify gateway of password update', e)
+    }
+
+    return { success: true }
+  } catch (error: any) {
+    console.error('Update password failed:', error)
+    return { error: 'An error occurred. Please try again later.' }
+  }
+}
+
 export async function logout() {
   const supabase = await createClient()
 

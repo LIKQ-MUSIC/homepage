@@ -158,7 +158,7 @@ const DonationSection = () => {
 
   const handleDonate = async () => {
     if (effectiveAmount < 20 || effectiveAmount > 2000) {
-      setError('ยอดบริจาคต้องอยู่ระหว่าง 20 - 2,000 บาท')
+      setError('ยอดโดเนทต้องอยู่ระหว่าง 20 - 2,000 บาท')
       return
     }
 
@@ -338,7 +338,7 @@ const DonationSection = () => {
                 </div>
                 {donorName && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">ชื่อผู้บริจาค</span>
+                    <span className="text-sm text-gray-500">ชื่อผู้โดเนท</span>
                     <span className="text-sm font-medium text-[#153051]">
                       {donorName}
                     </span>
@@ -352,22 +352,23 @@ const DonationSection = () => {
                 </div>
               </div>
 
-              {/* QR Code for PromptPay */}
-              {result.data?.payment?.qrCodeUrl && (
-                <div className="text-center">
-                  <p className="text-xs text-gray-500 mb-2">
-                    สแกน QR Code เพื่อชำระเงิน:
-                  </p>
-                  <img
-                    src={result.data.payment.qrCodeUrl}
-                    alt="QR Code"
-                    className="mx-auto w-48 h-48 rounded-lg"
-                  />
-                </div>
-              )}
+              {/* QR Code for PromptPay — only show while pending */}
+              {paymentStatus === 'pending' &&
+                result.data?.payment?.qrCodeUrl && (
+                  <div className="text-center">
+                    <p className="text-xs text-gray-500 mb-2">
+                      สแกน QR Code เพื่อชำระเงิน:
+                    </p>
+                    <img
+                      src={result.data.payment.qrCodeUrl}
+                      alt="QR Code"
+                      className="mx-auto w-48 h-48 rounded-lg"
+                    />
+                  </div>
+                )}
 
-              {/* Authorize URI for Credit Card */}
-              {result.data?.authorizeUri && (
+              {/* Authorize URI for Credit Card — only show while pending */}
+              {paymentStatus === 'pending' && result.data?.authorizeUri && (
                 <div className="text-center">
                   <a href={result.data.authorizeUri}>
                     <Button
@@ -387,7 +388,7 @@ const DonationSection = () => {
                 className="w-full dark:border-primary dark:text-primary dark:hover:bg-primary-light"
                 onClick={resetAll}
               >
-                Donate อีกครั้ง
+                {paymentStatus === 'pending' ? 'ยกเลิก' : 'โดเนทอีกครั้ง'}
               </Button>
             </div>
           ) : (
@@ -537,7 +538,7 @@ const DonationSection = () => {
               <div className="mb-6 space-y-3">
                 <div>
                   <label className="block text-xs text-gray-400 mb-1">
-                    ชื่อผู้บริจาค (ไม่บังคับ)
+                    ชื่อผู้โดเนท (ไม่บังคับ)
                   </label>
                   <input
                     type="text"
@@ -600,7 +601,7 @@ const DonationSection = () => {
               >
                 {loading
                   ? 'กำลังดำเนินการ...'
-                  : `บริจาค ฿${effectiveAmount.toLocaleString()}`}
+                  : `โดเนท ฿${effectiveAmount.toLocaleString()}`}
               </Button>
             </>
           )}

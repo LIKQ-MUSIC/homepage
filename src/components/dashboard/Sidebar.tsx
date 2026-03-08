@@ -20,7 +20,8 @@ import {
   Users,
   FileText,
   ClipboardList,
-  KeyRound
+  KeyRound,
+  Heart
 } from 'lucide-react'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { hasPermission } from '@/lib/permissions'
@@ -105,6 +106,17 @@ const navSections: NavSection[] = [
         label: 'Contracts',
         icon: <FileText size={20} />,
         requiredPermissions: ['contracts:read']
+      }
+    ]
+  },
+  {
+    title: 'Finance',
+    items: [
+      {
+        href: '/dashboard/donations',
+        label: 'Donations',
+        icon: <Heart size={20} />,
+        requiredPermissions: ['donations.manage']
       }
     ]
   },

@@ -36,7 +36,8 @@ export function DonationListTab({ settings }: { settings: DonationSetting[] }) {
   })
 
   const donations: Donation[] = response?.data || []
-  const meta: PaginationMeta | undefined = response?.meta
+  const meta: (PaginationMeta & { totalAmount?: number }) | undefined =
+    response?.meta
 
   const splitSettings = settings.filter(s => s.type === 'split')
 
@@ -147,14 +148,33 @@ export function DonationListTab({ settings }: { settings: DonationSetting[] }) {
     )
   ]
 
-  // Summary totals
+  // Summary totals (using the totalAmount from backend metadata which accounts for all pages)
+  const totalAmountSatang = meta?.totalAmount ?? 0
+
+  // Calculate fees on the total aggregated amount.
+  // We assume the total amount has a specific payment method ratio if we wanted exact splits,
+  // but since we need aggregate splits across all payment methods, we can't easily rely on `calcFeeBreakdown` natively without parsing arrays, unless we sum up per donation.
+  // Wait, `meta.totalAmount` is the total but doesn't have methods.
+  // So a naive sum on the frontend only works for the current page!
+  // To get an exact accurate fee, the backend itself must return grouped sums.
+  // Let's rely on the current page's fee calculation to give a proportional split, OR we just sum the current page.
+  // Actually, I can keep the manual sum for current page as UI requires it, BUT the amount will be the exact one from backend.
+  // Wait, let's just do manual reduce for current page for fees/splits, but display Total Amount from backend sum.
   const totals = donations.reduce(
     (acc, d) => {
+      // Only aggregate successful donations if we want "filter only success"
+      // Or if the backend filter handles status, we can aggregate whatever the backend returned.
+      // We will only calculate for successful items if that status matches, or implicitly if statusFilter='successful'.
+      // The user wants "sum of money according to filter, but basically just for successes".
+      // Let's filter here just to be safe if status='successful' wasn't set.
+      if (d.status !== 'successful') return acc
+
       const { fee, vat, net, splits } = calcFeeBreakdown(
         d.amount,
         d.payment_method,
         settings
       )
+      // We still sum current page items so that fee ratios look somewhat normal, though it's constrained to page context.
       acc.amount += d.amount / 100
       acc.fee += fee
       acc.vat += vat

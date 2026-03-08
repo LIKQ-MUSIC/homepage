@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { apiClient } from '@/lib/api-client'
 import Button from '@/ui/Button'
 
 function PaymentCallbackContent() {
@@ -13,8 +14,6 @@ function PaymentCallbackContent() {
   const [message, setMessage] = useState('')
 
   useEffect(() => {
-    // Get callback parameters from URL
-    const chargeId = searchParams.get('charge_id')
     const orderId = searchParams.get('order_id')
 
     if (!orderId) {
@@ -23,10 +22,28 @@ function PaymentCallbackContent() {
       return
     }
 
-    // Check payment status
-    // In a real implementation, you might want to verify the status with your backend
-    setStatus('success')
-    setMessage('การชำระเงินสำเร็จ')
+    const checkStatus = async () => {
+      try {
+        const { data } = await apiClient.get(`/donations/${orderId}/status`)
+        const paymentStatus = data.data?.status
+
+        if (paymentStatus === 'successful') {
+          setStatus('success')
+          setMessage('การชำระเงินสำเร็จ')
+        } else if (paymentStatus === 'failed') {
+          setStatus('failed')
+          setMessage('การชำระเงินล้มเหลว กรุณาลองใหม่อีกครั้ง')
+        } else {
+          // Still pending - poll again after delay
+          setTimeout(checkStatus, 3000)
+        }
+      } catch {
+        setStatus('failed')
+        setMessage('ไม่สามารถตรวจสอบสถานะได้')
+      }
+    }
+
+    checkStatus()
   }, [searchParams])
 
   const handleBackToHome = () => {

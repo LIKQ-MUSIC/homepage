@@ -329,12 +329,12 @@ export default function InvoicePaymentPage() {
                   </span>
                 </div>
               )}
-              <div className="flex justify-between items-baseline pt-4 border-t border-slate-200/80">
+              <div className="flex flex-wrap justify-between items-baseline gap-x-4 gap-y-1 pt-4 border-t border-slate-200/80">
                 <span className="text-base font-bold text-slate-900">
                   ยอดชำระสุทธิ
                 </span>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-3xl font-black text-[#153051] font-mono tracking-tight drop-shadow-sm">
+                <div className="flex items-baseline gap-1.5 ml-auto">
+                  <span className="text-2xl sm:text-3xl font-black text-[#153051] font-mono tracking-tight drop-shadow-sm">
                     {(invoice.net_total / 100).toLocaleString('th-TH', {
                       minimumFractionDigits: 2
                     })}
@@ -407,9 +407,9 @@ export default function InvoicePaymentPage() {
                       <Image
                         src="/images/promptpay-logo.png"
                         alt="PromptPay"
-                        width={140}
-                        height={46}
-                        className="mx-auto mb-8 object-contain"
+                        width={100}
+                        height={32}
+                        className="mx-auto mb-5 object-contain"
                       />
                       <div className="bg-white p-4 rounded-2xl shadow-inner border border-slate-100 mb-6 relative group overflow-hidden">
                         <img
@@ -520,8 +520,8 @@ export default function InvoicePaymentPage() {
                     <Image
                       src="/images/promptpay-logo.png"
                       alt="PromptPay"
-                      width={90}
-                      height={34}
+                      width={80}
+                      height={26}
                       className={`mb-4 object-contain transition-all duration-300 ${paymentMethod === 'promptpay' ? 'scale-110 drop-shadow-md' : 'group-hover:scale-105 grayscale opacity-60 mix-blend-luminosity'}`}
                     />
                     <span

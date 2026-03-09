@@ -92,13 +92,13 @@ export function ServiceList() {
 
   const columns: Column<Service>[] = [
     {
-      header: 'Name',
+      header: 'ชื่อบริการ',
       cell: item => (
         <span className="text-heading font-medium">{item.name}</span>
       )
     },
     {
-      header: 'Default Price',
+      header: 'ราคาเริ่มต้น',
       cell: item => (
         <span className="font-mono font-medium text-green-600 dark:text-green-400">
           {(item.default_price / 100).toLocaleString('th-TH', {
@@ -109,7 +109,7 @@ export function ServiceList() {
       )
     },
     {
-      header: 'Actions',
+      header: 'จัดการ',
       cell: item => (
         <div className="flex items-center gap-3">
           <button
@@ -120,7 +120,7 @@ export function ServiceList() {
           </button>
           <button
             onClick={() => {
-              if (confirm(`Delete service "${item.name}"?`)) {
+              if (confirm(`ยืนยันการลบบริการ "${item.name}" ใช่หรือไม่?`)) {
                 deleteMutation.mutate(item.id)
               }
             }}
@@ -136,10 +136,10 @@ export function ServiceList() {
   return (
     <div className="space-y-4 pt-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-semibold text-heading">Services</h3>
+        <h3 className="text-lg font-semibold text-heading">รายการบริการ</h3>
         <Button onClick={openCreate} size="sm" className="!rounded-lg gap-1">
           <Plus size={16} />
-          Add Service
+          เพิ่มบริการใหม่
         </Button>
       </div>
 
@@ -149,9 +149,9 @@ export function ServiceList() {
         keyExtractor={item => item.id}
         isLoading={isLoading}
         error={isError}
-        emptyMessage="No services found."
-        errorMessage="Failed to load services"
-        title="Services List"
+        emptyMessage="ไม่พบบริการ"
+        errorMessage="ไม่สามารถโหลดข้อมูลบริการได้"
+        title="รายการบริการ"
       />
 
       {/* Create/Edit Modal */}
@@ -159,12 +159,12 @@ export function ServiceList() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="w-full max-w-md bg-white dark:bg-zinc-900 rounded-xl shadow-2xl border border-zinc-200 dark:border-zinc-800 p-6 space-y-6">
             <h2 className="text-xl font-bold text-zinc-900 dark:text-white">
-              {editingService ? 'Edit Service' : 'Add Service'}
+              {editingService ? 'แก้ไขบริการ' : 'เพิ่มบริการใหม่'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Service Name
+                  ชื่อบริการ
                 </label>
                 <Input
                   type="text"
@@ -173,12 +173,12 @@ export function ServiceList() {
                   onChange={e =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  placeholder="e.g. Recording Session"
+                  placeholder="เช่น บันทึกเสียงร้อง"
                 />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Default Price (THB)
+                  ราคาเริ่มต้น (บาท)
                 </label>
                 <Input
                   type="number"
@@ -196,7 +196,7 @@ export function ServiceList() {
               </div>
               <div className="flex justify-end gap-3 pt-4">
                 <Button variant="ghost" type="button" onClick={closeModal}>
-                  Cancel
+                  ยกเลิก
                 </Button>
                 <Button
                   type="submit"
@@ -205,10 +205,10 @@ export function ServiceList() {
                   }
                 >
                   {createMutation.isPending || updateMutation.isPending
-                    ? 'Saving...'
+                    ? 'กำลังบันทึก...'
                     : editingService
-                      ? 'Update'
-                      : 'Create'}
+                      ? 'บันทึกการแก้ไข'
+                      : 'เพิ่มบริการ'}
                 </Button>
               </div>
             </form>

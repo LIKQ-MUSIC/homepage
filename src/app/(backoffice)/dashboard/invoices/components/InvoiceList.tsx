@@ -34,12 +34,12 @@ export function InvoiceList() {
   function handleCopyLink(id: string) {
     const link = `${window.location.origin}/payment/${id}`
     navigator.clipboard.writeText(link)
-    alert('Payment link copied to clipboard!')
+    alert('คัดลอกลิงก์ชำระเงินเรียบร้อยแล้ว!')
   }
 
   const columns: Column<Invoice>[] = [
     {
-      header: 'Customer',
+      header: 'ลูกค้า',
       cell: item => (
         <div className="flex flex-col">
           <span className="text-heading font-medium">{item.customer_name}</span>
@@ -48,7 +48,7 @@ export function InvoiceList() {
       )
     },
     {
-      header: 'Net Total',
+      header: 'ยอดรวมสุทธิ',
       cell: item => (
         <span className="font-mono font-medium text-green-600 dark:text-green-400">
           {(item.net_total / 100).toLocaleString('th-TH', {
@@ -59,7 +59,7 @@ export function InvoiceList() {
       )
     },
     {
-      header: 'Status',
+      header: 'สถานะ',
       cell: item => (
         <span
           className={`text-xs px-2 py-0.5 rounded-full ${
@@ -75,7 +75,7 @@ export function InvoiceList() {
       )
     },
     {
-      header: 'Date',
+      header: 'วันที่สร้าง',
       cell: item => (
         <span className="text-muted text-xs">
           {new Date(item.created_at).toLocaleDateString('th-TH', {
@@ -87,24 +87,28 @@ export function InvoiceList() {
       )
     },
     {
-      header: 'Actions',
+      header: 'จัดการ',
       cell: item => (
         <div className="flex items-center gap-3">
           <button
             onClick={() => handleCopyLink(item.id)}
             className="p-1 text-muted hover:text-primary transition-colors flex items-center gap-1 text-xs"
-            title="Copy Payment Link"
+            title="คัดลอกลิงก์ชำระเงิน"
           >
-            <Copy size={16} /> Copy Link
+            <Copy size={16} /> คัดลอกลิงก์
           </button>
           <button
             onClick={() => {
-              if (confirm(`Delete invoice for "${item.customer_name}"?`)) {
+              if (
+                confirm(
+                  `ยืนยันการลบใบแจ้งหนี้ของ "${item.customer_name}" ใช่หรือไม่?`
+                )
+              ) {
                 deleteMutation.mutate(item.id)
               }
             }}
             className="p-1 text-muted hover:text-danger transition-colors"
-            title="Delete Invoice"
+            title="ลบใบแจ้งหนี้"
             disabled={item.status === 'PAID'}
           >
             <Trash2 size={18} />
@@ -117,11 +121,11 @@ export function InvoiceList() {
   return (
     <div className="space-y-4 pt-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-semibold text-heading">Invoices</h3>
+        <h3 className="text-lg font-semibold text-heading">รายการใบแจ้งหนี้</h3>
         <Link href="/dashboard/invoices/new">
           <Button size="sm" className="!rounded-lg gap-1">
             <Plus size={16} />
-            Create Invoice
+            สร้างใบแจ้งหนี้
           </Button>
         </Link>
       </div>
@@ -132,9 +136,9 @@ export function InvoiceList() {
         keyExtractor={item => item.id}
         isLoading={isLoading}
         error={isError}
-        emptyMessage="No invoices found."
-        errorMessage="Failed to load invoices"
-        title="Invoice List"
+        emptyMessage="ไม่พบใบแจ้งหนี้"
+        errorMessage="ไม่สามารถโหลดข้อมูลใบแจ้งหนี้ได้"
+        title="รายการใบแจ้งหนี้"
       />
     </div>
   )

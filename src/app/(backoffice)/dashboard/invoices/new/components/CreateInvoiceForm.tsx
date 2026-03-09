@@ -122,7 +122,7 @@ export function CreateInvoiceForm() {
     e.preventDefault()
 
     if (items.length === 0 || netTotalTHB <= 0) {
-      alert('Please add at least one item with a valid price.')
+      alert('กรุณาเพิ่มรายการอย่างน้อย 1 รายการ และระบุราคาให้ถูกต้อง')
       return
     }
 
@@ -156,31 +156,31 @@ export function CreateInvoiceForm() {
         >
           <ArrowLeft size={20} />
         </Link>
-        <h2 className="text-lg font-semibold">Customer Details</h2>
+        <h2 className="text-lg font-semibold">ข้อมูลลูกค้า</h2>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <label className="text-sm font-medium">
-            Customer Name <span className="text-red-500">*</span>
+            ชื่อลูกค้า <span className="text-red-500">*</span>
           </label>
           <Input
             required
             value={customerName}
             onChange={e => setCustomerName(e.target.value)}
-            placeholder="John Doe"
+            placeholder="เช่น สมชาย ใจดี"
           />
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium">
-            Customer Email <span className="text-red-500">*</span>
+            อีเมลลูกค้า <span className="text-red-500">*</span>
           </label>
           <Input
             type="email"
             required
             value={customerEmail}
             onChange={e => setCustomerEmail(e.target.value)}
-            placeholder="john@example.com"
+            placeholder="เช่น somchai@example.com"
           />
         </div>
       </div>
@@ -189,7 +189,7 @@ export function CreateInvoiceForm() {
 
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Invoice Items</h2>
+          <h2 className="text-lg font-semibold">รายการในใบแจ้งหนี้</h2>
           <Button
             type="button"
             variant="outline"
@@ -197,7 +197,7 @@ export function CreateInvoiceForm() {
             onClick={handleAddItem}
             className="gap-2"
           >
-            <Plus size={16} /> Add Item
+            <Plus size={16} /> เพิ่มรายการ
           </Button>
         </div>
 
@@ -209,7 +209,7 @@ export function CreateInvoiceForm() {
             >
               <div className="w-full md:w-1/3 space-y-2">
                 <label className="text-xs font-medium text-muted">
-                  Service (Optional)
+                  บริการ (ไม่บังคับ)
                 </label>
                 <select
                   className="w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm dark:border-zinc-800 dark:bg-zinc-950"
@@ -218,7 +218,7 @@ export function CreateInvoiceForm() {
                     handleItemChange(item.id, 'service_id', e.target.value)
                   }
                 >
-                  <option value="">Custom Item</option>
+                  <option value="">กำหนดเอง</option>
                   {services.map(s => (
                     <option key={s.id} value={s.id}>
                       {s.name} ({s.default_price / 100} THB)
@@ -229,7 +229,8 @@ export function CreateInvoiceForm() {
 
               <div className="w-full md:w-1/3 space-y-2">
                 <label className="text-xs font-medium text-muted">
-                  Description / Name <span className="text-red-500">*</span>
+                  รายละเอียด / ชื่อบริการ{' '}
+                  <span className="text-red-500">*</span>
                 </label>
                 <Input
                   required
@@ -237,13 +238,13 @@ export function CreateInvoiceForm() {
                   onChange={e =>
                     handleItemChange(item.id, 'name', e.target.value)
                   }
-                  placeholder="Service description"
+                  placeholder="รายละเอียดบริการ"
                 />
               </div>
 
               <div className="w-full md:w-1/4 space-y-2">
                 <label className="text-xs font-medium text-muted">
-                  Price (THB) <span className="text-red-500">*</span>
+                  ราคา (THB) <span className="text-red-500">*</span>
                 </label>
                 <Input
                   type="number"
@@ -262,7 +263,7 @@ export function CreateInvoiceForm() {
                 onClick={() => handleRemoveItem(item.id)}
                 disabled={items.length === 1}
                 className="p-2 mb-1 text-muted hover:text-danger disabled:opacity-50 transition-colors"
-                title="Remove Item"
+                title="ลบรายการ"
               >
                 <Trash2 size={20} />
               </button>
@@ -283,17 +284,17 @@ export function CreateInvoiceForm() {
               className="w-5 h-5 rounded border-zinc-300 text-primary focus:ring-primary"
             />
             <span className="text-sm font-medium">
-              Apply Withholding Tax (WHT 3%)
+              หักภาษี ณ ที่จ่าย (WHT 3%)
             </span>
           </label>
           <p className="text-xs text-muted ml-8">
-            Check this if the customer is deducting 3% withholding tax.
+            เลือกเมื่อลูกค้าหักภาษี ณ ที่จ่าย 3%
           </p>
         </div>
 
         <div className="w-full md:w-72 space-y-3 text-sm">
           <div className="flex justify-between">
-            <span className="text-muted">Subtotal:</span>
+            <span className="text-muted">ยอดรวม:</span>
             <span className="font-mono">
               {subtotalTHB.toLocaleString('th-TH', {
                 minimumFractionDigits: 2
@@ -303,7 +304,7 @@ export function CreateInvoiceForm() {
           </div>
           {isWhtEnabled && (
             <div className="flex justify-between text-danger">
-              <span>WHT (3%):</span>
+              <span>หัก ณ ที่จ่าย 3%:</span>
               <span className="font-mono">
                 -{whtTHB.toLocaleString('th-TH', { minimumFractionDigits: 2 })}{' '}
                 THB
@@ -311,7 +312,7 @@ export function CreateInvoiceForm() {
             </div>
           )}
           <div className="flex justify-between pt-3 border-t border-zinc-200 dark:border-zinc-800 text-lg font-bold">
-            <span>Net Total:</span>
+            <span>ยอดสุทธิ:</span>
             <span className="font-mono text-primary">
               {netTotalTHB.toLocaleString('th-TH', {
                 minimumFractionDigits: 2
@@ -324,11 +325,11 @@ export function CreateInvoiceForm() {
           {netTotalTHB > 0 && feeSettings.length > 0 && (
             <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-900/50 space-y-2 text-xs">
               <p className="font-semibold text-blue-800 dark:text-blue-300 border-b border-blue-200 dark:border-blue-800/50 pb-1 mb-2">
-                Estimated Payout (After Gateway Fees)
+                ประมาณการยอดเงินที่ได้รับ (หลังหักค่าธรรมเนียม)
               </p>
 
               <div className="flex justify-between text-blue-900 dark:text-blue-200">
-                <span>Via PromptPay:</span>
+                <span>ผ่านพร้อมเพย์:</span>
                 <span className="font-mono font-medium">
                   {promptPayFees.netReceived.toLocaleString('th-TH', {
                     minimumFractionDigits: 2
@@ -337,7 +338,7 @@ export function CreateInvoiceForm() {
                 </span>
               </div>
               <div className="flex justify-between text-blue-700 dark:text-blue-400 text-[10px]">
-                <span>Fee + VAT:</span>
+                <span>ค่าธรรมเนียม + VAT:</span>
                 <span className="font-mono">
                   -
                   {(promptPayFees.fee + promptPayFees.vat).toLocaleString(
@@ -349,7 +350,7 @@ export function CreateInvoiceForm() {
               </div>
 
               <div className="flex justify-between text-blue-900 dark:text-blue-200 mt-2">
-                <span>Via Credit Card:</span>
+                <span>ผ่านบัตรเครดิต:</span>
                 <span className="font-mono font-medium">
                   {creditCardFees.netReceived.toLocaleString('th-TH', {
                     minimumFractionDigits: 2
@@ -358,7 +359,7 @@ export function CreateInvoiceForm() {
                 </span>
               </div>
               <div className="flex justify-between text-blue-700 dark:text-blue-400 text-[10px]">
-                <span>Fee + VAT:</span>
+                <span>ค่าธรรมเนียม + VAT:</span>
                 <span className="font-mono">
                   -
                   {(creditCardFees.fee + creditCardFees.vat).toLocaleString(
@@ -380,8 +381,8 @@ export function CreateInvoiceForm() {
           className="w-full md:w-auto px-8"
         >
           {createMutation.isPending
-            ? 'Creating Invoice...'
-            : 'Generate Invoice and Link'}
+            ? 'กำลังสร้างใบแจ้งหนี้...'
+            : 'สร้างใบแจ้งหนี้และลิงก์ชำระเงิน'}
         </Button>
       </div>
     </form>

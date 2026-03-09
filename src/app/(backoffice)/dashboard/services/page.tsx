@@ -9,7 +9,7 @@ export default function ServicesPage() {
     <PermissionGate>
       <div className="p-8 w-full max-w-7xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="page-title">Service Management</h1>
+          <h1 className="page-title">จัดการบริการ (Services)</h1>
         </div>
 
         <ServiceList />

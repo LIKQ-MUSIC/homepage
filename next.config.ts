@@ -16,8 +16,11 @@ const nextConfig: NextConfig = {
       }
     ]
   },
+  trailingSlash: false,
   async rewrites() {
-    const backofficeUrl = (process.env.BACKOFFICE_URL || 'http://localhost:3001').replace(/\/$/, '')
+    const backofficeUrl = (
+      process.env.BACKOFFICE_URL || 'http://localhost:3001'
+    ).replace(/\/$/, '')
     return [
       {
         source: '/dashboard',

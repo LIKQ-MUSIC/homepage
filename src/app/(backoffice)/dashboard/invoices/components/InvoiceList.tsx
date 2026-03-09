@@ -2,7 +2,8 @@ import React from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { DataTable, type Column } from '@/components/dashboard/DataTable'
 import Button from '@/ui/Button'
-import { Plus, Trash2, Link as LinkIcon, Copy } from 'lucide-react'
+import { Plus, Trash2, Link as LinkIcon } from 'lucide-react'
+import { CopyLinkButton } from './CopyLinkButton'
 import {
   getInvoices,
   deleteInvoice,
@@ -30,12 +31,6 @@ export function InvoiceList() {
       queryClient.invalidateQueries({ queryKey: ['admin-invoices'] })
     }
   })
-
-  function handleCopyLink(id: string) {
-    const link = `${window.location.origin}/payment/${id}`
-    navigator.clipboard.writeText(link)
-    alert('คัดลอกลิงก์ชำระเงินเรียบร้อยแล้ว!')
-  }
 
   const columns: Column<Invoice>[] = [
     {
@@ -90,13 +85,7 @@ export function InvoiceList() {
       header: 'จัดการ',
       cell: item => (
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => handleCopyLink(item.id)}
-            className="p-1 text-muted hover:text-primary transition-colors flex items-center gap-1 text-xs"
-            title="คัดลอกลิงก์ชำระเงิน"
-          >
-            <Copy size={16} /> คัดลอกลิงก์
-          </button>
+          <CopyLinkButton id={item.id} />
           <button
             onClick={() => {
               if (

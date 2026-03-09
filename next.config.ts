@@ -17,8 +17,7 @@ const nextConfig: NextConfig = {
     ]
   },
   async rewrites() {
-    // Determine the environment-specific destination for the backoffice MFE
-    const backofficeUrl = process.env.BACKOFFICE_URL || 'http://localhost:3001'
+    const backofficeUrl = (process.env.BACKOFFICE_URL || 'http://localhost:3001').replace(/\/$/, '')
     return [
       {
         source: '/dashboard',

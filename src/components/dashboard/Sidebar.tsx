@@ -117,6 +117,18 @@ const navSections: NavSection[] = [
         label: 'Donations',
         icon: <Heart size={20} />,
         requiredPermissions: ['donations.manage']
+      },
+      {
+        href: '/dashboard/services',
+        label: 'Services',
+        icon: <Package size={20} />,
+        requiredPermissions: ['services.view']
+      },
+      {
+        href: '/dashboard/invoices',
+        label: 'Invoices',
+        icon: <FileText size={20} />,
+        requiredPermissions: ['invoices.view']
       }
     ]
   },

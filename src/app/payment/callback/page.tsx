@@ -15,10 +15,17 @@ function PaymentCallbackContent() {
 
   useEffect(() => {
     const orderId = searchParams.get('order_id')
+    const type = searchParams.get('type')
+    const invoiceId = searchParams.get('invoice_id')
 
     if (!orderId) {
       setStatus('failed')
       setMessage('ไม่พบข้อมูลการชำระเงิน')
+      return
+    }
+
+    if (type === 'invoice' && invoiceId) {
+      router.replace(`/payment/${invoiceId}`)
       return
     }
 

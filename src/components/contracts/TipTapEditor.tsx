@@ -41,7 +41,7 @@ export default function TipTapEditor({ content, onChange }: TipTapEditorProps) {
     editorProps: {
       attributes: {
         class:
-          'prose-sm max-w-none focus:outline-none min-h-[400px] font-sarabun text-black dark:text-white text-[14pt] leading-normal prose-headings:text-black dark:prose-headings:text-white [&_h1]:text-black dark:[&_h1]:text-white [&_h2]:text-black dark:[&_h2]:text-white [&_h3]:text-black dark:[&_h3]:text-white prose-h1:text-[20pt] prose-h1:font-bold prose-h1:mb-2 prose-h1:mt-3 prose-h2:text-[18pt] prose-h2:font-bold prose-h2:mb-1 prose-h2:mt-2 prose-h3:text-[16pt] prose-h3:font-bold prose-h3:mb-1 prose-h3:mt-2 prose-p:leading-normal prose-p:mb-2 prose-p:text-[14pt] prose-strong:text-black dark:prose-strong:text-white prose-strong:font-bold prose-li:text-[14pt] prose-li:mb-1'
+          'prose-sm max-w-none focus:outline-none min-h-[400px] font-sarabun text-black dark:text-white text-[14pt] leading-normal prose-headings:!text-black [&_h1]:!text-black [&_h2]:!text-black [&_h3]:!text-black prose-h1:text-[20pt] prose-h1:font-bold prose-h1:mb-2 prose-h1:mt-3 prose-h2:text-[18pt] prose-h2:font-bold prose-h2:mb-1 prose-h2:mt-2 prose-h3:text-[16pt] prose-h3:font-bold prose-h3:mb-1 prose-h3:mt-2 prose-p:leading-normal prose-p:mb-2 prose-p:text-[14pt] prose-strong:!text-black prose-strong:font-bold prose-li:text-[14pt] prose-li:mb-1'
       }
     },
     immediatelyRender: false

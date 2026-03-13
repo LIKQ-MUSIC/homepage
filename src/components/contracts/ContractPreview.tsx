@@ -111,7 +111,9 @@ export default function ContractPreview({
       return
     }
 
-    const effectiveUsableHeight = USABLE_HEIGHT_PX - headerHeight - footerHeight
+    // Add extra buffer (50px) so page breaks happen before footer overlaps last content line
+    const FOOTER_OVERLAP_BUFFER = 50
+    const effectiveUsableHeight = USABLE_HEIGHT_PX - headerHeight - footerHeight - FOOTER_OVERLAP_BUFFER
 
     const newPages: { content: string; hasSignature: boolean }[] = []
     let currentPageContent = ''
@@ -233,7 +235,7 @@ export default function ContractPreview({
 
         <div
           id="measure-content"
-          className="prose-sm max-w-none font-sarabun text-[14pt] leading-normal text-black [&_p]:mb-2 [&_h1]:text-2xl [&_h1]:font-bold [&_h2]:text-xl [&_h2]:font-bold"
+          className="prose-sm max-w-none font-sarabun text-[14pt] leading-normal text-black [&_p]:mb-2 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-black [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-black [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-black [&_p:empty]:min-h-[1em] [&_p:empty]:mb-2"
           dangerouslySetInnerHTML={{ __html: content }}
         />
 
@@ -444,7 +446,7 @@ export default function ContractPreview({
 
                 {/* Content */}
                 <div
-                  className="prose-sm max-w-none font-sarabun text-[14pt] leading-normal text-black [&_p]:mb-2 [&_h1]:text-2xl [&_h1]:font-bold [&_h2]:text-xl [&_h2]:font-bold"
+                  className="prose-sm max-w-none font-sarabun text-[14pt] leading-normal text-black [&_p]:mb-2 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-black [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-black [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-black [&_p:empty]:min-h-[1em] [&_p:empty]:mb-2"
                   style={{
                     flexGrow: 1
                   }}

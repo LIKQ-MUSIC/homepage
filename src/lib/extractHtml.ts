@@ -460,6 +460,17 @@ export async function extractHtmlWithStyles(
     .font-medium {
       font-weight: 500 !important;
     }
+
+    /* Heading colors - ensure visible on white background */
+    h1, h2, h3 {
+      color: #000000 !important;
+    }
+
+    /* Preserve empty paragraphs (line breaks) */
+    p:empty {
+      min-height: 1em;
+      margin-bottom: 0.5rem;
+    }
   </style>
 </head>
 <body>

@@ -581,116 +581,120 @@ export default function ContractPreview({
                           )}
                         </p>
                       </div>
-                      <div style={{ textAlign: 'center' }}>
-                        <div
-                          style={{
-                            borderBottom: '1px solid #9ca3af',
-                            width: '75%',
-                            margin: '0 auto 0.5rem',
-                            height: '3rem',
-                            position: 'relative',
-                            display: 'flex',
-                            alignItems: 'flex-end',
-                            justifyContent: 'center'
-                          }}
-                        >
-                          {findPartyByRole('พยาน 1')?.signature_url && (
-                            <img
-                              src={findPartyByRole('พยาน 1')?.signature_url}
-                              alt="Signature"
-                              style={{
-                                maxHeight: '100%',
-                                maxWidth: '100%',
-                                objectFit: 'contain',
-                                paddingBottom: '2px'
-                              }}
-                            />
-                          )}
+                      {findPartyByRole('พยาน 1') && (
+                        <div style={{ textAlign: 'center' }}>
+                          <div
+                            style={{
+                              borderBottom: '1px solid #9ca3af',
+                              width: '75%',
+                              margin: '0 auto 0.5rem',
+                              height: '3rem',
+                              position: 'relative',
+                              display: 'flex',
+                              alignItems: 'flex-end',
+                              justifyContent: 'center'
+                            }}
+                          >
+                            {findPartyByRole('พยาน 1')?.signature_url && (
+                              <img
+                                src={findPartyByRole('พยาน 1')?.signature_url}
+                                alt="Signature"
+                                style={{
+                                  maxHeight: '100%',
+                                  maxWidth: '100%',
+                                  objectFit: 'contain',
+                                  paddingBottom: '2px'
+                                }}
+                              />
+                            )}
+                          </div>
+                          <p
+                            style={{
+                              fontWeight: '600',
+                              fontSize: '0.875rem',
+                              margin: 0
+                            }}
+                          >
+                            พยาน (Witness)
+                          </p>
+                          <p
+                            style={{
+                              fontSize: '0.75rem',
+                              color: '#6b7280',
+                              marginTop: '0.25rem'
+                            }}
+                          >
+                            ({' '}
+                            {findPartyByRole('พยาน 1')?.legal_name ||
+                              '................................................'}{' '}
+                            )
+                          </p>
+                          <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+                            Date:{' '}
+                            {formatDateThaiLong(
+                              findPartyByRole('พยาน 1')?.signed_date,
+                              '..../..../....'
+                            )}
+                          </p>
                         </div>
-                        <p
-                          style={{
-                            fontWeight: '600',
-                            fontSize: '0.875rem',
-                            margin: 0
-                          }}
-                        >
-                          พยาน (Witness)
-                        </p>
-                        <p
-                          style={{
-                            fontSize: '0.75rem',
-                            color: '#6b7280',
-                            marginTop: '0.25rem'
-                          }}
-                        >
-                          ({' '}
-                          {findPartyByRole('พยาน 1')?.legal_name ||
-                            '................................................'}{' '}
-                          )
-                        </p>
-                        <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
-                          Date:{' '}
-                          {formatDateThaiLong(
-                            findPartyByRole('พยาน 1')?.signed_date,
-                            '..../..../....'
-                          )}
-                        </p>
-                      </div>
-                      <div style={{ textAlign: 'center' }}>
-                        <div
-                          style={{
-                            borderBottom: '1px solid #9ca3af',
-                            width: '75%',
-                            margin: '0 auto 0.5rem',
-                            height: '3rem',
-                            position: 'relative',
-                            display: 'flex',
-                            alignItems: 'flex-end',
-                            justifyContent: 'center'
-                          }}
-                        >
-                          {findPartyByRole('พยาน 2')?.signature_url && (
-                            <img
-                              src={findPartyByRole('พยาน 2')?.signature_url}
-                              alt="Signature"
-                              style={{
-                                maxHeight: '100%',
-                                maxWidth: '100%',
-                                objectFit: 'contain',
-                                paddingBottom: '2px'
-                              }}
-                            />
-                          )}
+                      )}
+                      {findPartyByRole('พยาน 2') && (
+                        <div style={{ textAlign: 'center' }}>
+                          <div
+                            style={{
+                              borderBottom: '1px solid #9ca3af',
+                              width: '75%',
+                              margin: '0 auto 0.5rem',
+                              height: '3rem',
+                              position: 'relative',
+                              display: 'flex',
+                              alignItems: 'flex-end',
+                              justifyContent: 'center'
+                            }}
+                          >
+                            {findPartyByRole('พยาน 2')?.signature_url && (
+                              <img
+                                src={findPartyByRole('พยาน 2')?.signature_url}
+                                alt="Signature"
+                                style={{
+                                  maxHeight: '100%',
+                                  maxWidth: '100%',
+                                  objectFit: 'contain',
+                                  paddingBottom: '2px'
+                                }}
+                              />
+                            )}
+                          </div>
+                          <p
+                            style={{
+                              fontWeight: '600',
+                              fontSize: '0.875rem',
+                              margin: 0
+                            }}
+                          >
+                            พยาน (Witness)
+                          </p>
+                          <p
+                            style={{
+                              fontSize: '0.75rem',
+                              color: '#6b7280',
+                              marginTop: '0.25rem'
+                            }}
+                          >
+                            ({' '}
+                            {findPartyByRole('พยาน 2')?.legal_name ||
+                              '................................................'}{' '}
+                            )
+                          </p>
+                          <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+                            Date:{' '}
+                            {formatDateThaiLong(
+                              findPartyByRole('พยาน 2')?.signed_date,
+                              '..../..../....'
+                            )}
+                          </p>
                         </div>
-                        <p
-                          style={{
-                            fontWeight: '600',
-                            fontSize: '0.875rem',
-                            margin: 0
-                          }}
-                        >
-                          พยาน (Witness)
-                        </p>
-                        <p
-                          style={{
-                            fontSize: '0.75rem',
-                            color: '#6b7280',
-                            marginTop: '0.25rem'
-                          }}
-                        >
-                          ({' '}
-                          {findPartyByRole('พยาน 2')?.legal_name ||
-                            '................................................'}{' '}
-                          )
-                        </p>
-                        <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
-                          Date:{' '}
-                          {formatDateThaiLong(
-                            findPartyByRole('พยาน 2')?.signed_date,
-                            '..../..../....'
-                          )}
-                        </p>
-                      </div>
+                      )}
                     </div>
                   </div>
                 )}

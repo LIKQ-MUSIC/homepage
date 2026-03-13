@@ -390,25 +390,35 @@ export async function extractHtmlWithStyles(
       border-style: dashed !important;
     }
 
-    /* Position utilities */
-    .relative {
-      position: relative !important;
+    /* Heading styles - matching TipTap and Preview */
+    h1 {
+      font-size: 20pt !important;
+      font-weight: 700 !important;
+      color: #000000 !important;
+      margin-top: 2rem !important;
+      margin-bottom: 1rem !important;
     }
 
-    .absolute {
-      position: absolute !important;
+    h2 {
+      font-size: 18pt !important;
+      font-weight: 700 !important;
+      color: #000000 !important;
+      margin-top: 1.5rem !important;
+      margin-bottom: 0.75rem !important;
     }
 
-    .bottom-0 {
-      bottom: 0 !important;
+    h3 {
+      font-size: 16pt !important;
+      font-weight: 700 !important;
+      color: #000000 !important;
+      margin-top: 1.25rem !important;
+      margin-bottom: 0.5rem !important;
     }
 
-    .left-0 {
-      left: 0 !important;
-    }
-
-    .right-0 {
-      right: 0 !important;
+    p {
+      font-size: 14pt !important;
+      line-height: normal !important;
+      margin-bottom: 0.5rem !important;
     }
 
     /* Text color utilities */

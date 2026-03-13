@@ -94,7 +94,7 @@ export default function ContractPreview({
 
     const headerHeight = header?.getBoundingClientRect().height || 150
     const footerHeight = footer?.getBoundingClientRect().height || 50
-    const signaturesHeight = 350
+    const signaturesHeight = 400
 
     const contentDiv = container.querySelector('#measure-content')
     if (!contentDiv) {
@@ -111,8 +111,8 @@ export default function ContractPreview({
       return
     }
 
-    // Add extra buffer (50px) so page breaks happen before footer overlaps last content line
-    const FOOTER_OVERLAP_BUFFER = 50
+    // Add extra buffer (60px) so page breaks happen before footer overlaps last content line
+    const FOOTER_OVERLAP_BUFFER = 60
     const effectiveUsableHeight = USABLE_HEIGHT_PX - headerHeight - footerHeight - FOOTER_OVERLAP_BUFFER
 
     const newPages: { content: string; hasSignature: boolean }[] = []
@@ -235,7 +235,7 @@ export default function ContractPreview({
 
         <div
           id="measure-content"
-          className="prose-sm max-w-none font-sarabun text-[14pt] leading-normal text-black [&_p]:mb-2 [&_h1]:text-[20pt] [&_h1]:font-bold [&_h1]:!text-[#000000] [&_h2]:text-[18pt] [&_h2]:font-bold [&_h2]:!text-[#000000] [&_h3]:text-[16pt] [&_h3]:font-bold [&_h3]:!text-[#000000] [&_p:empty]:min-h-[1em] [&_p:empty]:mb-2"
+          className="prose-sm max-w-none font-sarabun text-[14pt] leading-normal text-black [&_p]:mb-2 [&_h1]:text-[20pt] [&_h1]:font-bold [&_h1]:!text-[#000000] [&_h1]:mt-3 [&_h1]:mb-2 [&_h2]:text-[18pt] [&_h2]:font-bold [&_h2]:!text-[#000000] [&_h2]:mt-2 [&_h2]:mb-1 [&_h3]:text-[16pt] [&_h3]:font-bold [&_h3]:!text-[#000000] [&_h3]:mt-2 [&_h3]:mb-1 [&_p:empty]:min-h-[1em] [&_p:empty]:mb-2"
           dangerouslySetInnerHTML={{ __html: content }}
         />
 
@@ -446,7 +446,7 @@ export default function ContractPreview({
 
                 {/* Content */}
                 <div
-                  className="prose-sm max-w-none font-sarabun text-[14pt] leading-normal text-black [&_p]:mb-2 [&_h1]:text-[20pt] [&_h1]:font-bold [&_h1]:!text-[#000000] [&_h2]:text-[18pt] [&_h2]:font-bold [&_h2]:!text-[#000000] [&_h3]:text-[16pt] [&_h3]:font-bold [&_h3]:!text-[#000000] [&_p:empty]:min-h-[1em] [&_p:empty]:mb-2"
+                  className="prose-sm max-w-none font-sarabun text-[14pt] leading-normal text-black [&_p]:mb-2 [&_h1]:text-[20pt] [&_h1]:font-bold [&_h1]:!text-[#000000] [&_h1]:mt-3 [&_h1]:mb-2 [&_h2]:text-[18pt] [&_h2]:font-bold [&_h2]:!text-[#000000] [&_h2]:mt-2 [&_h2]:mb-1 [&_h3]:text-[16pt] [&_h3]:font-bold [&_h3]:!text-[#000000] [&_h3]:mt-2 [&_h3]:mb-1 [&_p:empty]:min-h-[1em] [&_p:empty]:mb-2"
                   style={{
                     flexGrow: 1
                   }}

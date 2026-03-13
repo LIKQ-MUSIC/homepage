@@ -400,30 +400,30 @@ export async function extractHtmlWithStyles(
       font-size: 20pt !important;
       font-weight: 700 !important;
       color: #000000 !important;
-      margin-top: 2rem !important;
-      margin-bottom: 1rem !important;
+      margin-top: 12px !important;
+      margin-bottom: 8px !important;
     }
 
     h2 {
       font-size: 18pt !important;
       font-weight: 700 !important;
       color: #000000 !important;
-      margin-top: 1.5rem !important;
-      margin-bottom: 0.75rem !important;
+      margin-top: 8px !important;
+      margin-bottom: 4px !important;
     }
 
     h3 {
       font-size: 16pt !important;
       font-weight: 700 !important;
       color: #000000 !important;
-      margin-top: 1.25rem !important;
-      margin-bottom: 0.5rem !important;
+      margin-top: 8px !important;
+      margin-bottom: 4px !important;
     }
 
     p {
       font-size: 14pt !important;
-      line-height: normal !important;
-      margin-bottom: 0.5rem !important;
+      line-height: 1.5 !important;
+      margin-bottom: 8px !important;
     }
 
     /* Text color utilities */

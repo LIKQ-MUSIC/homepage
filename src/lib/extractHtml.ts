@@ -127,33 +127,38 @@ export async function extractHtmlWithStyles(
   <style>
     ${styles}
     
-    /* Embed TH Sarabun New fonts as base64 */
+    /* Embed TH Sarabun New fonts */
+    /* We prioritize the local file name for Gothenburg, then fallback to base64 for browser preview */
     @font-face {
       font-family: 'TH Sarabun New';
       font-style: normal;
       font-weight: 400;
-      src: url('${fontBase64Map['/fonts/THSarabunNew.ttf'] || ''}') format('truetype');
+      src: url('THSarabunNew.ttf') format('truetype'),
+           url('${fontBase64Map['/fonts/THSarabunNew.ttf'] || ''}') format('truetype');
     }
     
     @font-face {
       font-family: 'TH Sarabun New';
       font-style: normal;
       font-weight: 700;
-      src: url('${fontBase64Map['/fonts/THSarabunNew-Bold.ttf'] || ''}') format('truetype');
+      src: url('THSarabunNew-Bold.ttf') format('truetype'),
+           url('${fontBase64Map['/fonts/THSarabunNew-Bold.ttf'] || ''}') format('truetype');
     }
     
     @font-face {
       font-family: 'TH Sarabun New';
       font-style: italic;
       font-weight: 400;
-      src: url('${fontBase64Map['/fonts/THSarabunNew-Italic.ttf'] || ''}') format('truetype');
+      src: url('THSarabunNew-Italic.ttf') format('truetype'),
+           url('${fontBase64Map['/fonts/THSarabunNew-Italic.ttf'] || ''}') format('truetype');
     }
     
     @font-face {
       font-family: 'TH Sarabun New';
       font-style: italic;
       font-weight: 700;
-      src: url('${fontBase64Map['/fonts/THSarabunNew-BoldItalic.ttf'] || ''}') format('truetype');
+      src: url('THSarabunNew-BoldItalic.ttf') format('truetype'),
+           url('${fontBase64Map['/fonts/THSarabunNew-BoldItalic.ttf'] || ''}') format('truetype');
     }
     
     /* Embed Noto Sans Thai as base64 for header */

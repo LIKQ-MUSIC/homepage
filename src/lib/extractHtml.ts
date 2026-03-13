@@ -396,34 +396,37 @@ export async function extractHtmlWithStyles(
     }
 
     /* Heading styles - matching TipTap and Preview */
-    h1 {
+    /* Only apply to content inside prose-sm to avoid breaking document header/footer */
+    .prose-sm h1 {
       font-size: 20pt !important;
       font-weight: 700 !important;
       color: #000000 !important;
       margin-top: 12px !important;
       margin-bottom: 8px !important;
     }
-
-    h2 {
+    .prose-sm h2 {
       font-size: 18pt !important;
       font-weight: 700 !important;
       color: #000000 !important;
       margin-top: 8px !important;
       margin-bottom: 4px !important;
     }
-
-    h3 {
+    .prose-sm h3 {
       font-size: 16pt !important;
       font-weight: 700 !important;
       color: #000000 !important;
       margin-top: 8px !important;
       margin-bottom: 4px !important;
     }
-
-    p {
+    .prose-sm p {
       font-size: 14pt !important;
-      line-height: 1.5 !important;
+      line-height: 1.4 !important;
       margin-bottom: 8px !important;
+    }
+
+    /* Reset global margins appearing from Tailwind prose defaults if any */
+    .prose-sm > * {
+      margin-top: 0 !important;
     }
 
     /* Text color utilities */

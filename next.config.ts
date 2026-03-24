@@ -1,5 +1,9 @@
 import type { NextConfig } from 'next'
 
+const STORE_STOREFRONT_URL =
+  process.env.STORE_STOREFRONT_URL ??
+  'https://store-storefront-git-develop-realkyrs-projects.vercel.app'
+
 const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react']
@@ -29,6 +33,14 @@ const nextConfig: NextConfig = {
       {
         source: '/dashboard/:path*',
         destination: `${backofficeUrl}/dashboard/:path*`
+      },
+      {
+        source: '/merch',
+        destination: `${STORE_STOREFRONT_URL}/merch`
+      },
+      {
+        source: '/merch/:path*',
+        destination: `${STORE_STOREFRONT_URL}/merch/:path*`
       }
     ]
   }

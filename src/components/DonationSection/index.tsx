@@ -253,6 +253,12 @@ const DonationSection = () => {
         ...(cardToken && { cardToken })
       })
 
+      // Credit card: auto-redirect to 3DS authorize page
+      if (paymentMethod === 'credit_card' && data.data?.authorizeUri) {
+        window.location.href = data.data.authorizeUri
+        return
+      }
+
       setResult(data)
       setStep('result')
     } catch (err: any) {
@@ -275,7 +281,7 @@ const DonationSection = () => {
       id="donation"
       className="py-16 md:py-24 px-4 md:px-8 bg-gradient-to-b from-[#f8f9fb] to-white"
     >
-      <div className="max-w-xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-[#7B68AE] mb-3">
@@ -389,19 +395,6 @@ const DonationSection = () => {
                     className="mx-auto w-52 h-52 rounded-xl border border-gray-100"
                   />
                 </div>
-              )}
-
-              {/* Authorize URI for Credit Card */}
-              {paymentStatus === 'pending' && result.data?.authorizeUri && (
-                <a href={result.data.authorizeUri}>
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    className="w-full dark:bg-primary dark:hover:bg-primary-hover"
-                  >
-                    ดำเนินการชำระเงิน
-                  </Button>
-                </a>
               )}
 
               <Button
@@ -527,8 +520,9 @@ const DonationSection = () => {
 
                   {/* Credit Card Form */}
                   {paymentMethod === 'credit_card' && (
-                    <div className="mt-5 space-y-4">
-                      <div className="flex justify-center">
+                    <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                      {/* Card Preview */}
+                      <div className="flex justify-center lg:sticky lg:top-8">
                         <Cards
                           number={cardNumber}
                           name={cardName}
@@ -537,6 +531,7 @@ const DonationSection = () => {
                           focused={cardFocused || undefined}
                         />
                       </div>
+                      {/* Card Fields */}
                       <div className="space-y-3">
                         <div>
                           <label className="block text-xs font-medium text-gray-500 mb-1.5">หมายเลขบัตร</label>
@@ -601,7 +596,7 @@ const DonationSection = () => {
                     <span className="w-5 h-5 rounded-full bg-[#153051] text-white text-xs flex items-center justify-center">3</span>
                     ข้อมูลผู้โดเนท
                   </h3>
-                  <div className="space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
                       <label className="block text-xs font-medium text-gray-500 mb-1.5">
                         ชื่อ <span className="text-gray-400">(ไม่บังคับ)</span>
@@ -614,34 +609,32 @@ const DonationSection = () => {
                         className={inputClass}
                       />
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                          อีเมล <span className="text-red-400">*</span>
-                        </label>
-                        <input
-                          type="email"
-                          value={email}
-                          onChange={e => setEmail(e.target.value)}
-                          placeholder="email@example.com"
-                          className={inputClass}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                          เบอร์โทร{' '}
-                          {paymentMethod === 'credit_card' && (
-                            <span className="text-red-400">*</span>
-                          )}
-                        </label>
-                        <input
-                          type="tel"
-                          value={phoneNumber}
-                          onChange={e => setPhoneNumber(e.target.value)}
-                          placeholder="0812345678"
-                          className={inputClass}
-                        />
-                      </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                        อีเมล <span className="text-red-400">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        placeholder="email@example.com"
+                        className={inputClass}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                        เบอร์โทร{' '}
+                        {paymentMethod === 'credit_card' && (
+                          <span className="text-red-400">*</span>
+                        )}
+                      </label>
+                      <input
+                        type="tel"
+                        value={phoneNumber}
+                        onChange={e => setPhoneNumber(e.target.value)}
+                        placeholder="0812345678"
+                        className={inputClass}
+                      />
                     </div>
                   </div>
                 </div>
@@ -690,10 +683,8 @@ const DonationSection = () => {
                 >
                   {loading ? (
                     <span className="flex items-center gap-2">
-                      <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-                      </svg>
-                      กำลังดำเนินการ...
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      {paymentMethod === 'credit_card' ? 'กำลังเปลี่ยนหน้า...' : 'กำลังดำเนินการ...'}
                     </span>
                   ) : (
                     `โดเนท ฿${effectiveAmount.toLocaleString()}`

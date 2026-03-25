@@ -9,6 +9,7 @@ import Button from '@/ui/Button'
 
 type PaymentMethod = 'promptpay' | 'credit_card'
 type Focused = 'number' | 'name' | 'expiry' | 'cvc' | ''
+type Step = 'form' | 'result'
 
 declare global {
   interface Window {
@@ -55,7 +56,36 @@ const createOmiseToken = (cardData: {
   })
 }
 
+/** Format card number with spaces every 4 digits */
+const formatCardNumber = (value: string): string => {
+  const digits = value.replace(/\D/g, '').slice(0, 16)
+  return digits.replace(/(.{4})/g, '$1 ').trim()
+}
+
+/** Format expiry as MM/YY with auto slash */
+const formatExpiry = (value: string, prevValue: string): string => {
+  const digits = value.replace(/\D/g, '').slice(0, 4)
+
+  // If user is deleting and we had a slash, let them delete cleanly
+  if (prevValue.length > value.length) {
+    // If they deleted the slash, remove the last month digit too
+    if (prevValue.includes('/') && !value.includes('/')) {
+      return digits.slice(0, 1)
+    }
+    return digits.length <= 2 ? digits : digits.slice(0, 2) + '/' + digits.slice(2)
+  }
+
+  if (digits.length === 0) return ''
+  if (digits.length <= 2) {
+    // Auto-add slash after 2 digits
+    if (digits.length === 2) return digits + '/'
+    return digits
+  }
+  return digits.slice(0, 2) + '/' + digits.slice(2)
+}
+
 const DonationSection = () => {
+  const [step, setStep] = useState<Step>('form')
   const [amount, setAmount] = useState<number>(100)
   const [customAmount, setCustomAmount] = useState('')
   const [isCustom, setIsCustom] = useState(false)
@@ -66,7 +96,6 @@ const DonationSection = () => {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState('')
-  const [submitted, setSubmitted] = useState(false)
   const [paymentStatus, setPaymentStatus] = useState<
     'pending' | 'successful' | 'failed'
   >('pending')
@@ -93,7 +122,20 @@ const DonationSection = () => {
     setError('')
   }
 
+  const handleCardNumberChange = (value: string) => {
+    setCardNumber(formatCardNumber(value))
+  }
+
+  const handleExpiryChange = (value: string) => {
+    setCardExpiry(formatExpiry(value, cardExpiry))
+  }
+
+  const handleCvcChange = (value: string) => {
+    setCardCvc(value.replace(/\D/g, '').slice(0, 4))
+  }
+
   const resetAll = useCallback(() => {
+    setStep('form')
     setAmount(100)
     setCustomAmount('')
     setIsCustom(false)
@@ -104,7 +146,6 @@ const DonationSection = () => {
     setLoading(false)
     setResult(null)
     setError('')
-    setSubmitted(false)
     setCardNumber('')
     setCardName('')
     setCardExpiry('')
@@ -120,7 +161,7 @@ const DonationSection = () => {
   // Polling for PromptPay status
   useEffect(() => {
     if (
-      submitted &&
+      step === 'result' &&
       paymentMethod === 'promptpay' &&
       result?.data?.orderId &&
       paymentStatus === 'pending'
@@ -145,7 +186,6 @@ const DonationSection = () => {
         }
       }
 
-      // Start polling every 3 seconds
       pollingIntervalRef.current = setInterval(checkStatus, 3000)
     }
 
@@ -154,7 +194,7 @@ const DonationSection = () => {
         clearInterval(pollingIntervalRef.current)
       }
     }
-  }, [submitted, paymentMethod, result, paymentStatus])
+  }, [step, paymentMethod, result, paymentStatus])
 
   const handleDonate = async () => {
     if (effectiveAmount < 20 || effectiveAmount > 2000) {
@@ -162,13 +202,11 @@ const DonationSection = () => {
       return
     }
 
-    // Email is required for all payments (to deliver reward)
     if (!email) {
       setError('กรุณากรอกอีเมลเพื่อรับของสมนาคุณ')
       return
     }
 
-    // Validate phone for credit card payments
     if (paymentMethod === 'credit_card') {
       if (!phoneNumber) {
         setError('กรุณากรอกหมายเลขโทรศัพท์สำหรับการชำระเงินด้วยบัตรเครดิต')
@@ -214,7 +252,7 @@ const DonationSection = () => {
       })
 
       setResult(data)
-      setSubmitted(true)
+      setStep('result')
     } catch (err: any) {
       const msg =
         err?.response?.data?.error ||
@@ -226,12 +264,16 @@ const DonationSection = () => {
     }
   }
 
+  // ─── Shared input class ───
+  const inputClass =
+    'w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/60 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]/60 focus:border-[#B4A7D6] placeholder:text-gray-400'
+
   return (
     <section
       id="donation"
       className="py-16 md:py-24 px-4 md:px-8 bg-gradient-to-b from-[#f8f9fb] to-white"
     >
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-[#7B68AE] mb-3">
@@ -244,94 +286,66 @@ const DonationSection = () => {
             ร่วมเป็นส่วนหนึ่งในการสร้างเสียงเพลง
             ทุกบาทของคุณจะช่วยให้เราผลิตผลงานดนตรีที่มีคุณภาพต่อไป
           </p>
-          <div className="mt-4 mx-auto max-w-lg bg-[#f5f3ff] border border-[#B4A7D6]/30 rounded-xl px-5 py-4 text-sm text-[#153051] leading-relaxed">
-            <p className="font-semibold mb-1">ของสมนาคุณสำหรับผู้ Donate</p>
-            <p>
-              ผู้ donate จะได้รับอาร์ตเวิร์ก เพลงคาปิบาราไม่ได้นอน - KIMYORA
-              พร้อมไฟล์ WAV uncompress แล้วก็ Backing Track ทาง email
-              จัดส่งภายใน 3 วันทำการ
-            </p>
-          </div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6 md:p-10">
-          {submitted && result?.success ? (
-            /* Summary Screen */
-            <div className="space-y-5">
+        {/* Main Card */}
+        <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+          {step === 'result' && result?.success ? (
+            /* ───────── Result Screen ───────── */
+            <div className="p-6 md:p-10 space-y-5">
+              {/* Status Banner */}
               {paymentStatus === 'successful' ? (
-                <div className="flex items-center gap-2 mb-2 p-3 bg-green-50 text-green-700 rounded-lg">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                    <path d="M22 4L12 14.01l-3-3" />
-                  </svg>
-                  <span className="font-semibold text-sm">
-                    ชำระเงินสำเร็จ ขอบคุณสำหรับการสนับสนุน
-                  </span>
+                <div className="flex items-center gap-3 p-4 bg-emerald-50 text-emerald-700 rounded-2xl">
+                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">ชำระเงินสำเร็จ</p>
+                    <p className="text-xs text-emerald-600">ขอบคุณสำหรับการสนับสนุน</p>
+                  </div>
                 </div>
               ) : paymentStatus === 'failed' ? (
-                <div className="flex items-center gap-2 mb-2 p-3 bg-red-50 text-red-700 rounded-lg">
-                  <svg
-                    className="w-5 h-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="15" y1="9" x2="9" y2="15" />
-                    <line x1="9" y1="9" x2="15" y2="15" />
-                  </svg>
-                  <span className="font-semibold text-sm">
-                    การชำระเงินล้มเหลว กรุณาลองใหม่อีกครั้ง
-                  </span>
+                <div className="flex items-center gap-3 p-4 bg-red-50 text-red-700 rounded-2xl">
+                  <div className="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">การชำระเงินล้มเหลว</p>
+                    <p className="text-xs text-red-600">กรุณาลองใหม่อีกครั้ง</p>
+                  </div>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 mb-2 p-3 bg-blue-50 text-blue-700 rounded-lg">
-                  <svg
-                    className="w-5 h-5 animate-spin"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-                  </svg>
-                  <span className="font-semibold text-sm">
-                    รอการชำระเงิน (กรุณาดำเนินการต่อ)
-                  </span>
+                <div className="flex items-center gap-3 p-4 bg-blue-50 text-blue-700 rounded-2xl">
+                  <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">รอการชำระเงิน</p>
+                    <p className="text-xs text-blue-600">กรุณาดำเนินการชำระเงินด้านล่าง</p>
+                  </div>
                 </div>
               )}
 
-              <div className="space-y-3 p-4 rounded-xl bg-gray-50 border border-gray-100">
+              {/* Order Summary */}
+              <div className="space-y-3 p-5 rounded-2xl bg-gray-50/80 border border-gray-100">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">วิธีชำระเงิน</span>
                   <span className="flex items-center gap-2 text-sm font-medium text-[#153051]">
                     {paymentMethod === 'promptpay' ? (
                       <>
-                        <Image
-                          src="/images/promptpay-logo.png"
-                          alt="PromptPay"
-                          width={20}
-                          height={20}
-                          className="object-contain"
-                        />
+                        <Image src="/images/promptpay-logo.png" alt="PromptPay" width={20} height={20} className="object-contain" />
                         PromptPay
                       </>
                     ) : (
                       <>
-                        <svg
-                          className="w-5 h-5"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                           <rect x="1" y="4" width="22" height="16" rx="2" />
                           <line x1="1" y1="10" x2="23" y2="10" />
                         </svg>
@@ -340,56 +354,52 @@ const DonationSection = () => {
                     )}
                   </span>
                 </div>
+                <div className="h-px bg-gray-200" />
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">จำนวน</span>
-                  <span className="text-sm font-semibold text-[#153051]">
+                  <span className="text-lg font-bold text-[#153051]">
                     ฿{effectiveAmount.toLocaleString()}
                   </span>
                 </div>
                 {donorName && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">ชื่อผู้โดเนท</span>
-                    <span className="text-sm font-medium text-[#153051]">
-                      {donorName}
-                    </span>
-                  </div>
+                  <>
+                    <div className="h-px bg-gray-200" />
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-500">ชื่อผู้โดเนท</span>
+                      <span className="text-sm font-medium text-[#153051]">{donorName}</span>
+                    </div>
+                  </>
                 )}
+                <div className="h-px bg-gray-200" />
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">Order ID</span>
-                  <span className="text-xs font-mono text-gray-400">
-                    {result.data?.orderId}
-                  </span>
+                  <span className="text-xs font-mono text-gray-400">{result.data?.orderId}</span>
                 </div>
               </div>
 
-              {/* QR Code for PromptPay — only show while pending */}
-              {paymentStatus === 'pending' &&
-                result.data?.payment?.qrCodeUrl && (
-                  <div className="text-center">
-                    <p className="text-xs text-gray-500 mb-2">
-                      สแกน QR Code เพื่อชำระเงิน:
-                    </p>
-                    <img
-                      src={result.data.payment.qrCodeUrl}
-                      alt="QR Code"
-                      className="mx-auto w-48 h-48 rounded-lg"
-                    />
-                  </div>
-                )}
-
-              {/* Authorize URI for Credit Card — only show while pending */}
-              {paymentStatus === 'pending' && result.data?.authorizeUri && (
-                <div className="text-center">
-                  <a href={result.data.authorizeUri}>
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      className="w-full dark:bg-primary dark:hover:bg-primary-hover"
-                    >
-                      ดำเนินการชำระเงิน
-                    </Button>
-                  </a>
+              {/* QR Code for PromptPay */}
+              {paymentStatus === 'pending' && result.data?.payment?.qrCodeUrl && (
+                <div className="text-center py-2">
+                  <p className="text-xs text-gray-500 mb-3">สแกน QR Code เพื่อชำระเงิน</p>
+                  <img
+                    src={result.data.payment.qrCodeUrl}
+                    alt="QR Code"
+                    className="mx-auto w-52 h-52 rounded-xl border border-gray-100"
+                  />
                 </div>
+              )}
+
+              {/* Authorize URI for Credit Card */}
+              {paymentStatus === 'pending' && result.data?.authorizeUri && (
+                <a href={result.data.authorizeUri}>
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    className="w-full dark:bg-primary dark:hover:bg-primary-hover"
+                  >
+                    ดำเนินการชำระเงิน
+                  </Button>
+                </a>
               )}
 
               <Button
@@ -402,214 +412,272 @@ const DonationSection = () => {
               </Button>
             </div>
           ) : (
-            /* Donation Form */
+            /* ───────── Donation Form ───────── */
             <>
-              {/* Amount Selection */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-[#153051] mb-3">
-                  เลือกจำนวน (บาท)
-                </label>
-                <div className="grid grid-cols-3 md:grid-cols-5 gap-2">
-                  {PRESET_AMOUNTS.map(val => (
-                    <button
-                      key={val}
-                      onClick={() => handlePresetClick(val)}
-                      className={`py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                        !isCustom && amount === val
-                          ? 'bg-[#153051] text-white shadow-md scale-105'
-                          : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
-                      }`}
-                    >
-                      ฿{val}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Custom Amount */}
-                <div className="mt-3">
-                  <input
-                    type="number"
-                    placeholder="กรอกจำนวนเอง..."
-                    value={isCustom ? customAmount : ''}
-                    onChange={e => handleCustomChange(e.target.value)}
-                    onFocus={() => setIsCustom(true)}
-                    min={20}
-                    max={2000}
-                    className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#B4A7D6] ${
-                      isCustom
-                        ? 'border-[#B4A7D6] bg-[#f5f3ff]'
-                        : 'border-gray-200 bg-gray-50'
-                    }`}
-                  />
-                </div>
-              </div>
-
-              {/* Payment Method */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-[#153051] mb-3">
-                  วิธีชำระเงิน
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={() => setPaymentMethod('promptpay')}
-                    className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-all ${
-                      paymentMethod === 'promptpay'
-                        ? 'bg-[#153051] text-white shadow-md'
-                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
-                    }`}
-                  >
-                    <Image
-                      src="/images/promptpay-logo.png"
-                      alt="PromptPay"
-                      width={24}
-                      height={24}
-                      className="object-contain"
-                    />
-                    PromptPay
-                  </button>
-                  <button
-                    onClick={() => setPaymentMethod('credit_card')}
-                    className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-all ${
-                      paymentMethod === 'credit_card'
-                        ? 'bg-[#153051] text-white shadow-md'
-                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
-                    }`}
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <rect x="1" y="4" width="22" height="16" rx="2" />
-                      <line x1="1" y1="10" x2="23" y2="10" />
+              {/* Reward Banner */}
+              <div className="bg-gradient-to-r from-[#f5f3ff] to-[#ede9fe] px-6 py-4 border-b border-[#B4A7D6]/20">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-[#B4A7D6]/20 rounded-lg flex items-center justify-center mt-0.5">
+                    <svg className="w-4 h-4 text-[#7B68AE]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6" />
+                      <path d="M2 8h20v4H2z" />
+                      <path d="M12 2l3 6H9l3-6z" />
                     </svg>
-                    บัตรเครดิต
-                  </button>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm text-[#153051]">ของสมนาคุณสำหรับผู้ Donate</p>
+                    <p className="text-xs text-gray-600 mt-0.5 leading-relaxed">
+                      รับอาร์ตเวิร์ก เพลงคาปิบาราไม่ได้นอน - KIMYORA พร้อมไฟล์ WAV
+                      uncompress และ Backing Track ทาง email ภายใน 3 วันทำการ
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {/* Credit Card Form */}
-              {paymentMethod === 'credit_card' && (
-                <div className="mb-6 space-y-4">
-                  <div className="flex justify-center">
-                    <Cards
-                      number={cardNumber}
-                      name={cardName}
-                      expiry={cardExpiry}
-                      cvc={cardCvc}
-                      focused={cardFocused || undefined}
+              <div className="p-6 md:p-10 space-y-8">
+                {/* ── Section 1: Amount ── */}
+                <div>
+                  <h3 className="text-sm font-semibold text-[#153051] mb-3 flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#153051] text-white text-xs flex items-center justify-center">1</span>
+                    เลือกจำนวน (บาท)
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {PRESET_AMOUNTS.map(val => (
+                      <button
+                        key={val}
+                        onClick={() => handlePresetClick(val)}
+                        className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+                          !isCustom && amount === val
+                            ? 'bg-[#153051] text-white shadow-md'
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200'
+                        }`}
+                      >
+                        ฿{val}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mt-3 relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">฿</span>
+                    <input
+                      type="number"
+                      placeholder="กรอกจำนวนเอง (20 - 2,000)"
+                      value={isCustom ? customAmount : ''}
+                      onChange={e => handleCustomChange(e.target.value)}
+                      onFocus={() => setIsCustom(true)}
+                      min={20}
+                      max={2000}
+                      className={`w-full pl-8 pr-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]/60 focus:border-[#B4A7D6] ${
+                        isCustom
+                          ? 'border-[#B4A7D6] bg-[#f5f3ff]/50'
+                          : 'border-gray-200 bg-gray-50/60'
+                      }`}
                     />
                   </div>
+                </div>
+
+                {/* ── Section 2: Payment Method ── */}
+                <div>
+                  <h3 className="text-sm font-semibold text-[#153051] mb-3 flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#153051] text-white text-xs flex items-center justify-center">2</span>
+                    วิธีชำระเงิน
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => setPaymentMethod('promptpay')}
+                      className={`relative flex items-center justify-center gap-2.5 py-3.5 rounded-2xl text-sm font-medium transition-all border-2 ${
+                        paymentMethod === 'promptpay'
+                          ? 'border-[#153051] bg-[#153051]/[0.03] text-[#153051] shadow-sm'
+                          : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                      }`}
+                    >
+                      {paymentMethod === 'promptpay' && (
+                        <span className="absolute top-2 right-2 w-4 h-4 bg-[#153051] rounded-full flex items-center justify-center">
+                          <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                          </svg>
+                        </span>
+                      )}
+                      <Image src="/images/promptpay-logo.png" alt="PromptPay" width={24} height={24} className="object-contain" />
+                      PromptPay
+                    </button>
+                    <button
+                      onClick={() => setPaymentMethod('credit_card')}
+                      className={`relative flex items-center justify-center gap-2.5 py-3.5 rounded-2xl text-sm font-medium transition-all border-2 ${
+                        paymentMethod === 'credit_card'
+                          ? 'border-[#153051] bg-[#153051]/[0.03] text-[#153051] shadow-sm'
+                          : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                      }`}
+                    >
+                      {paymentMethod === 'credit_card' && (
+                        <span className="absolute top-2 right-2 w-4 h-4 bg-[#153051] rounded-full flex items-center justify-center">
+                          <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                          </svg>
+                        </span>
+                      )}
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                        <rect x="1" y="4" width="22" height="16" rx="2" />
+                        <line x1="1" y1="10" x2="23" y2="10" />
+                      </svg>
+                      บัตรเครดิต
+                    </button>
+                  </div>
+
+                  {/* Credit Card Form */}
+                  {paymentMethod === 'credit_card' && (
+                    <div className="mt-5 space-y-4">
+                      <div className="flex justify-center">
+                        <Cards
+                          number={cardNumber}
+                          name={cardName}
+                          expiry={cardExpiry.replace('/', '')}
+                          cvc={cardCvc}
+                          focused={cardFocused || undefined}
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-500 mb-1.5">หมายเลขบัตร</label>
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="0000 0000 0000 0000"
+                            value={cardNumber}
+                            onChange={e => handleCardNumberChange(e.target.value)}
+                            onFocus={() => setCardFocused('number')}
+                            maxLength={19}
+                            className={inputClass}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-500 mb-1.5">ชื่อบนบัตร</label>
+                          <input
+                            type="text"
+                            placeholder="JOHN DOE"
+                            value={cardName}
+                            onChange={e => setCardName(e.target.value)}
+                            onFocus={() => setCardFocused('name')}
+                            className={inputClass}
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 mb-1.5">วันหมดอายุ</label>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              placeholder="MM/YY"
+                              value={cardExpiry}
+                              onChange={e => handleExpiryChange(e.target.value)}
+                              onFocus={() => setCardFocused('expiry')}
+                              maxLength={5}
+                              className={inputClass}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 mb-1.5">CVC</label>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              placeholder="123"
+                              value={cardCvc}
+                              onChange={e => handleCvcChange(e.target.value)}
+                              onFocus={() => setCardFocused('cvc')}
+                              maxLength={4}
+                              className={inputClass}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* ── Section 3: Your Info ── */}
+                <div>
+                  <h3 className="text-sm font-semibold text-[#153051] mb-3 flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-[#153051] text-white text-xs flex items-center justify-center">3</span>
+                    ข้อมูลผู้โดเนท
+                  </h3>
                   <div className="space-y-3">
-                    <input
-                      type="text"
-                      placeholder="หมายเลขบัตร"
-                      value={cardNumber}
-                      onChange={e => setCardNumber(e.target.value)}
-                      onFocus={() => setCardFocused('number')}
-                      maxLength={19}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]"
-                    />
-                    <input
-                      type="text"
-                      placeholder="ชื่อบนบัตร"
-                      value={cardName}
-                      onChange={e => setCardName(e.target.value)}
-                      onFocus={() => setCardFocused('name')}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]"
-                    />
-                    <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                        ชื่อ <span className="text-gray-400">(ไม่บังคับ)</span>
+                      </label>
                       <input
                         type="text"
-                        placeholder="MM/YY"
-                        value={cardExpiry}
-                        onChange={e => setCardExpiry(e.target.value)}
-                        onFocus={() => setCardFocused('expiry')}
-                        maxLength={5}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]"
+                        value={donorName}
+                        onChange={e => setDonorName(e.target.value)}
+                        placeholder="ชื่อของคุณ"
+                        className={inputClass}
                       />
-                      <input
-                        type="text"
-                        placeholder="CVC"
-                        value={cardCvc}
-                        onChange={e => setCardCvc(e.target.value)}
-                        onFocus={() => setCardFocused('cvc')}
-                        maxLength={4}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]"
-                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                          อีเมล <span className="text-red-400">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={e => setEmail(e.target.value)}
+                          placeholder="email@example.com"
+                          className={inputClass}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                          เบอร์โทร{' '}
+                          {paymentMethod === 'credit_card' && (
+                            <span className="text-red-400">*</span>
+                          )}
+                        </label>
+                        <input
+                          type="tel"
+                          value={phoneNumber}
+                          onChange={e => setPhoneNumber(e.target.value)}
+                          placeholder="0812345678"
+                          className={inputClass}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              )}
 
-              {/* Donor Info */}
-              <div className="mb-6 space-y-3">
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">
-                    ชื่อผู้โดเนท (ไม่บังคับ)
-                  </label>
-                  <input
-                    type="text"
-                    value={donorName}
-                    onChange={e => setDonorName(e.target.value)}
-                    placeholder="ชื่อของคุณ"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]"
-                  />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs text-gray-400 mb-1">
-                      อีเมล <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                      placeholder="email@example.com"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]"
-                    />
+                {/* Error */}
+                {error && (
+                  <div className="flex items-start gap-2.5 px-4 py-3 rounded-xl bg-red-50 text-red-600 text-sm border border-red-100">
+                    <svg className="w-4 h-4 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="8" x2="12" y2="12" />
+                      <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    {error}
                   </div>
-                  <div>
-                    <label className="block text-xs text-gray-400 mb-1">
-                      เบอร์โทร{' '}
-                      {paymentMethod === 'credit_card' && (
-                        <span className="text-red-500">*</span>
-                      )}
-                    </label>
-                    <input
-                      type="tel"
-                      value={phoneNumber}
-                      onChange={e => setPhoneNumber(e.target.value)}
-                      placeholder="0812345678"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]"
-                    />
-                  </div>
-                </div>
+                )}
+
+                {/* Submit */}
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className="w-full dark:bg-primary dark:hover:bg-primary-hover"
+                  onClick={handleDonate}
+                  disabled={
+                    loading || effectiveAmount < 20 || effectiveAmount > 2000
+                  }
+                >
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                      </svg>
+                      กำลังดำเนินการ...
+                    </span>
+                  ) : (
+                    `โดเนท ฿${effectiveAmount.toLocaleString()}`
+                  )}
+                </Button>
               </div>
-
-              {/* Error */}
-              {error && (
-                <div className="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-600 text-sm border border-red-100">
-                  {error}
-                </div>
-              )}
-
-              {/* Submit */}
-              <Button
-                variant="primary"
-                size="lg"
-                className="w-full dark:bg-primary dark:hover:bg-primary-hover"
-                onClick={handleDonate}
-                disabled={
-                  loading || effectiveAmount < 20 || effectiveAmount > 2000
-                }
-              >
-                {loading
-                  ? 'กำลังดำเนินการ...'
-                  : `โดเนท ฿${effectiveAmount.toLocaleString()}`}
-              </Button>
             </>
           )}
         </div>

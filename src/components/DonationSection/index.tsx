@@ -162,12 +162,14 @@ const DonationSection = () => {
       return
     }
 
-    // Validate email and phone for credit card payments
+    // Email is required for all payments (to deliver reward)
+    if (!email) {
+      setError('กรุณากรอกอีเมลเพื่อรับของสมนาคุณ')
+      return
+    }
+
+    // Validate phone for credit card payments
     if (paymentMethod === 'credit_card') {
-      if (!email) {
-        setError('กรุณากรอกอีเมลสำหรับการชำระเงินด้วยบัตรเครดิต')
-        return
-      }
       if (!phoneNumber) {
         setError('กรุณากรอกหมายเลขโทรศัพท์สำหรับการชำระเงินด้วยบัตรเครดิต')
         return
@@ -242,6 +244,14 @@ const DonationSection = () => {
             ร่วมเป็นส่วนหนึ่งในการสร้างเสียงเพลง
             ทุกบาทของคุณจะช่วยให้เราผลิตผลงานดนตรีที่มีคุณภาพต่อไป
           </p>
+          <div className="mt-4 mx-auto max-w-lg bg-[#f5f3ff] border border-[#B4A7D6]/30 rounded-xl px-5 py-4 text-sm text-[#153051] leading-relaxed">
+            <p className="font-semibold mb-1">ของสมนาคุณสำหรับผู้ Donate</p>
+            <p>
+              ผู้ donate จะได้รับอาร์ตเวิร์ก เพลงคาปิบาราไม่ได้นอน - KIMYORA
+              พร้อมไฟล์ WAV uncompress แล้วก็ Backing Track ทาง email
+              จัดส่งภายใน 3 วันทำการ
+            </p>
+          </div>
         </div>
 
         <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6 md:p-10">
@@ -551,10 +561,7 @@ const DonationSection = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs text-gray-400 mb-1">
-                      อีเมล{' '}
-                      {paymentMethod === 'credit_card' && (
-                        <span className="text-red-500">*</span>
-                      )}
+                      อีเมล <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"

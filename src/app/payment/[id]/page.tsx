@@ -112,6 +112,7 @@ export default function InvoicePaymentPage() {
   const [cardExpiry, setCardExpiry] = useState('')
   const [cardCvc, setCardCvc] = useState('')
   const [cardFocused, setCardFocused] = useState<any>('')
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
 
   const handleCardNumberChange = (value: string) => {
     setCardNumber(formatCardNumber(value))
@@ -585,6 +586,26 @@ export default function InvoicePaymentPage() {
                   </div>
                 )}
 
+                {/* Terms & Policies */}
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={e => setAcceptedTerms(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 rounded border-slate-300 text-[#153051] focus:ring-[#153051]/30 cursor-pointer flex-shrink-0"
+                  />
+                  <span className="text-xs text-slate-500 leading-relaxed">
+                    ฉันยอมรับ{' '}
+                    <a href="/merch/th/policy/terms" target="_blank" rel="noopener noreferrer" className="text-[#153051] underline underline-offset-2 hover:text-[#0f2340]">ข้อกำหนดและเงื่อนไข</a>
+                    {', '}
+                    <a href="/merch/th/policy/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#153051] underline underline-offset-2 hover:text-[#0f2340]">นโยบายความเป็นส่วนตัว</a>
+                    {', '}
+                    <a href="/merch/th/policy/refund-policy" target="_blank" rel="noopener noreferrer" className="text-[#153051] underline underline-offset-2 hover:text-[#0f2340]">นโยบายการคืนเงิน</a>
+                    {' และ '}
+                    <a href="/merch/th/policy/shipping-policy" target="_blank" rel="noopener noreferrer" className="text-[#153051] underline underline-offset-2 hover:text-[#0f2340]">นโยบายการจัดส่ง</a>
+                  </span>
+                </label>
+
                 {/* Error */}
                 {error && (
                   <div className="flex items-start gap-2.5 p-4 text-sm text-rose-600 bg-rose-50 rounded-xl border border-rose-100" role="alert">
@@ -603,7 +624,7 @@ export default function InvoicePaymentPage() {
                   size="lg"
                   className="w-full py-4 text-base sm:text-lg font-bold bg-[#153051] hover:bg-[#0f2340] rounded-2xl"
                   onClick={handlePay}
-                  disabled={loading}
+                  disabled={loading || !acceptedTerms}
                 >
                   {loading ? (
                     <span className="flex items-center gap-2">

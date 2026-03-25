@@ -107,6 +107,7 @@ const DonationSection = () => {
   const [cardExpiry, setCardExpiry] = useState('')
   const [cardCvc, setCardCvc] = useState('')
   const [cardFocused, setCardFocused] = useState<Focused>('')
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
 
   const effectiveAmount = isCustom ? Number(customAmount) : amount
 
@@ -151,6 +152,7 @@ const DonationSection = () => {
     setCardExpiry('')
     setCardCvc('')
     setCardFocused('')
+    setAcceptedTerms(false)
     setPaymentStatus('pending')
     if (pollingIntervalRef.current) {
       clearInterval(pollingIntervalRef.current)
@@ -644,6 +646,26 @@ const DonationSection = () => {
                   </div>
                 </div>
 
+                {/* Terms & Policies */}
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={e => setAcceptedTerms(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#153051] focus:ring-[#B4A7D6] cursor-pointer flex-shrink-0"
+                  />
+                  <span className="text-xs text-gray-500 leading-relaxed">
+                    ฉันยอมรับ{' '}
+                    <a href="/merch/th/policy/terms" target="_blank" rel="noopener noreferrer" className="text-[#7B68AE] underline underline-offset-2 hover:text-[#153051]">ข้อกำหนดและเงื่อนไข</a>
+                    {', '}
+                    <a href="/merch/th/policy/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#7B68AE] underline underline-offset-2 hover:text-[#153051]">นโยบายความเป็นส่วนตัว</a>
+                    {', '}
+                    <a href="/merch/th/policy/refund-policy" target="_blank" rel="noopener noreferrer" className="text-[#7B68AE] underline underline-offset-2 hover:text-[#153051]">นโยบายการคืนเงิน</a>
+                    {' และ '}
+                    <a href="/merch/th/policy/shipping-policy" target="_blank" rel="noopener noreferrer" className="text-[#7B68AE] underline underline-offset-2 hover:text-[#153051]">นโยบายการจัดส่ง</a>
+                  </span>
+                </label>
+
                 {/* Error */}
                 {error && (
                   <div className="flex items-start gap-2.5 px-4 py-3 rounded-xl bg-red-50 text-red-600 text-sm border border-red-100">
@@ -663,7 +685,7 @@ const DonationSection = () => {
                   className="w-full dark:bg-primary dark:hover:bg-primary-hover"
                   onClick={handleDonate}
                   disabled={
-                    loading || effectiveAmount < 20 || effectiveAmount > 2000
+                    loading || !acceptedTerms || effectiveAmount < 20 || effectiveAmount > 2000
                   }
                 >
                   {loading ? (

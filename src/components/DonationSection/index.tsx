@@ -423,7 +423,7 @@ const DonationSection = () => {
                     <p className="font-semibold text-sm text-[#153051]">ของสมนาคุณสำหรับผู้ Donate</p>
                     <p className="text-xs text-gray-600 mt-0.5 leading-relaxed">
                       รับอาร์ตเวิร์ก เพลงคาปิบาราไม่ได้นอน - KIMYORA พร้อมไฟล์ WAV
-                      uncompress และ Backing Track ทาง email ภายใน 3 วันทำการ
+                      uncompressed และ Backing Track ทาง email ภายใน 3 วันทำการ
                     </p>
                   </div>
                 </div>

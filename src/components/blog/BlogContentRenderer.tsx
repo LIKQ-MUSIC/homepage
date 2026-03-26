@@ -162,7 +162,7 @@ export default function BlogContentRenderer({
 
         {/* Hero Image */}
         {blog.thumbnail_url && (
-          <div className="relative w-full aspect-[21/9] rounded-2xl overflow-hidden mb-16 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 group">
+          <div className="relative w-full aspect-[1200/630] rounded-2xl overflow-hidden mb-16 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 group">
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
             <Image
               src={blog.thumbnail_url}

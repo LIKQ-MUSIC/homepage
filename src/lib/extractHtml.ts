@@ -127,33 +127,38 @@ export async function extractHtmlWithStyles(
   <style>
     ${styles}
     
-    /* Embed TH Sarabun New fonts as base64 */
+    /* Embed TH Sarabun New fonts */
+    /* We prioritize the local file name for Gothenburg, then fallback to base64 for browser preview */
     @font-face {
       font-family: 'TH Sarabun New';
       font-style: normal;
       font-weight: 400;
-      src: url('${fontBase64Map['/fonts/THSarabunNew.ttf'] || ''}') format('truetype');
+      src: url('THSarabunNew.ttf') format('truetype'),
+           url('${fontBase64Map['/fonts/THSarabunNew.ttf'] || ''}') format('truetype');
     }
     
     @font-face {
       font-family: 'TH Sarabun New';
       font-style: normal;
       font-weight: 700;
-      src: url('${fontBase64Map['/fonts/THSarabunNew-Bold.ttf'] || ''}') format('truetype');
+      src: url('THSarabunNew-Bold.ttf') format('truetype'),
+           url('${fontBase64Map['/fonts/THSarabunNew-Bold.ttf'] || ''}') format('truetype');
     }
     
     @font-face {
       font-family: 'TH Sarabun New';
       font-style: italic;
       font-weight: 400;
-      src: url('${fontBase64Map['/fonts/THSarabunNew-Italic.ttf'] || ''}') format('truetype');
+      src: url('THSarabunNew-Italic.ttf') format('truetype'),
+           url('${fontBase64Map['/fonts/THSarabunNew-Italic.ttf'] || ''}') format('truetype');
     }
     
     @font-face {
       font-family: 'TH Sarabun New';
       font-style: italic;
       font-weight: 700;
-      src: url('${fontBase64Map['/fonts/THSarabunNew-BoldItalic.ttf'] || ''}') format('truetype');
+      src: url('THSarabunNew-BoldItalic.ttf') format('truetype'),
+           url('${fontBase64Map['/fonts/THSarabunNew-BoldItalic.ttf'] || ''}') format('truetype');
     }
     
     /* Embed Noto Sans Thai as base64 for header */
@@ -390,25 +395,38 @@ export async function extractHtmlWithStyles(
       border-style: dashed !important;
     }
 
-    /* Position utilities */
-    .relative {
-      position: relative !important;
+    /* Heading styles - matching TipTap and Preview */
+    /* Only apply to content inside prose-sm to avoid breaking document header/footer */
+    .prose-sm h1 {
+      font-size: 20pt !important;
+      font-weight: 700 !important;
+      color: #000000 !important;
+      margin-top: 12px !important;
+      margin-bottom: 8px !important;
+    }
+    .prose-sm h2 {
+      font-size: 18pt !important;
+      font-weight: 700 !important;
+      color: #000000 !important;
+      margin-top: 8px !important;
+      margin-bottom: 4px !important;
+    }
+    .prose-sm h3 {
+      font-size: 16pt !important;
+      font-weight: 700 !important;
+      color: #000000 !important;
+      margin-top: 8px !important;
+      margin-bottom: 4px !important;
+    }
+    .prose-sm p {
+      font-size: 14pt !important;
+      line-height: 1.4 !important;
+      margin-bottom: 8px !important;
     }
 
-    .absolute {
-      position: absolute !important;
-    }
-
-    .bottom-0 {
-      bottom: 0 !important;
-    }
-
-    .left-0 {
-      left: 0 !important;
-    }
-
-    .right-0 {
-      right: 0 !important;
+    /* Reset global margins appearing from Tailwind prose defaults if any */
+    .prose-sm > * {
+      margin-top: 0 !important;
     }
 
     /* Text color utilities */

@@ -11,9 +11,15 @@ export const ROUTE_PERMISSIONS: Record<string, string[]> = {
   '/dashboard/parties': ['parties:read'],
   '/dashboard/quotations': ['quotations:read'],
   '/dashboard/contracts': ['contracts:read'],
+  '/dashboard/donations': ['donations.manage'],
+  '/dashboard/services': ['services.view'],
+  '/dashboard/invoices': ['invoices.view']
 }
 
-export function hasPermission(userPermissions: string[], required: string[]): boolean {
+export function hasPermission(
+  userPermissions: string[],
+  required: string[]
+): boolean {
   return required.some(p => userPermissions.includes(p))
 }
 

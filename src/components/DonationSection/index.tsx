@@ -9,7 +9,7 @@ import Button from '@/ui/Button'
 
 type PaymentMethod = 'promptpay' | 'credit_card'
 type Focused = 'number' | 'name' | 'expiry' | 'cvc' | ''
-type Step = 'form' | 'result'
+type Step = 'form' | 'summary' | 'result'
 
 declare global {
   interface Window {
@@ -17,7 +17,7 @@ declare global {
   }
 }
 
-const PRESET_AMOUNTS = [20, 50, 100, 200, 500]
+const PRESET_AMOUNTS = [50, 100, 200, 500, 1000]
 
 const loadOmiseScript = (): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -198,24 +198,24 @@ const DonationSection = () => {
     }
   }, [step, paymentMethod, result, paymentStatus])
 
-  const handleDonate = async () => {
-    if (effectiveAmount < 20 || effectiveAmount > 2000) {
-      setError('ยอดโดเนทต้องอยู่ระหว่าง 20 - 2,000 บาท')
+  const handleGoToSummary = () => {
+    if (effectiveAmount < 50 || effectiveAmount > 2000) {
+      setError('ยอดโดเนทต้องอยู่ระหว่าง 50 - 2,000 บาท')
       return
     }
-
     if (!email) {
       setError('กรุณากรอกอีเมลเพื่อรับของสมนาคุณ')
       return
     }
-
-    if (paymentMethod === 'credit_card') {
-      if (!phoneNumber) {
-        setError('กรุณากรอกหมายเลขโทรศัพท์สำหรับการชำระเงินด้วยบัตรเครดิต')
-        return
-      }
+    if (paymentMethod === 'credit_card' && !phoneNumber) {
+      setError('กรุณากรอกหมายเลขโทรศัพท์สำหรับการชำระเงินด้วยบัตรเครดิต')
+      return
     }
+    setError('')
+    setStep('summary')
+  }
 
+  const handleDonate = async () => {
     setLoading(true)
     setError('')
     setResult(null)
@@ -407,6 +407,224 @@ const DonationSection = () => {
                 {paymentStatus === 'pending' ? 'ยกเลิก' : 'โดเนทอีกครั้ง'}
               </Button>
             </div>
+          ) : step === 'summary' ? (
+            /* ───────── Order Summary ───────── */
+            <div className="p-6 md:p-10 space-y-6">
+              <div className="flex items-center gap-2 mb-2">
+                <button
+                  onClick={() => setStep('form')}
+                  className="text-gray-400 hover:text-[#153051] transition-colors"
+                  aria-label="กลับ"
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <h3 className="text-lg font-bold text-[#153051]">สรุปคำสั่งซื้อ</h3>
+              </div>
+
+              {/* Line items */}
+              <div className="rounded-2xl border border-gray-100 overflow-hidden">
+                {/* Donation item */}
+                <div className="flex items-center gap-4 p-4 bg-white">
+                  <div className="w-12 h-12 rounded-xl bg-[#153051]/5 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-[#153051]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-[#153051]">Donation</p>
+                    <p className="text-xs text-gray-400">สนับสนุน LiKQ Music</p>
+                  </div>
+                  <p className="text-base font-bold text-[#153051] tabular-nums flex-shrink-0">
+                    ฿{effectiveAmount.toLocaleString()}
+                  </p>
+                </div>
+
+                <div className="h-px bg-gray-100" />
+
+                {/* Gift item */}
+                <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-[#f5f3ff]/50 to-white">
+                  <div className="w-12 h-12 rounded-xl bg-[#B4A7D6]/15 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-[#7B68AE]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6" />
+                      <path d="M2 8h20v4H2z" />
+                      <path d="M12 2l3 6H9l3-6z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-[#153051]">ของสมนาคุณ</p>
+                    <p className="text-xs text-gray-500 leading-relaxed mt-0.5">
+                      อาร์ตเวิร์ก เพลงคาปิบาราไม่ได้นอน - KIMYORA<br />
+                      พร้อมไฟล์ WAV uncompressed และ Backing Track
+                    </p>
+                    <p className="text-[10px] text-gray-400 mt-1">จัดส่งทาง email ภายใน 3 วันทำการ</p>
+                  </div>
+                  <p className="text-sm font-medium text-emerald-600 flex-shrink-0">ฟรี</p>
+                </div>
+              </div>
+
+              {/* Summary details */}
+              <div className="space-y-3 p-5 rounded-2xl bg-gray-50/80 border border-gray-100">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-500">วิธีชำระเงิน</span>
+                  <span className="flex items-center gap-2 text-sm font-medium text-[#153051]">
+                    {paymentMethod === 'promptpay' ? (
+                      <>
+                        <Image src="/images/promptpay-logo.png" alt="PromptPay" width={20} height={20} className="object-contain" />
+                        PromptPay
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                          <rect x="1" y="4" width="22" height="16" rx="2" />
+                          <line x1="1" y1="10" x2="23" y2="10" />
+                        </svg>
+                        บัตรเครดิต
+                      </>
+                    )}
+                  </span>
+                </div>
+                {donorName && (
+                  <>
+                    <div className="h-px bg-gray-200" />
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-500">ชื่อผู้โดเนท</span>
+                      <span className="text-sm font-medium text-[#153051]">{donorName}</span>
+                    </div>
+                  </>
+                )}
+                <div className="h-px bg-gray-200" />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-500">อีเมล</span>
+                  <span className="text-sm font-medium text-[#153051]">{email}</span>
+                </div>
+                {phoneNumber && (
+                  <>
+                    <div className="h-px bg-gray-200" />
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-500">เบอร์โทร</span>
+                      <span className="text-sm font-medium text-[#153051]">{phoneNumber}</span>
+                    </div>
+                  </>
+                )}
+                <div className="h-px bg-gray-200" />
+                <div className="flex items-center justify-between">
+                  <span className="text-base font-semibold text-[#153051]">ยอดรวม</span>
+                  <span className="text-xl font-bold text-[#153051]">฿{effectiveAmount.toLocaleString()}</span>
+                </div>
+              </div>
+
+              {/* Credit Card Form — shown only at summary step */}
+              {paymentMethod === 'credit_card' && (
+                <div>
+                  <h3 className="text-sm font-semibold text-[#153051] mb-4 flex items-center gap-2">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <rect x="1" y="4" width="22" height="16" rx="2" />
+                      <line x1="1" y1="10" x2="23" y2="10" />
+                    </svg>
+                    กรอกข้อมูลบัตรเครดิต
+                  </h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                    {/* Card Preview */}
+                    <div className="flex justify-center lg:sticky lg:top-8">
+                      <Cards
+                        number={cardNumber}
+                        name={cardName}
+                        expiry={cardExpiry.replace('/', '')}
+                        cvc={cardCvc}
+                        focused={cardFocused || undefined}
+                      />
+                    </div>
+                    {/* Card Fields */}
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">หมายเลขบัตร</label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          placeholder="0000 0000 0000 0000"
+                          value={cardNumber}
+                          onChange={e => handleCardNumberChange(e.target.value)}
+                          onFocus={() => setCardFocused('number')}
+                          maxLength={19}
+                          className={inputClass}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">ชื่อบนบัตร</label>
+                        <input
+                          type="text"
+                          placeholder="JOHN DOE"
+                          value={cardName}
+                          onChange={e => setCardName(e.target.value)}
+                          onFocus={() => setCardFocused('name')}
+                          className={inputClass}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-500 mb-1.5">วันหมดอายุ</label>
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="MM/YY"
+                            value={cardExpiry}
+                            onChange={e => handleExpiryChange(e.target.value)}
+                            onFocus={() => setCardFocused('expiry')}
+                            maxLength={5}
+                            className={inputClass}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-500 mb-1.5">CVC</label>
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="123"
+                            value={cardCvc}
+                            onChange={e => handleCvcChange(e.target.value)}
+                            onFocus={() => setCardFocused('cvc')}
+                            maxLength={4}
+                            className={inputClass}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Error */}
+              {error && (
+                <div className="flex items-start gap-2.5 px-4 py-3 rounded-xl bg-red-50 text-red-600 text-sm border border-red-100">
+                  <svg className="w-4 h-4 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  {error}
+                </div>
+              )}
+
+              {/* Pay button */}
+              <Button
+                variant="primary"
+                size="lg"
+                className="w-full dark:bg-primary dark:hover:bg-primary-hover"
+                onClick={handleDonate}
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    {paymentMethod === 'credit_card' ? 'กำลังเปลี่ยนหน้า...' : 'กำลังดำเนินการ...'}
+                  </span>
+                ) : (
+                  `ชำระเงิน ฿${effectiveAmount.toLocaleString()}`
+                )}
+              </Button>
+            </div>
           ) : (
             /* ───────── Donation Form ───────── */
             <>
@@ -456,11 +674,11 @@ const DonationSection = () => {
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">฿</span>
                     <input
                       type="number"
-                      placeholder="กรอกจำนวนเอง (20 - 2,000)"
+                      placeholder="กรอกจำนวนเอง (50 - 2,000)"
                       value={isCustom ? customAmount : ''}
                       onChange={e => handleCustomChange(e.target.value)}
                       onFocus={() => setIsCustom(true)}
-                      min={20}
+                      min={50}
                       max={2000}
                       className={`w-full pl-8 pr-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]/60 focus:border-[#B4A7D6] ${
                         isCustom
@@ -518,77 +736,6 @@ const DonationSection = () => {
                       บัตรเครดิต
                     </button>
                   </div>
-
-                  {/* Credit Card Form */}
-                  {paymentMethod === 'credit_card' && (
-                    <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-                      {/* Card Preview */}
-                      <div className="flex justify-center lg:sticky lg:top-8">
-                        <Cards
-                          number={cardNumber}
-                          name={cardName}
-                          expiry={cardExpiry.replace('/', '')}
-                          cvc={cardCvc}
-                          focused={cardFocused || undefined}
-                        />
-                      </div>
-                      {/* Card Fields */}
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-xs font-medium text-gray-500 mb-1.5">หมายเลขบัตร</label>
-                          <input
-                            type="text"
-                            inputMode="numeric"
-                            placeholder="0000 0000 0000 0000"
-                            value={cardNumber}
-                            onChange={e => handleCardNumberChange(e.target.value)}
-                            onFocus={() => setCardFocused('number')}
-                            maxLength={19}
-                            className={inputClass}
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-500 mb-1.5">ชื่อบนบัตร</label>
-                          <input
-                            type="text"
-                            placeholder="JOHN DOE"
-                            value={cardName}
-                            onChange={e => setCardName(e.target.value)}
-                            onFocus={() => setCardFocused('name')}
-                            className={inputClass}
-                          />
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-xs font-medium text-gray-500 mb-1.5">วันหมดอายุ</label>
-                            <input
-                              type="text"
-                              inputMode="numeric"
-                              placeholder="MM/YY"
-                              value={cardExpiry}
-                              onChange={e => handleExpiryChange(e.target.value)}
-                              onFocus={() => setCardFocused('expiry')}
-                              maxLength={5}
-                              className={inputClass}
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-xs font-medium text-gray-500 mb-1.5">CVC</label>
-                            <input
-                              type="text"
-                              inputMode="numeric"
-                              placeholder="123"
-                              value={cardCvc}
-                              onChange={e => handleCvcChange(e.target.value)}
-                              onFocus={() => setCardFocused('cvc')}
-                              maxLength={4}
-                              className={inputClass}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 {/* ── Section 3: Your Info ── */}
@@ -672,24 +819,17 @@ const DonationSection = () => {
                   </div>
                 )}
 
-                {/* Submit */}
+                {/* Submit — goes to summary, not payment */}
                 <Button
                   variant="primary"
                   size="lg"
                   className="w-full dark:bg-primary dark:hover:bg-primary-hover"
-                  onClick={handleDonate}
+                  onClick={handleGoToSummary}
                   disabled={
-                    loading || !acceptedTerms || effectiveAmount < 20 || effectiveAmount > 2000
+                    !acceptedTerms || effectiveAmount < 50 || effectiveAmount > 2000
                   }
                 >
-                  {loading ? (
-                    <span className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      {paymentMethod === 'credit_card' ? 'กำลังเปลี่ยนหน้า...' : 'กำลังดำเนินการ...'}
-                    </span>
-                  ) : (
-                    `โดเนท ฿${effectiveAmount.toLocaleString()}`
-                  )}
+                  {`โดเนท ฿${effectiveAmount.toLocaleString()}`}
                 </Button>
               </div>
             </>

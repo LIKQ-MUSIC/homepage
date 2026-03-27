@@ -20,7 +20,7 @@ interface EditorJSRendererProps {
 function renderBlock(block: EditorJSBlock, index: number) {
   switch (block.type) {
     case 'header': {
-      const Tag = `h${block.data.level}` as keyof JSX.IntrinsicElements
+      const Tag = `h${block.data.level}` as keyof React.JSX.IntrinsicElements
       const sizeClasses: Record<number, string> = {
         1: 'text-3xl md:text-4xl font-bold mt-8 mb-4',
         2: 'text-2xl md:text-3xl font-bold mt-7 mb-3',
@@ -48,9 +48,7 @@ function renderBlock(block: EditorJSBlock, index: number) {
     case 'list': {
       const Tag = block.data.style === 'ordered' ? 'ol' : 'ul'
       const listClass =
-        block.data.style === 'ordered'
-          ? 'list-decimal'
-          : 'list-disc'
+        block.data.style === 'ordered' ? 'list-decimal' : 'list-disc'
       return (
         <Tag
           key={index}

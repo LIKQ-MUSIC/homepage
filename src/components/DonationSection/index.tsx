@@ -250,6 +250,7 @@ const DonationSection = () => {
         donorName: donorName || undefined,
         email: email || undefined,
         phoneNumber: phoneNumber || undefined,
+        locale: navigator.language,
         ...(cardToken && { cardToken })
       })
 

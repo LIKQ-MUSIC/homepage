@@ -31,7 +31,7 @@ function PaymentCallbackContent() {
 
     const checkStatus = async () => {
       try {
-        const { data } = await apiClient.get(`/donations/${orderId}/status`)
+        const { data } = await apiClient.get(`/seasonal-drops/${orderId}/status`)
         const paymentStatus = data.data?.status
 
         if (paymentStatus === 'successful') {
@@ -54,7 +54,7 @@ function PaymentCallbackContent() {
   }, [searchParams])
 
   const handleBackToHome = () => {
-    router.push('/#donation')
+    router.push('/#seasonal-drop')
   }
 
   return (
@@ -93,8 +93,8 @@ function PaymentCallbackContent() {
             </h1>
             <p className="text-gray-500 mb-6">{message}</p>
             <p className="text-sm text-gray-400 mb-6">
-              ขอบคุณสำหรับการสนับสนุน
-              เราจะนำเงินของคุณไปใช้ในการผลิตผลงานดนตรีที่มีคุณภาพต่อไป
+              ขอบคุณสำหรับการสั่งซื้อ
+              ไฟล์ดิจิทัลจะถูกส่งไปยังอีเมลของคุณ
             </p>
             <Button
               variant="primary"

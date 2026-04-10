@@ -89,3 +89,42 @@ export async function deleteDonationSetting(id: number) {
   )
   return response.data
 }
+
+// ─── Seasonal Drop ───
+
+export interface SeasonalDropTier {
+  id: number
+  name: string
+  price: number // in satang
+  description: string | null
+  product_type: string
+  drive_link: string | null
+  image_url: string | null
+  display_order: number
+  is_active: boolean
+  requires_shipping: boolean
+}
+
+export async function getSeasonalDropTiers(): Promise<SeasonalDropTier[]> {
+  const response = await apiClient.get<{ success: boolean; data: SeasonalDropTier[] }>('/seasonal-drops/tiers')
+  return response.data.data
+}
+
+export async function createSeasonalDropPurchase(data: {
+  tierId: number
+  paymentMethod: string
+  cardToken?: string
+  email: string
+  buyerName?: string
+  phoneNumber?: string
+  shippingAddress?: string
+  locale?: string
+}) {
+  const response = await apiClient.post('/seasonal-drops/purchase', data)
+  return response.data
+}
+
+export async function getSeasonalDropOrderStatus(orderId: string) {
+  const response = await apiClient.get(`/seasonal-drops/${orderId}/status`)
+  return response.data
+}

@@ -112,26 +112,42 @@ const DonationSection = () => {
   const [cardFocused, setCardFocused] = useState<Focused>('')
   const [acceptedTerms, setAcceptedTerms] = useState(false)
 
+  const [heroImages, setHeroImages] = useState<{ id: string; public_url: string; filename: string }[]>([])
+  const [carouselIndex, setCarouselIndex] = useState(0)
+
   const priceInBaht = selectedTier ? selectedTier.price / 100 : 0
 
-  // Fetch tiers on mount
+  // Fetch tiers and images on mount
   useEffect(() => {
-    const fetchTiers = async () => {
+    const fetchData = async () => {
       try {
-        const { data } = await apiClient.get<{ success: boolean; data: SeasonalDropTier[] }>('/seasonal-drops/tiers')
-        const activeTiers = data.data
+        const [tiersRes, imagesRes] = await Promise.all([
+          apiClient.get<{ success: boolean; data: SeasonalDropTier[] }>('/seasonal-drops/tiers'),
+          apiClient.get<{ success: boolean; data: { id: string; public_url: string; filename: string }[] }>('/seasonal-drops/images'),
+        ])
+        const activeTiers = tiersRes.data.data
           .filter(t => t.is_active)
           .sort((a, b) => a.display_order - b.display_order)
         setTiers(activeTiers)
         if (activeTiers.length > 0) setSelectedTier(activeTiers[0])
+        setHeroImages(imagesRes.data.data || [])
       } catch {
         setTiersError('ไม่สามารถโหลดข้อมูลสินค้าได้')
       } finally {
         setTiersLoading(false)
       }
     }
-    fetchTiers()
+    fetchData()
   }, [])
+
+  // Auto-advance carousel
+  useEffect(() => {
+    if (heroImages.length <= 1) return
+    const interval = setInterval(() => {
+      setCarouselIndex(prev => (prev + 1) % heroImages.length)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [heroImages.length])
 
   const handleCardNumberChange = (value: string) => setCardNumber(formatCardNumber(value))
   const handleExpiryChange = (value: string) => setCardExpiry(formatExpiry(value, cardExpiry))
@@ -361,8 +377,8 @@ const DonationSection = () => {
     </span>
   )
 
-  // Use first tier's image as the hero image
-  const heroImage = tiers.length > 0 ? tiers[0].image_url : null
+  const goToPrevImage = () => setCarouselIndex(prev => (prev - 1 + heroImages.length) % heroImages.length)
+  const goToNextImage = () => setCarouselIndex(prev => (prev + 1) % heroImages.length)
 
   return (
     <section
@@ -396,12 +412,67 @@ const DonationSection = () => {
           /* ───────── Product Page: Single product with price selector ───────── */
           <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-2">
-              {/* Left: Product Image */}
-              <div className="relative aspect-square bg-gray-100">
-                {heroImage ? (
-                  <Image src={heroImage} alt="Seasonal Drop" fill className="object-cover" />
+              {/* Left: Product Image Carousel */}
+              <div className="relative bg-gray-100 min-h-[300px] md:min-h-0">
+                {heroImages.length > 0 ? (
+                  <>
+                    <div className="relative w-full h-full min-h-[300px] md:min-h-[480px]">
+                      {heroImages.map((img, i) => (
+                        <div
+                          key={img.id}
+                          className={`absolute inset-0 transition-opacity duration-500 ${
+                            i === carouselIndex ? 'opacity-100' : 'opacity-0'
+                          }`}
+                        >
+                          <Image
+                            src={img.public_url}
+                            alt={img.filename}
+                            fill
+                            className="object-cover"
+                            priority={i === 0}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    {/* Carousel controls */}
+                    {heroImages.length > 1 && (
+                      <>
+                        <button
+                          onClick={goToPrevImage}
+                          className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/50 transition-colors"
+                          aria-label="Previous image"
+                        >
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M15 18l-6-6 6-6" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={goToNextImage}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/50 transition-colors"
+                          aria-label="Next image"
+                        >
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M9 18l6-6-6-6" />
+                          </svg>
+                        </button>
+                        {/* Dots */}
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                          {heroImages.map((_, i) => (
+                            <button
+                              key={i}
+                              onClick={() => setCarouselIndex(i)}
+                              className={`w-2 h-2 rounded-full transition-all ${
+                                i === carouselIndex ? 'bg-white w-5' : 'bg-white/50'
+                              }`}
+                              aria-label={`Go to image ${i + 1}`}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#B4A7D6]/20 to-[#153051]/10">
+                  <div className="w-full h-full min-h-[300px] md:min-h-[480px] flex items-center justify-center bg-gradient-to-br from-[#B4A7D6]/20 to-[#153051]/10">
                     <svg className="w-24 h-24 text-[#B4A7D6]/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1}>
                       <rect x="3" y="3" width="18" height="18" rx="2" />
                       <circle cx="8.5" cy="8.5" r="1.5" />

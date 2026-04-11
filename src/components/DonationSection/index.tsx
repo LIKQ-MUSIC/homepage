@@ -409,94 +409,59 @@ const DonationSection = () => {
             <Button variant="outline" onClick={() => window.location.reload()}>ลองใหม่</Button>
           </div>
         ) : step === 'product' ? (
-          /* ───────── Product Page: Single product with price selector ───────── */
+          /* ───────── Product Page ───────── */
           <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
-            <div className="grid grid-cols-1 md:grid-cols-2">
-              {/* Left: Product Image Carousel */}
-              <div className="relative bg-gray-100 min-h-[300px] md:min-h-0">
-                {heroImages.length > 0 ? (
-                  <>
-                    <div className="relative w-full h-full min-h-[300px] md:min-h-[480px]">
-                      {heroImages.map((img, i) => (
-                        <div
-                          key={img.id}
-                          className={`absolute inset-0 transition-opacity duration-500 ${
-                            i === carouselIndex ? 'opacity-100' : 'opacity-0'
-                          }`}
-                        >
-                          <Image
-                            src={img.public_url}
-                            alt={img.filename}
-                            fill
-                            className="object-cover"
-                            priority={i === 0}
-                          />
-                        </div>
-                      ))}
+            {/* Top: Image Carousel — landscape, full width */}
+            <div className="relative w-full aspect-[2/1] bg-gray-100">
+              {heroImages.length > 0 ? (
+                <>
+                  {heroImages.map((img, i) => (
+                    <div
+                      key={img.id}
+                      className={`absolute inset-0 transition-opacity duration-500 ${
+                        i === carouselIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                      }`}
+                    >
+                      <Image src={img.public_url} alt={img.filename} fill className="object-cover" priority={i === 0} />
                     </div>
-                    {/* Carousel controls */}
-                    {heroImages.length > 1 && (
-                      <>
-                        <button
-                          onClick={goToPrevImage}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/50 transition-colors"
-                          aria-label="Previous image"
-                        >
-                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M15 18l-6-6 6-6" />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={goToNextImage}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/50 transition-colors"
-                          aria-label="Next image"
-                        >
-                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M9 18l6-6-6-6" />
-                          </svg>
-                        </button>
-                        {/* Dots */}
-                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-                          {heroImages.map((_, i) => (
-                            <button
-                              key={i}
-                              onClick={() => setCarouselIndex(i)}
-                              className={`w-2 h-2 rounded-full transition-all ${
-                                i === carouselIndex ? 'bg-white w-5' : 'bg-white/50'
-                              }`}
-                              aria-label={`Go to image ${i + 1}`}
-                            />
-                          ))}
-                        </div>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <div className="w-full h-full min-h-[300px] md:min-h-[480px] flex items-center justify-center bg-gradient-to-br from-[#B4A7D6]/20 to-[#153051]/10">
-                    <svg className="w-24 h-24 text-[#B4A7D6]/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1}>
-                      <rect x="3" y="3" width="18" height="18" rx="2" />
-                      <circle cx="8.5" cy="8.5" r="1.5" />
-                      <path d="M21 15l-5-5L5 21" />
-                    </svg>
-                  </div>
-                )}
-              </div>
-
-              {/* Right: Product Info + Price Selector + Form */}
-              <div className="p-6 md:p-8 flex flex-col">
-                {/* Product name & description (from first tier or generic) */}
-                <div className="mb-6">
-                  <h3 className="text-xl font-bold text-[#153051] mb-2">
-                    LIKQ Music Seasonal Drop
-                  </h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">
-                    รับไฟล์เพลงดิจิทัล อาร์ตเวิร์ก และของสมนาคุณพิเศษ ส่งตรงถึงอีเมลของคุณ
-                  </p>
+                  ))}
+                  {heroImages.length > 1 && (
+                    <>
+                      <button onClick={goToPrevImage} className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/50 transition-colors" aria-label="Previous">
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+                      </button>
+                      <button onClick={goToNextImage} className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/50 transition-colors" aria-label="Next">
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+                      </button>
+                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                        {heroImages.map((_, i) => (
+                          <button key={i} onClick={() => setCarouselIndex(i)} className={`h-2 rounded-full transition-all ${i === carouselIndex ? 'bg-white w-6' : 'bg-white/50 w-2'}`} aria-label={`Image ${i + 1}`} />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#B4A7D6]/20 to-[#153051]/10">
+                  <svg className="w-20 h-20 text-[#B4A7D6]/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1}>
+                    <rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="M21 15l-5-5L5 21" />
+                  </svg>
                 </div>
+              )}
+            </div>
 
-                {/* Price tier selector — pill buttons */}
-                <div className="mb-6">
-                  {stepNumber(1, 'เลือกราคา')}
+            {/* Bottom: 2-column content */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:divide-x divide-gray-100">
+              {/* Left column: Product info + Price */}
+              <div className="p-6 md:p-8">
+                <h3 className="text-xl font-bold text-[#153051] mb-1">LIKQ Music Seasonal Drop</h3>
+                <p className="text-sm text-gray-500 leading-relaxed mb-5">
+                  รับไฟล์เพลงดิจิทัล อาร์ตเวิร์ก และของสมนาคุณพิเศษ ส่งตรงถึงอีเมลของคุณ
+                </p>
+
+                {/* Price pills */}
+                <div className="mb-4">
+                  <p className="text-xs font-semibold text-[#153051] mb-2 uppercase tracking-wide">เลือกแพ็กเกจ</p>
                   <div className="flex flex-wrap gap-2">
                     {tiers.map(tier => (
                       <button
@@ -511,122 +476,71 @@ const DonationSection = () => {
                         ฿{(tier.price / 100).toLocaleString()}
                         {tier.requires_shipping && (
                           <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#7B68AE] rounded-full flex items-center justify-center">
-                            <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
-                              <path d="M20 12H4M4 12l4-4M4 12l4 4" />
-                            </svg>
+                            <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}><path d="M5 12h14" /><path d="M12 5v14" /></svg>
                           </span>
                         )}
                       </button>
                     ))}
                   </div>
-                  {/* Selected tier info */}
-                  {selectedTier && (
-                    <div className="mt-3 px-4 py-2.5 rounded-xl bg-[#f5f3ff]/60 border border-[#B4A7D6]/20">
-                      <p className="text-xs font-semibold text-[#153051]">{selectedTier.name}</p>
-                      {selectedTier.description && (
-                        <p className="text-xs text-gray-500 mt-0.5">{selectedTier.description}</p>
-                      )}
-                      {selectedTier.requires_shipping && (
-                        <span className="inline-block mt-1 text-[10px] bg-[#7B68AE] text-white font-semibold px-2 py-0.5 rounded-full">
-                          Physical + Digital
-                        </span>
-                      )}
-                    </div>
-                  )}
                 </div>
 
-                {/* Buyer info */}
-                <div className="mb-5">
-                  {stepNumber(2, 'ข้อมูลผู้ซื้อ')}
-                  <div className="space-y-3">
-                    <div>
-                      <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                        อีเมล <span className="text-red-400">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        placeholder="email@example.com"
-                        className={inputClass}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                        ชื่อ <span className="text-gray-400">(ไม่บังคับ)</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={buyerName}
-                        onChange={e => setBuyerName(e.target.value)}
-                        placeholder="ชื่อของคุณ"
-                        className={inputClass}
-                      />
-                    </div>
+                {/* Tier detail card */}
+                {selectedTier && (
+                  <div className="px-4 py-3 rounded-xl bg-[#f5f3ff]/60 border border-[#B4A7D6]/20">
+                    <p className="text-sm font-semibold text-[#153051]">{selectedTier.name}</p>
+                    {selectedTier.description && <p className="text-xs text-gray-500 mt-0.5">{selectedTier.description}</p>}
+                    {selectedTier.requires_shipping && (
+                      <span className="inline-block mt-1.5 text-[10px] bg-[#7B68AE] text-white font-semibold px-2 py-0.5 rounded-full">Physical + Digital</span>
+                    )}
+                    <p className="text-2xl font-bold text-[#153051] mt-2">฿{priceInBaht.toLocaleString()}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Right column: Form */}
+              <div className="p-6 md:p-8 space-y-4">
+                {/* Email & Name */}
+                <div className="grid grid-cols-1 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 mb-1.5">อีเมล <span className="text-red-400">*</span></label>
+                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="email@example.com" className={inputClass} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 mb-1.5">ชื่อ <span className="text-gray-400">(ไม่บังคับ)</span></label>
+                    <input type="text" value={buyerName} onChange={e => setBuyerName(e.target.value)} placeholder="ชื่อของคุณ" className={inputClass} />
                   </div>
                 </div>
 
-                {/* Shipping (if required) */}
+                {/* Shipping (conditional) */}
                 {selectedTier?.requires_shipping && (
-                  <div className="mb-5">
-                    {stepNumber(3, 'ข้อมูลจัดส่ง')}
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                          เบอร์โทร <span className="text-red-400">*</span>
-                        </label>
-                        <input
-                          type="tel"
-                          value={phoneNumber}
-                          onChange={e => setPhoneNumber(e.target.value)}
-                          placeholder="0812345678"
-                          className={inputClass}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                          ที่อยู่จัดส่ง <span className="text-red-400">*</span>
-                        </label>
-                        <textarea
-                          value={shippingAddress}
-                          onChange={e => setShippingAddress(e.target.value)}
-                          placeholder="ที่อยู่สำหรับจัดส่งสินค้า"
-                          rows={2}
-                          className={inputClass}
-                        />
-                      </div>
+                  <div className="space-y-3 pt-2 border-t border-gray-100">
+                    <p className="text-xs font-semibold text-[#153051] uppercase tracking-wide">ข้อมูลจัดส่ง</p>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">เบอร์โทร <span className="text-red-400">*</span></label>
+                      <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="0812345678" className={inputClass} />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">ที่อยู่จัดส่ง <span className="text-red-400">*</span></label>
+                      <textarea value={shippingAddress} onChange={e => setShippingAddress(e.target.value)} placeholder="ที่อยู่สำหรับจัดส่งสินค้า" rows={2} className={inputClass} />
                     </div>
                   </div>
                 )}
 
                 {/* Payment method */}
-                <div className="mb-5">
-                  {stepNumber(selectedTier?.requires_shipping ? 4 : 3, 'วิธีชำระเงิน')}
+                <div className="pt-2 border-t border-gray-100">
+                  <p className="text-xs font-semibold text-[#153051] mb-2 uppercase tracking-wide">วิธีชำระเงิน</p>
                   {paymentMethodSelector}
                   {paymentMethod === 'credit_card' && !selectedTier?.requires_shipping && (
                     <div className="mt-3">
-                      <label className="block text-xs font-medium text-gray-500 mb-1.5">
-                        เบอร์โทร <span className="text-red-400">*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        value={phoneNumber}
-                        onChange={e => setPhoneNumber(e.target.value)}
-                        placeholder="0812345678"
-                        className={inputClass}
-                      />
+                      <label className="block text-xs font-medium text-gray-500 mb-1.5">เบอร์โทร <span className="text-red-400">*</span></label>
+                      <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="0812345678" className={inputClass} />
                     </div>
                   )}
                 </div>
 
                 {/* Terms */}
-                <label className="flex items-start gap-3 cursor-pointer group mb-4">
-                  <input
-                    type="checkbox"
-                    checked={acceptedTerms}
-                    onChange={e => setAcceptedTerms(e.target.checked)}
-                    className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#153051] focus:ring-[#B4A7D6] cursor-pointer flex-shrink-0"
-                  />
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input type="checkbox" checked={acceptedTerms} onChange={e => setAcceptedTerms(e.target.checked)} className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#153051] focus:ring-[#B4A7D6] cursor-pointer flex-shrink-0" />
                   <span className="text-xs text-gray-500 leading-relaxed">
                     ฉันยอมรับ{' '}
                     <a href="/merch/th/policy/terms" target="_blank" rel="noopener noreferrer" className="text-[#7B68AE] underline underline-offset-2 hover:text-[#153051]">ข้อกำหนดและเงื่อนไข</a>
@@ -641,14 +555,7 @@ const DonationSection = () => {
 
                 {errorBlock}
 
-                {/* CTA */}
-                <Button
-                  variant="primary"
-                  size="lg"
-                  className="w-full mt-auto dark:bg-primary dark:hover:bg-primary-hover"
-                  onClick={handleGoToSummary}
-                  disabled={!acceptedTerms || !selectedTier}
-                >
+                <Button variant="primary" size="lg" className="w-full dark:bg-primary dark:hover:bg-primary-hover" onClick={handleGoToSummary} disabled={!acceptedTerms || !selectedTier}>
                   {selectedTier ? `ซื้อเลย ฿${priceInBaht.toLocaleString()}` : 'เลือกราคา'}
                 </Button>
               </div>

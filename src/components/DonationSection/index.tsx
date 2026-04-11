@@ -9,7 +9,7 @@ import Button from '@/ui/Button'
 
 type PaymentMethod = 'promptpay' | 'credit_card'
 type Focused = 'number' | 'name' | 'expiry' | 'cvc' | ''
-type Step = 'tiers' | 'info' | 'summary' | 'result'
+type Step = 'product' | 'summary' | 'result'
 
 declare global {
   interface Window {
@@ -67,23 +67,19 @@ const createOmiseToken = (cardData: {
   })
 }
 
-/** Format card number with spaces every 4 digits */
 const formatCardNumber = (value: string): string => {
   const digits = value.replace(/\D/g, '').slice(0, 16)
   return digits.replace(/(.{4})/g, '$1 ').trim()
 }
 
-/** Format expiry as MM/YY with auto slash */
 const formatExpiry = (value: string, prevValue: string): string => {
   const digits = value.replace(/\D/g, '').slice(0, 4)
-
   if (prevValue.length > value.length) {
     if (prevValue.includes('/') && !value.includes('/')) {
       return digits.slice(0, 1)
     }
     return digits.length <= 2 ? digits : digits.slice(0, 2) + '/' + digits.slice(2)
   }
-
   if (digits.length === 0) return ''
   if (digits.length <= 2) {
     if (digits.length === 2) return digits + '/'
@@ -93,7 +89,7 @@ const formatExpiry = (value: string, prevValue: string): string => {
 }
 
 const DonationSection = () => {
-  const [step, setStep] = useState<Step>('tiers')
+  const [step, setStep] = useState<Step>('product')
   const [tiers, setTiers] = useState<SeasonalDropTier[]>([])
   const [tiersLoading, setTiersLoading] = useState(true)
   const [tiersError, setTiersError] = useState('')
@@ -106,12 +102,9 @@ const DonationSection = () => {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState('')
-  const [paymentStatus, setPaymentStatus] = useState<
-    'pending' | 'successful' | 'failed'
-  >('pending')
+  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'successful' | 'failed'>('pending')
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Credit card state
   const [cardNumber, setCardNumber] = useState('')
   const [cardName, setCardName] = useState('')
   const [cardExpiry, setCardExpiry] = useState('')
@@ -126,7 +119,11 @@ const DonationSection = () => {
     const fetchTiers = async () => {
       try {
         const { data } = await apiClient.get<{ success: boolean; data: SeasonalDropTier[] }>('/seasonal-drops/tiers')
-        setTiers(data.data)
+        const activeTiers = data.data
+          .filter(t => t.is_active)
+          .sort((a, b) => a.display_order - b.display_order)
+        setTiers(activeTiers)
+        if (activeTiers.length > 0) setSelectedTier(activeTiers[0])
       } catch {
         setTiersError('ไม่สามารถโหลดข้อมูลสินค้าได้')
       } finally {
@@ -136,21 +133,13 @@ const DonationSection = () => {
     fetchTiers()
   }, [])
 
-  const handleCardNumberChange = (value: string) => {
-    setCardNumber(formatCardNumber(value))
-  }
-
-  const handleExpiryChange = (value: string) => {
-    setCardExpiry(formatExpiry(value, cardExpiry))
-  }
-
-  const handleCvcChange = (value: string) => {
-    setCardCvc(value.replace(/\D/g, '').slice(0, 4))
-  }
+  const handleCardNumberChange = (value: string) => setCardNumber(formatCardNumber(value))
+  const handleExpiryChange = (value: string) => setCardExpiry(formatExpiry(value, cardExpiry))
+  const handleCvcChange = (value: string) => setCardCvc(value.replace(/\D/g, '').slice(0, 4))
 
   const resetAll = useCallback(() => {
-    setStep('tiers')
-    setSelectedTier(null)
+    setStep('product')
+    setSelectedTier(tiers.length > 0 ? tiers[0] : null)
     setPaymentMethod('promptpay')
     setBuyerName('')
     setEmail('')
@@ -170,21 +159,14 @@ const DonationSection = () => {
       clearInterval(pollingIntervalRef.current)
       pollingIntervalRef.current = null
     }
-  }, [])
+  }, [tiers])
 
   // Polling for PromptPay status
   useEffect(() => {
-    if (
-      step === 'result' &&
-      paymentMethod === 'promptpay' &&
-      result?.data?.orderId &&
-      paymentStatus === 'pending'
-    ) {
+    if (step === 'result' && paymentMethod === 'promptpay' && result?.data?.orderId && paymentStatus === 'pending') {
       const checkStatus = async () => {
         try {
-          const { data } = await apiClient.get(
-            `/seasonal-drops/${result.data.orderId}/status`
-          )
+          const { data } = await apiClient.get(`/seasonal-drops/${result.data.orderId}/status`)
           if (data.success && data.data?.status) {
             const status = data.data.status
             if (status === 'successful' || status === 'failed') {
@@ -199,33 +181,27 @@ const DonationSection = () => {
           console.error('Failed to check payment status:', error)
         }
       }
-
       pollingIntervalRef.current = setInterval(checkStatus, 3000)
     }
-
     return () => {
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current)
-      }
+      if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current)
     }
   }, [step, paymentMethod, result, paymentStatus])
 
-  const handleSelectTier = (tier: SeasonalDropTier) => {
-    setSelectedTier(tier)
-    setStep('info')
-    setError('')
-  }
-
   const handleGoToSummary = () => {
+    if (!selectedTier) {
+      setError('กรุณาเลือกราคา')
+      return
+    }
     if (!email) {
       setError('กรุณากรอกอีเมล')
       return
     }
-    if (selectedTier?.requires_shipping && !phoneNumber) {
+    if (selectedTier.requires_shipping && !phoneNumber) {
       setError('กรุณากรอกหมายเลขโทรศัพท์สำหรับการจัดส่ง')
       return
     }
-    if (selectedTier?.requires_shipping && !shippingAddress) {
+    if (selectedTier.requires_shipping && !shippingAddress) {
       setError('กรุณากรอกที่อยู่จัดส่ง')
       return
     }
@@ -278,7 +254,6 @@ const DonationSection = () => {
         ...(cardToken && { cardToken })
       })
 
-      // Credit card: auto-redirect to 3DS authorize page
       if (paymentMethod === 'credit_card' && data.data?.authorizeUri) {
         window.location.href = data.data.authorizeUri
         return
@@ -287,21 +262,16 @@ const DonationSection = () => {
       setResult(data)
       setStep('result')
     } catch (err: any) {
-      const msg =
-        err?.response?.data?.error ||
-        err?.message ||
-        'เกิดข้อผิดพลาด กรุณาลองใหม่'
+      const msg = err?.response?.data?.error || err?.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่'
       setError(msg)
     } finally {
       setLoading(false)
     }
   }
 
-  // ─── Shared input class ───
   const inputClass =
     'w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/60 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]/60 focus:border-[#B4A7D6] placeholder:text-gray-400'
 
-  // ─── Step indicator ───
   const stepNumber = (n: number, label: string) => (
     <h3 className="text-sm font-semibold text-[#153051] mb-3 flex items-center gap-2">
       <span className="w-5 h-5 rounded-full bg-[#153051] text-white text-xs flex items-center justify-center">{n}</span>
@@ -309,20 +279,14 @@ const DonationSection = () => {
     </h3>
   )
 
-  // ─── Back button ───
   const backButton = (onClick: () => void) => (
-    <button
-      onClick={onClick}
-      className="text-gray-400 hover:text-[#153051] transition-colors"
-      aria-label="กลับ"
-    >
+    <button onClick={onClick} className="text-gray-400 hover:text-[#153051] transition-colors" aria-label="กลับ">
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
         <path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
       </svg>
     </button>
   )
 
-  // ─── Error block ───
   const errorBlock = error ? (
     <div className="flex items-start gap-2.5 px-4 py-3 rounded-xl bg-red-50 text-red-600 text-sm border border-red-100">
       <svg className="w-4 h-4 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -334,7 +298,6 @@ const DonationSection = () => {
     </div>
   ) : null
 
-  // ─── Payment method selector (reused) ───
   const paymentMethodSelector = (
     <div className="grid grid-cols-2 gap-3">
       <button
@@ -379,7 +342,6 @@ const DonationSection = () => {
     </div>
   )
 
-  // ─── Payment method display (for summaries) ───
   const paymentMethodDisplay = (
     <span className="flex items-center gap-2 text-sm font-medium text-[#153051]">
       {paymentMethod === 'promptpay' ? (
@@ -399,12 +361,15 @@ const DonationSection = () => {
     </span>
   )
 
+  // Use first tier's image as the hero image
+  const heroImage = tiers.length > 0 ? tiers[0].image_url : null
+
   return (
     <section
       id="seasonal-drop"
       className="py-16 md:py-24 px-4 md:px-8 bg-gradient-to-b from-[#f8f9fb] to-white"
     >
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-[#7B68AE] mb-3">
@@ -418,106 +383,91 @@ const DonationSection = () => {
           </p>
         </div>
 
-        {step === 'tiers' && (
-          /* ───────── Step 1: Tier Selection ───────── */
-          <>
-            {tiersLoading ? (
-              <div className="flex justify-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#7B68AE]" />
+        {tiersLoading ? (
+          <div className="flex justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#7B68AE]" />
+          </div>
+        ) : tiersError ? (
+          <div className="text-center py-20">
+            <p className="text-gray-500 mb-4">{tiersError}</p>
+            <Button variant="outline" onClick={() => window.location.reload()}>ลองใหม่</Button>
+          </div>
+        ) : step === 'product' ? (
+          /* ───────── Product Page: Single product with price selector ───────── */
+          <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-2">
+              {/* Left: Product Image */}
+              <div className="relative aspect-square bg-gray-100">
+                {heroImage ? (
+                  <Image src={heroImage} alt="Seasonal Drop" fill className="object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#B4A7D6]/20 to-[#153051]/10">
+                    <svg className="w-24 h-24 text-[#B4A7D6]/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1}>
+                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <path d="M21 15l-5-5L5 21" />
+                    </svg>
+                  </div>
+                )}
               </div>
-            ) : tiersError ? (
-              <div className="text-center py-20">
-                <p className="text-gray-500 mb-4">{tiersError}</p>
-                <Button variant="outline" onClick={() => window.location.reload()}>
-                  ลองใหม่
-                </Button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                {tiers
-                  .filter(t => t.is_active)
-                  .sort((a, b) => a.display_order - b.display_order)
-                  .map(tier => (
-                    <div
-                      key={tier.id}
-                      className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden flex flex-col transition-all hover:shadow-xl hover:-translate-y-1"
-                    >
-                      {/* Image */}
-                      <div className="relative w-full aspect-square bg-gray-100">
-                        {tier.image_url ? (
-                          <Image
-                            src={tier.image_url}
-                            alt={tier.name}
-                            fill
-                            className="object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#B4A7D6]/20 to-[#153051]/10">
-                            <svg className="w-16 h-16 text-[#B4A7D6]/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                              <rect x="3" y="3" width="18" height="18" rx="2" />
-                              <circle cx="8.5" cy="8.5" r="1.5" />
-                              <path d="M21 15l-5-5L5 21" />
-                            </svg>
-                          </div>
-                        )}
+
+              {/* Right: Product Info + Price Selector + Form */}
+              <div className="p-6 md:p-8 flex flex-col">
+                {/* Product name & description (from first tier or generic) */}
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-[#153051] mb-2">
+                    LIKQ Music Seasonal Drop
+                  </h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">
+                    รับไฟล์เพลงดิจิทัล อาร์ตเวิร์ก และของสมนาคุณพิเศษ ส่งตรงถึงอีเมลของคุณ
+                  </p>
+                </div>
+
+                {/* Price tier selector — pill buttons */}
+                <div className="mb-6">
+                  {stepNumber(1, 'เลือกราคา')}
+                  <div className="flex flex-wrap gap-2">
+                    {tiers.map(tier => (
+                      <button
+                        key={tier.id}
+                        onClick={() => { setSelectedTier(tier); setError('') }}
+                        className={`relative px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+                          selectedTier?.id === tier.id
+                            ? 'bg-[#153051] text-white shadow-md'
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200'
+                        }`}
+                      >
+                        ฿{(tier.price / 100).toLocaleString()}
                         {tier.requires_shipping && (
-                          <span className="absolute top-3 right-3 bg-[#7B68AE] text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">
-                            Physical + Digital
+                          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#7B68AE] rounded-full flex items-center justify-center">
+                            <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
+                              <path d="M20 12H4M4 12l4-4M4 12l4 4" />
+                            </svg>
                           </span>
                         )}
-                      </div>
-
-                      {/* Content */}
-                      <div className="p-5 flex flex-col flex-1">
-                        <h3 className="text-base font-bold text-[#153051] mb-1">{tier.name}</h3>
-                        {tier.description && (
-                          <p className="text-xs text-gray-500 leading-relaxed mb-4 flex-1">{tier.description}</p>
-                        )}
-                        {!tier.description && <div className="flex-1" />}
-                        <div className="flex items-end justify-between mt-auto">
-                          <p className="text-2xl font-bold text-[#153051]">
-                            ฿{(tier.price / 100).toLocaleString()}
-                          </p>
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            className="dark:bg-primary dark:hover:bg-primary-hover"
-                            onClick={() => handleSelectTier(tier)}
-                          >
-                            ซื้อเลย
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            )}
-          </>
-        )}
-
-        {step === 'info' && selectedTier && (
-          /* ───────── Step 2: Buyer Info ───────── */
-          <div className="max-w-3xl mx-auto">
-            <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
-              {/* Selected tier banner */}
-              <div className="bg-gradient-to-r from-[#f5f3ff] to-[#ede9fe] px-6 py-4 border-b border-[#B4A7D6]/20">
-                <div className="flex items-center gap-3">
-                  {backButton(() => setStep('tiers'))}
-                  <div className="flex-1">
-                    <p className="font-semibold text-sm text-[#153051]">{selectedTier.name}</p>
-                    <p className="text-xs text-gray-600 mt-0.5">
-                      ฿{priceInBaht.toLocaleString()}
-                      {selectedTier.requires_shipping && ' — รวมจัดส่งสินค้า'}
-                    </p>
+                      </button>
+                    ))}
                   </div>
+                  {/* Selected tier info */}
+                  {selectedTier && (
+                    <div className="mt-3 px-4 py-2.5 rounded-xl bg-[#f5f3ff]/60 border border-[#B4A7D6]/20">
+                      <p className="text-xs font-semibold text-[#153051]">{selectedTier.name}</p>
+                      {selectedTier.description && (
+                        <p className="text-xs text-gray-500 mt-0.5">{selectedTier.description}</p>
+                      )}
+                      {selectedTier.requires_shipping && (
+                        <span className="inline-block mt-1 text-[10px] bg-[#7B68AE] text-white font-semibold px-2 py-0.5 rounded-full">
+                          Physical + Digital
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </div>
 
-              <div className="p-6 md:p-10 space-y-8">
-                {/* ── Buyer Info ── */}
-                <div>
-                  {stepNumber(1, 'ข้อมูลผู้ซื้อ')}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {/* Buyer info */}
+                <div className="mb-5">
+                  {stepNumber(2, 'ข้อมูลผู้ซื้อ')}
+                  <div className="space-y-3">
                     <div>
                       <label className="block text-xs font-medium text-gray-500 mb-1.5">
                         อีเมล <span className="text-red-400">*</span>
@@ -545,10 +495,10 @@ const DonationSection = () => {
                   </div>
                 </div>
 
-                {/* ── Shipping (conditional) ── */}
-                {selectedTier.requires_shipping && (
-                  <div>
-                    {stepNumber(2, 'ข้อมูลจัดส่ง')}
+                {/* Shipping (if required) */}
+                {selectedTier?.requires_shipping && (
+                  <div className="mb-5">
+                    {stepNumber(3, 'ข้อมูลจัดส่ง')}
                     <div className="space-y-3">
                       <div>
                         <label className="block text-xs font-medium text-gray-500 mb-1.5">
@@ -570,7 +520,7 @@ const DonationSection = () => {
                           value={shippingAddress}
                           onChange={e => setShippingAddress(e.target.value)}
                           placeholder="ที่อยู่สำหรับจัดส่งสินค้า"
-                          rows={3}
+                          rows={2}
                           className={inputClass}
                         />
                       </div>
@@ -578,12 +528,11 @@ const DonationSection = () => {
                   </div>
                 )}
 
-                {/* ── Payment Method ── */}
-                <div>
-                  {stepNumber(selectedTier.requires_shipping ? 3 : 2, 'วิธีชำระเงิน')}
+                {/* Payment method */}
+                <div className="mb-5">
+                  {stepNumber(selectedTier?.requires_shipping ? 4 : 3, 'วิธีชำระเงิน')}
                   {paymentMethodSelector}
-                  {/* Phone number for credit card (if not already shown for shipping) */}
-                  {paymentMethod === 'credit_card' && !selectedTier.requires_shipping && (
+                  {paymentMethod === 'credit_card' && !selectedTier?.requires_shipping && (
                     <div className="mt-3">
                       <label className="block text-xs font-medium text-gray-500 mb-1.5">
                         เบอร์โทร <span className="text-red-400">*</span>
@@ -599,8 +548,8 @@ const DonationSection = () => {
                   )}
                 </div>
 
-                {/* Terms & Policies */}
-                <label className="flex items-start gap-3 cursor-pointer group">
+                {/* Terms */}
+                <label className="flex items-start gap-3 cursor-pointer group mb-4">
                   <input
                     type="checkbox"
                     checked={acceptedTerms}
@@ -621,31 +570,30 @@ const DonationSection = () => {
 
                 {errorBlock}
 
+                {/* CTA */}
                 <Button
                   variant="primary"
                   size="lg"
-                  className="w-full dark:bg-primary dark:hover:bg-primary-hover"
+                  className="w-full mt-auto dark:bg-primary dark:hover:bg-primary-hover"
                   onClick={handleGoToSummary}
-                  disabled={!acceptedTerms}
+                  disabled={!acceptedTerms || !selectedTier}
                 >
-                  ดำเนินการต่อ
+                  {selectedTier ? `ซื้อเลย ฿${priceInBaht.toLocaleString()}` : 'เลือกราคา'}
                 </Button>
               </div>
             </div>
           </div>
-        )}
-
-        {step === 'summary' && selectedTier && (
-          /* ───────── Step 3: Summary + Credit Card ───────── */
+        ) : step === 'summary' && selectedTier ? (
+          /* ───────── Summary + Credit Card ───────── */
           <div className="max-w-3xl mx-auto">
             <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
               <div className="p-6 md:p-10 space-y-6">
                 <div className="flex items-center gap-2 mb-2">
-                  {backButton(() => setStep('info'))}
+                  {backButton(() => setStep('product'))}
                   <h3 className="text-lg font-bold text-[#153051]">สรุปคำสั่งซื้อ</h3>
                 </div>
 
-                {/* Line items */}
+                {/* Line item */}
                 <div className="rounded-2xl border border-gray-100 overflow-hidden">
                   <div className="flex items-center gap-4 p-4 bg-white">
                     <div className="w-12 h-12 rounded-xl bg-[#153051]/5 flex items-center justify-center flex-shrink-0 overflow-hidden">
@@ -676,7 +624,7 @@ const DonationSection = () => {
                   </div>
                 </div>
 
-                {/* Summary details */}
+                {/* Details */}
                 <div className="space-y-3 p-5 rounded-2xl bg-gray-50/80 border border-gray-100">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-500">วิธีชำระเงิน</span>
@@ -708,7 +656,7 @@ const DonationSection = () => {
                   {shippingAddress && (
                     <>
                       <div className="h-px bg-gray-200" />
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-start justify-between">
                         <span className="text-sm text-gray-500">ที่อยู่จัดส่ง</span>
                         <span className="text-sm font-medium text-[#153051] text-right max-w-[60%]">{shippingAddress}</span>
                       </div>
@@ -732,7 +680,6 @@ const DonationSection = () => {
                       กรอกข้อมูลบัตรเครดิต
                     </h3>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-                      {/* Card Preview */}
                       <div className="flex justify-center lg:sticky lg:top-8">
                         <Cards
                           number={cardNumber}
@@ -742,58 +689,23 @@ const DonationSection = () => {
                           focused={cardFocused || undefined}
                         />
                       </div>
-                      {/* Card Fields */}
                       <div className="space-y-3">
                         <div>
                           <label className="block text-xs font-medium text-gray-500 mb-1.5">หมายเลขบัตร</label>
-                          <input
-                            type="text"
-                            inputMode="numeric"
-                            placeholder="0000 0000 0000 0000"
-                            value={cardNumber}
-                            onChange={e => handleCardNumberChange(e.target.value)}
-                            onFocus={() => setCardFocused('number')}
-                            maxLength={19}
-                            className={inputClass}
-                          />
+                          <input type="text" inputMode="numeric" placeholder="0000 0000 0000 0000" value={cardNumber} onChange={e => handleCardNumberChange(e.target.value)} onFocus={() => setCardFocused('number')} maxLength={19} className={inputClass} />
                         </div>
                         <div>
                           <label className="block text-xs font-medium text-gray-500 mb-1.5">ชื่อบนบัตร</label>
-                          <input
-                            type="text"
-                            placeholder="JOHN DOE"
-                            value={cardName}
-                            onChange={e => setCardName(e.target.value)}
-                            onFocus={() => setCardFocused('name')}
-                            className={inputClass}
-                          />
+                          <input type="text" placeholder="JOHN DOE" value={cardName} onChange={e => setCardName(e.target.value)} onFocus={() => setCardFocused('name')} className={inputClass} />
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           <div>
                             <label className="block text-xs font-medium text-gray-500 mb-1.5">วันหมดอายุ</label>
-                            <input
-                              type="text"
-                              inputMode="numeric"
-                              placeholder="MM/YY"
-                              value={cardExpiry}
-                              onChange={e => handleExpiryChange(e.target.value)}
-                              onFocus={() => setCardFocused('expiry')}
-                              maxLength={5}
-                              className={inputClass}
-                            />
+                            <input type="text" inputMode="numeric" placeholder="MM/YY" value={cardExpiry} onChange={e => handleExpiryChange(e.target.value)} onFocus={() => setCardFocused('expiry')} maxLength={5} className={inputClass} />
                           </div>
                           <div>
                             <label className="block text-xs font-medium text-gray-500 mb-1.5">CVC</label>
-                            <input
-                              type="text"
-                              inputMode="numeric"
-                              placeholder="123"
-                              value={cardCvc}
-                              onChange={e => handleCvcChange(e.target.value)}
-                              onFocus={() => setCardFocused('cvc')}
-                              maxLength={4}
-                              className={inputClass}
-                            />
+                            <input type="text" inputMode="numeric" placeholder="123" value={cardCvc} onChange={e => handleCvcChange(e.target.value)} onFocus={() => setCardFocused('cvc')} maxLength={4} className={inputClass} />
                           </div>
                         </div>
                       </div>
@@ -803,7 +715,6 @@ const DonationSection = () => {
 
                 {errorBlock}
 
-                {/* Pay button */}
                 <Button
                   variant="primary"
                   size="lg"
@@ -823,10 +734,8 @@ const DonationSection = () => {
               </div>
             </div>
           </div>
-        )}
-
-        {step === 'result' && result?.success && (
-          /* ───────── Step 4: Result ───────── */
+        ) : step === 'result' && result?.success && selectedTier ? (
+          /* ───────── Result ───────── */
           <div className="max-w-3xl mx-auto">
             <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
               <div className="p-6 md:p-10 space-y-5">
@@ -874,7 +783,7 @@ const DonationSection = () => {
                 <div className="space-y-3 p-5 rounded-2xl bg-gray-50/80 border border-gray-100">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-500">สินค้า</span>
-                    <span className="text-sm font-medium text-[#153051]">{selectedTier?.name}</span>
+                    <span className="text-sm font-medium text-[#153051]">{selectedTier.name}</span>
                   </div>
                   <div className="h-px bg-gray-200" />
                   <div className="flex items-center justify-between">
@@ -884,9 +793,7 @@ const DonationSection = () => {
                   <div className="h-px bg-gray-200" />
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-500">จำนวน</span>
-                    <span className="text-lg font-bold text-[#153051]">
-                      ฿{priceInBaht.toLocaleString()}
-                    </span>
+                    <span className="text-lg font-bold text-[#153051]">฿{priceInBaht.toLocaleString()}</span>
                   </div>
                   <div className="h-px bg-gray-200" />
                   <div className="flex items-center justify-between">
@@ -913,12 +820,12 @@ const DonationSection = () => {
                   className="w-full dark:border-primary dark:text-primary dark:hover:bg-primary-light"
                   onClick={resetAll}
                 >
-                  {paymentStatus === 'pending' ? 'ยกเลิก' : 'ซื้อสินค้าอื่น'}
+                  {paymentStatus === 'pending' ? 'ยกเลิก' : 'สั่งซื้ออีกครั้ง'}
                 </Button>
               </div>
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </section>
   )

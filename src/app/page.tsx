@@ -15,7 +15,8 @@ import Arrange from '@/ui/Icons/Arrange'
 import AboutUs from '@/components/AboutUs'
 import BlogSection from '@/components/BlogSection'
 import ColorStory from '@/components/ColorStory'
-import DonationSection from '@/components/DonationSection'
+import SeasonalDropSection from '@/components/SeasonalDropSection'
+import type { SeasonalDropTier, SeasonalDropImage } from '@/components/SeasonalDropSection'
 import { getAboutUsImages } from '@/services/about-us'
 
 import type { Metadata } from 'next'
@@ -73,6 +74,38 @@ async function getWorks(): Promise<IWorkItem[]> {
   }
 }
 
+async function getSeasonalDropTiers(): Promise<SeasonalDropTier[]> {
+  const url = process.env.NEXT_PUBLIC_GATEWAY_API_URL || 'http://localhost:3002'
+  try {
+    const res = await fetch(`${url}/seasonal-drops/tiers`, {
+      next: { tags: ['seasonal-drop-tiers'] }
+    })
+    if (!res.ok) return []
+    const json = await res.json()
+    return (json.data || [])
+      .filter((t: SeasonalDropTier) => t.is_active)
+      .sort((a: SeasonalDropTier, b: SeasonalDropTier) => a.display_order - b.display_order)
+  } catch (error) {
+    console.error('Failed to fetch seasonal drop tiers:', error)
+    return []
+  }
+}
+
+async function getSeasonalDropImages(): Promise<SeasonalDropImage[]> {
+  const url = process.env.NEXT_PUBLIC_GATEWAY_API_URL || 'http://localhost:3002'
+  try {
+    const res = await fetch(`${url}/seasonal-drops/images`, {
+      next: { tags: ['seasonal-drop-images'] }
+    })
+    if (!res.ok) return []
+    const json = await res.json()
+    return json.data || []
+  } catch (error) {
+    console.error('Failed to fetch seasonal drop images:', error)
+    return []
+  }
+}
+
 async function getLatestBlogs() {
   const url = process.env.NEXT_PUBLIC_GATEWAY_API_URL || 'http://localhost:3002'
   try {
@@ -89,10 +122,12 @@ async function getLatestBlogs() {
 }
 
 export default async function Home() {
-  const [worksData, aboutUsData, latestPosts] = await Promise.all([
+  const [worksData, aboutUsData, latestPosts, seasonalDropTiers, seasonalDropImages] = await Promise.all([
     getWorks(),
     getAboutUsImages(),
-    getLatestBlogs()
+    getLatestBlogs(),
+    getSeasonalDropTiers(),
+    getSeasonalDropImages(),
   ])
 
   // Map to component format or use default if empty/failed
@@ -159,7 +194,7 @@ export default async function Home() {
 
       <ColorStory />
 
-      <DonationSection />
+      <SeasonalDropSection initialTiers={seasonalDropTiers} initialImages={seasonalDropImages} />
 
       <BlogSection posts={latestPosts} />
 

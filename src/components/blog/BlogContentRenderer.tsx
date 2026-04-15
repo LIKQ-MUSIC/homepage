@@ -14,6 +14,7 @@ import EditorJSRenderer from './EditorJSRenderer'
 import { OutputData } from '@editorjs/editorjs'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import Button from '@/ui/Button'
+import ShareButtons from './ShareButtons'
 
 interface BlogContentRendererProps {
   blog: {
@@ -207,18 +208,7 @@ export default function BlogContentRenderer({
               </Link>
             )}
 
-            {/* Share/Socials Placeholder */}
-            <div className="flex items-center gap-4">
-              <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                Share this post
-              </span>
-              <div className="flex gap-2">
-                {/* Social Icons would go here */}
-                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800" />
-                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800" />
-                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800" />
-              </div>
-            </div>
+            <ShareButtons title={blog.title} slug={blog.slug} />
           </div>
         </div>
       </div>

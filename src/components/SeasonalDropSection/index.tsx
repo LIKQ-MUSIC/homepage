@@ -17,7 +17,7 @@ declare global {
   }
 }
 
-interface SeasonalDropTier {
+export interface SeasonalDropTier {
   id: number
   name: string
   price: number // in satang
@@ -28,6 +28,17 @@ interface SeasonalDropTier {
   display_order: number
   is_active: boolean
   requires_shipping: boolean
+}
+
+export interface SeasonalDropImage {
+  id: string
+  public_url: string
+  filename: string
+}
+
+interface SeasonalDropSectionProps {
+  initialTiers: SeasonalDropTier[]
+  initialImages: SeasonalDropImage[]
 }
 
 const loadOmiseScript = (): Promise<void> => {
@@ -88,12 +99,10 @@ const formatExpiry = (value: string, prevValue: string): string => {
   return digits.slice(0, 2) + '/' + digits.slice(2)
 }
 
-const DonationSection = () => {
+const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectionProps) => {
   const [step, setStep] = useState<Step>('product')
-  const [tiers, setTiers] = useState<SeasonalDropTier[]>([])
-  const [tiersLoading, setTiersLoading] = useState(true)
-  const [tiersError, setTiersError] = useState('')
-  const [selectedTier, setSelectedTier] = useState<SeasonalDropTier | null>(null)
+  const [tiers] = useState<SeasonalDropTier[]>(initialTiers)
+  const [selectedTier, setSelectedTier] = useState<SeasonalDropTier | null>(initialTiers[0] || null)
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('promptpay')
   const [buyerName, setBuyerName] = useState('')
   const [email, setEmail] = useState('')
@@ -112,33 +121,10 @@ const DonationSection = () => {
   const [cardFocused, setCardFocused] = useState<Focused>('')
   const [acceptedTerms, setAcceptedTerms] = useState(false)
 
-  const [heroImages, setHeroImages] = useState<{ id: string; public_url: string; filename: string }[]>([])
+  const [heroImages] = useState<SeasonalDropImage[]>(initialImages)
   const [carouselIndex, setCarouselIndex] = useState(0)
 
   const priceInBaht = selectedTier ? selectedTier.price / 100 : 0
-
-  // Fetch tiers and images on mount
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [tiersRes, imagesRes] = await Promise.all([
-          apiClient.get<{ success: boolean; data: SeasonalDropTier[] }>('/seasonal-drops/tiers'),
-          apiClient.get<{ success: boolean; data: { id: string; public_url: string; filename: string }[] }>('/seasonal-drops/images'),
-        ])
-        const activeTiers = tiersRes.data.data
-          .filter(t => t.is_active)
-          .sort((a, b) => a.display_order - b.display_order)
-        setTiers(activeTiers)
-        if (activeTiers.length > 0) setSelectedTier(activeTiers[0])
-        setHeroImages(imagesRes.data.data || [])
-      } catch {
-        setTiersError('ไม่สามารถโหลดข้อมูลสินค้าได้')
-      } finally {
-        setTiersLoading(false)
-      }
-    }
-    fetchData()
-  }, [])
 
   // Auto-advance carousel
   useEffect(() => {
@@ -399,14 +385,9 @@ const DonationSection = () => {
           </p>
         </div>
 
-        {tiersLoading ? (
-          <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#7B68AE]" />
-          </div>
-        ) : tiersError ? (
+        {tiers.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-gray-500 mb-4">{tiersError}</p>
-            <Button variant="outline" onClick={() => window.location.reload()}>ลองใหม่</Button>
+            <p className="text-gray-500">ยังไม่มีสินค้าในขณะนี้</p>
           </div>
         ) : step === 'product' ? (
           /* ───────── Product Page ───────── */
@@ -809,4 +790,4 @@ const DonationSection = () => {
   )
 }
 
-export default DonationSection
+export default SeasonalDropSection

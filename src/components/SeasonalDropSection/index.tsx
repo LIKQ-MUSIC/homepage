@@ -437,7 +437,7 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
               <div className="p-6 md:p-8">
                 <h3 className="text-xl font-bold text-[#153051] mb-1">LIKQ Music Seasonal Drop</h3>
                 <p className="text-sm text-gray-500 leading-relaxed mb-5">
-                  รับไฟล์เพลงดิจิทัล อาร์ตเวิร์ก และของสมนาคุณพิเศษ ส่งตรงถึงอีเมลของคุณ
+                  รับไฟล์เพลงดิจิทัล อาร์ตเวิร์ก และของสมนาคุณพิเศษตามระดับราคาที่เลือก ส่งตรงถึงอีเมลของคุณ
                 </p>
 
                 {/* Price pills */}

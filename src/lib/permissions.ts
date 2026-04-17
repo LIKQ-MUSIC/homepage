@@ -11,7 +11,7 @@ export const ROUTE_PERMISSIONS: Record<string, string[]> = {
   '/dashboard/parties': ['parties:read'],
   '/dashboard/quotations': ['quotations:read'],
   '/dashboard/contracts': ['contracts:read'],
-  '/dashboard/donations': ['donations.manage'],
+  '/dashboard/seasonal-drop': ['seasonal.manage'],
   '/dashboard/services': ['services.view'],
   '/dashboard/invoices': ['invoices.view']
 }

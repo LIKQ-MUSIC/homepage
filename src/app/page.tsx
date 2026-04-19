@@ -15,6 +15,7 @@ import Arrange from '@/ui/Icons/Arrange'
 import AboutUs from '@/components/AboutUs'
 import BlogSection from '@/components/BlogSection'
 import ColorStory from '@/components/ColorStory'
+import AuditionCTA from '@/components/Audition/AuditionCTA'
 import SeasonalDropSection from '@/components/SeasonalDropSection'
 import type { SeasonalDropTier, SeasonalDropImage } from '@/components/SeasonalDropSection'
 import { getAboutUsImages } from '@/services/about-us'
@@ -177,6 +178,8 @@ export default async function Home() {
       <HeroCarousel images={aboutUsImages} />
 
       <AboutUs />
+
+      <AuditionCTA />
 
       <Section id="services" label="Our Services" title="บริการของเรา">
         <Title className="text-center" level={5}>

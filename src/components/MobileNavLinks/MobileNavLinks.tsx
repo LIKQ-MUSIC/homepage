@@ -13,7 +13,8 @@ interface MobileNavLinksProps {
 const links: NavLink[] = [
   { href: '#services', label: 'Our Services' },
   { href: '#work', label: 'Our Work' },
-  { href: '#team', label: 'Our Team' }
+  { href: '#team', label: 'Our Team' },
+  { href: '/audition', label: 'Audition' }
 ]
 
 const MobileNavLinks: React.FC<MobileNavLinksProps> = ({ onLinkClick }) => {
@@ -31,19 +32,28 @@ const MobileNavLinks: React.FC<MobileNavLinksProps> = ({ onLinkClick }) => {
 
   return (
     <>
-      {links.map(link => (
-        <Link
-          key={link.href}
-          href={link.href}
-          className="px-8 py-3 text-center hover:bg-gray-50 block"
-          onClick={e => {
-            goToSection(e, link.href)
-            onLinkClick()
-          }}
-        >
-          {link.label}
-        </Link>
-      ))}
+      {links.map(link => {
+        const isRoute = link.href.startsWith('/')
+        return (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={`px-8 py-3 text-center hover:bg-gray-50 block ${
+              isRoute ? 'font-bold text-primary bg-primary/5' : ''
+            }`}
+            onClick={
+              isRoute
+                ? () => onLinkClick()
+                : e => {
+                    goToSection(e, link.href)
+                    onLinkClick()
+                  }
+            }
+          >
+            {link.label}
+          </Link>
+        )
+      })}
     </>
   )
 }

@@ -322,7 +322,7 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
       </button>
       <button
         onClick={() => setPaymentMethod('credit_card')}
-        className={`relative flex items-center justify-center gap-2.5 py-3.5 rounded-2xl text-sm font-medium transition-all border-2 ${
+        className={`relative flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl text-sm font-medium transition-all border-2 ${
           paymentMethod === 'credit_card'
             ? 'border-[#153051] bg-[#153051]/[0.03] text-[#153051] shadow-sm'
             : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
@@ -335,11 +335,25 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
             </svg>
           </span>
         )}
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-          <rect x="1" y="4" width="22" height="16" rx="2" />
-          <line x1="1" y1="10" x2="23" y2="10" />
-        </svg>
-        บัตรเครดิต
+        <div className={`flex items-center gap-1 transition-all ${paymentMethod !== 'credit_card' ? 'grayscale opacity-40' : ''}`}>
+          <svg viewBox="0 0 38 24" className="h-4 w-auto" fill="none" aria-label="Visa">
+            <rect width="38" height="24" rx="4" fill="#1A1F71"/>
+            <path d="M16.2 17H14l1.4-9h2.2L16.2 17ZM11.7 8 9.5 14.1l-.2-1-.8-4.2C8.4 8.4 8 8.1 7.5 8H3.8l-.1.3c.9.2 1.7.6 2.4 1.1L8.1 17H10.4L13.9 8H11.7ZM22.4 12.7c0-1-.6-1.7-1.9-2.3-.8-.4-1.3-.7-1.3-1.1 0-.4.4-.8 1.3-.8.7 0 1.2.2 1.7.4l.2.1.3-1.9C22.2 6.9 21.5 6.7 20.6 6.7c-2.2 0-3.7 1.1-3.7 2.7 0 1.2 1 1.9 1.9 2.3.9.4 1.2.7 1.2 1.1 0 .6-.7.9-1.3.9-.9 0-1.5-.2-2.2-.5l-.2-.1-.3 2c.5.2 1.4.4 2.4.4 2.4 0 3.8-1.1 4-2.8ZM27.3 17H29.2L27.6 8H25.8c-.5 0-.9.3-1.1.7L21.6 17H23.9l.5-1.3H27.1L27.3 17ZM24.9 14 26 10.9l.6 3.1H24.9Z" fill="white"/>
+          </svg>
+          <svg viewBox="0 0 38 24" className="h-4 w-auto" fill="none" aria-label="Mastercard">
+            <rect width="38" height="24" rx="4" fill="#1D1D1D"/>
+            <circle cx="14.5" cy="12" r="6.5" fill="#EB001B"/>
+            <circle cx="23.5" cy="12" r="6.5" fill="#F79E1B"/>
+            <path fillRule="evenodd" clipRule="evenodd" d="M19 5.68a6.5 6.5 0 0 1 0 12.64A6.5 6.5 0 0 1 19 5.68Z" fill="#FF5F00"/>
+          </svg>
+          <svg viewBox="0 0 38 24" className="h-4 w-auto" fill="none" aria-label="JCB">
+            <rect width="38" height="24" rx="4" fill="white" stroke="#E5E7EB" strokeWidth="1"/>
+            <rect x="5" y="3.5" width="8.5" height="17" rx="3.5" fill="#003087"/>
+            <rect x="14.75" y="3.5" width="8.5" height="17" rx="3.5" fill="#007B40"/>
+            <rect x="24.5" y="3.5" width="8.5" height="17" rx="3.5" fill="#CC0000"/>
+          </svg>
+        </div>
+        Credit / Debit
       </button>
     </div>
   )

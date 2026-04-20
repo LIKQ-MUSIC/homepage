@@ -91,7 +91,11 @@ export default function InvoicePaymentPage() {
   } = useQuery({
     queryKey: ['invoice', invoiceId],
     queryFn: () => getInvoice(invoiceId),
-    retry: false
+    retry: false,
+    // Keep polling while PENDING — catches the case where Mobile Safari reloads
+    // the page mid-payment (bfcache miss) and the manual setInterval is gone.
+    refetchInterval: (query) =>
+      query.state.data?.status === 'PENDING' ? 3000 : false,
   })
 
   const [paymentMethod, setPaymentMethod] = useState<

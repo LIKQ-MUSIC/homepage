@@ -153,12 +153,29 @@ export default function InvoicePaymentPage() {
           console.error('Failed to check invoice status:', error)
         }
       }
+
       pollingIntervalRef.current = setInterval(checkStatus, 3000)
+
+      // Mobile Safari pauses setInterval when the app goes to background (e.g. user
+      // switches to their banking app to scan the QR). Check immediately on return.
+      const handleVisibilityChange = () => {
+        if (!document.hidden) checkStatus()
+      }
+      document.addEventListener('visibilitychange', handleVisibilityChange)
+
+      return () => {
+        if (pollingIntervalRef.current) {
+          clearInterval(pollingIntervalRef.current)
+          pollingIntervalRef.current = null
+        }
+        document.removeEventListener('visibilitychange', handleVisibilityChange)
+      }
     }
 
     return () => {
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current)
+        pollingIntervalRef.current = null
       }
     }
   }, [result, paymentMethod, paymentStatus, invoiceId])

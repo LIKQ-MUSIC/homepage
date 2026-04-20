@@ -6,7 +6,7 @@ const STORE_STOREFRONT_URL =
 
 const NEKOWINK_STOREFRONT_URL =
   process.env.NEKOWINK_STOREFRONT_URL ??
-  'https://nekowink-storefront.dh885srk7b.workers.dev'
+  'https://nekowink-storefront.vercel.app'
 
 const nextConfig: NextConfig = {
   experimental: {

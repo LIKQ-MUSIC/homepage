@@ -7,7 +7,11 @@ import { useAuditionForm } from './useAuditionForm'
 import AudioPlayerY2K from './AudioPlayerY2K'
 import FileUploadY2K from './FileUploadY2K'
 import SaveDraftButtonY2K from './SaveDraftButtonY2K'
-import { STEPS } from './types'
+import { Y2K_STEPS as STEPS } from './types'
+
+const TOTAL_STEPS = 5
+const REVIEW_STEP = 5
+const PRESSURE_STEP = 4
 
 const DEMO_TRACK_SRC = '/audio/demo-track.mp3'
 const COMMERCIAL_BEAT_SRC = '/audio/commercial-beat.wav'
@@ -79,9 +83,8 @@ export default function AuditionFormY2K({
     handleChange,
     saveDraft,
     clearDraft,
-    nextStep,
-    prevStep,
     goToStep,
+    setCurrentStep,
   } = useAuditionForm()
 
   const scrollToTop = () => {
@@ -91,11 +94,12 @@ export default function AuditionFormY2K({
   }
 
   const handleNext = () => {
-    nextStep()
+    setCurrentStep((prev) => Math.min(prev + 1, TOTAL_STEPS))
+    saveDraft()
     scrollToTop()
   }
   const handlePrev = () => {
-    prevStep()
+    setCurrentStep((prev) => Math.max(prev - 1, 1))
     scrollToTop()
   }
   const handleGoToStep = (id: number) => {
@@ -105,9 +109,9 @@ export default function AuditionFormY2K({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (currentStep !== 4) return
+    if (currentStep !== REVIEW_STEP) return
     saveDraft()
-    alert('ส่งใบสมัครเรียบร้อย! เราจะตรวจสอบและติดต่อกลับเร็วๆ นี้')
+    alert('ส่งใบสมัครเรียบร้อย. เราจะตรวจสอบและติดต่อกลับเร็วๆ นี้')
   }
 
   return (
@@ -139,10 +143,10 @@ export default function AuditionFormY2K({
             AUDITION
           </h1>
           <p className="font-pixel-mono text-[22px] md:text-[26px] text-y2k-yellow leading-tight mb-4">
-            ออดิชั่น Idol — ครั้งแรกของคุณเริ่มที่นี่
+            ออดิชั่น Idol ครั้งแรกของคุณเริ่มที่นี่
           </p>
           <p className="font-prompt text-white/90 text-base md:text-lg max-w-xl leading-relaxed">
-            เรากำลังสร้างสิ่งใหม่ ถ้าคุณมีแพสชั่น เสียงร้อง และวิสัยทัศน์ —
+            เรากำลังสร้างสิ่งใหม่ ถ้าคุณมีแพสชั่น เสียงร้อง และวิสัยทัศน์
             เราอยากรู้จักคุณ
           </p>
 
@@ -321,7 +325,7 @@ export default function AuditionFormY2K({
             <SectionHeader
               kicker="STAGE 02"
               title="ทัศนคติของคุณ"
-              desc="เราอยากเข้าใจวิธีคิดของคุณ ไม่ใช่แค่ว่าทำอะไรเป็น — ตอบตามความจริง ไม่มีคำตอบไหนผิด"
+              desc="เราอยากเข้าใจวิธีคิดของคุณ ไม่ใช่แค่ว่าทำอะไรเป็น ตอบตามความจริง ไม่มีคำตอบไหนผิด"
             />
 
             {accentImageSrc && (
@@ -356,7 +360,7 @@ export default function AuditionFormY2K({
                   name="creativeProject"
                   rows={4}
                   className="y2k-input resize-y"
-                  placeholder="เพลงที่แต่ง, วิดีโอที่ตัด, แดนซ์คัฟเวอร์, งานศิลปะ, โปรเจ็กต์นักเรียน — อะไรก็ได้..."
+                  placeholder="เพลงที่แต่ง, วิดีโอที่ตัด, แดนซ์คัฟเวอร์, งานศิลปะ, โปรเจ็กต์นักเรียน อะไรก็ได้..."
                   value={data.creativeProject}
                   onChange={handleChange}
                   required
@@ -435,7 +439,7 @@ export default function AuditionFormY2K({
                 <AudioPlayerY2K
                   src={DEMO_TRACK_SRC}
                   title="DEMO TRACK"
-                  subtitle="เดโม่ดิบ — มีเนื้อร้อง ยังไม่ได้มิกซ์"
+                  subtitle="เดโม่ดิบ มีเนื้อร้อง ยังไม่ได้มิกซ์"
                 />
                 <Y2KField id="demoAnalysis" label="เห็นศักยภาพอะไร? จะต่อยอดยังไง? *">
                   <textarea
@@ -443,7 +447,7 @@ export default function AuditionFormY2K({
                     name="demoAnalysis"
                     rows={5}
                     className="y2k-input resize-y"
-                    placeholder="พูดถึงเมโลดี้ เนื้อร้อง การเรียบเรียง อารมณ์ — อะไรก็ได้ที่สะดุดหู แล้วบอกว่าจะต่อยอดยังไง..."
+                    placeholder="พูดถึงเมโลดี้ เนื้อร้อง การเรียบเรียง อารมณ์ อะไรก็ได้ที่สะดุดหู แล้วบอกว่าจะต่อยอดยังไง..."
                     value={data.demoAnalysis}
                     onChange={handleChange}
                     required
@@ -457,13 +461,14 @@ export default function AuditionFormY2K({
               <TrackBadge letter="B" title="บีท COMMERCIAL" tone="mint" />
               <div className="y2k-card p-5 space-y-4">
                 <p className="font-prompt text-sm text-y2k-ink/80 leading-relaxed">
-                  นี่คือ <strong>บีทสำหรับโปรโมตสินค้า</strong> · โจทย์ของคุณ:
-                  แต่งเนื้อร้องใหม่ ต่อเพลง หรือปรับแต่งตามสไตล์ที่คุณคิด แล้วอัดผลงานอัพโหลดด้านล่าง
+                  นี่คือ <strong>beat เปล่าๆ</strong> ศิลปินเราเริ่มจากบีตโล่งๆ ประมาณนี้
+                  แทบเป็นไปไม่ได้เลยที่จะเห็นภาพเพลงเต็มๆ ก่อนจะไฟนอล
+                  แล้วคุณมองเห็นเพลงนี้เป็นยังไง? อัดผลงานอัพโหลดด้านล่างได้เลย
                 </p>
                 <AudioPlayerY2K
                   src={COMMERCIAL_BEAT_SRC}
-                  title="COMMERCIAL BEAT"
-                  subtitle="บีทสำหรับโปรโมตสินค้า — เปิดให้ตีความ"
+                  title="RAW BEAT"
+                  subtitle="บีทโล่งๆ เปิดให้ตีความเต็มที่"
                 />
                 <Y2KField id="commercialResponse" label="แนวทางสร้างสรรค์ของคุณ *">
                   <textarea
@@ -490,12 +495,88 @@ export default function AuditionFormY2K({
           </section>
         )}
 
-        {currentStep === 4 && (
+        {currentStep === PRESSURE_STEP && (
           <section className="space-y-8 animate-fade-in">
             <SectionHeader
-              kicker="STAGE 04 · FINAL"
+              kicker="STAGE 04 · BOSS FIGHT"
+              title="สถานการณ์กดดัน"
+              desc="ไม่มีคำตอบที่ถูก คิดให้สุด เขียนตามจริง ยิ่งตอบจริงใจยิ่งเห็นตัวตนคุณ"
+            />
+
+            <div className="flex gap-3 p-4 bg-y2k-pink/15 border-[3px] border-y2k-ink"
+                 style={{ boxShadow: '4px 4px 0 0 #0D0A2C' }}>
+              <Info size={20} className="text-y2k-ink flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-pixel text-[10px] uppercase tracking-wider text-y2k-ink">
+                  WARNING
+                </p>
+                <p className="font-prompt text-sm text-y2k-ink/90 mt-1.5 leading-relaxed">
+                  คำถามในสเตจนี้ไม่มีคำตอบสำเร็จรูป เราอ่านเพื่อดูวิธีคิด
+                  ไม่ได้ดูว่า "เก่ง" แค่ไหน ถ้าคำถามไหนทำให้คุณลังเล นั่นคือจุดที่เราอยากฟัง
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <PressureQuestion
+                number={1}
+                id="pressure1"
+                value={data.pressure1}
+                onChange={handleChange}
+                prompt="ค่ายให้คุณทำเพลงแนวหนึ่ง แต่คุณอยากทำอีกแนวมาตลอด คุณมั่นใจว่าแนวตัวเองดีกว่า คุณจะคุยกับทีมยังไงโดยไม่ทำลายความไว้ใจ และถ้าสุดท้ายค่ายเดินแนวแรก คุณจะ deliver performance ที่ 100% ได้ยังไง?"
+              />
+              <PressureQuestion
+                number={2}
+                id="pressure2"
+                value={data.pressure2}
+                onChange={handleChange}
+                prompt="เพลงใหม่ออก แฟนส่วนหนึ่งโจมตีใน X ว่ามิกซ์แย่ เนื้อตื้น เสียดายศิลปิน แต่ค่าย เพื่อนในวง และโปรดิวเซอร์ทุกคนยืนยันว่างานดีที่สุดเท่าที่เคยทำ คุณจะโพสต์ตอบหรือปล่อยผ่านยังไง และจะเลือก protect ตัวเอง หรือ protect งานของทีม?"
+              />
+              <PressureQuestion
+                number={3}
+                id="pressure3"
+                value={data.pressure3}
+                onChange={handleChange}
+                prompt="24 ชั่วโมงก่อนคอนเสิร์ตใหญ่ที่สุดในชีวิต เสียงคุณหาย ค่ายเสนอให้ลิปซิงค์ทั้งเซ็ต คุณรู้ว่าแฟนบางส่วนจะผิดหวังถ้ารู้ แต่ถ้าร้องสดโชว์อาจพังเลย คุณจะเลือกอะไร และจะสื่อสารกับแฟนยังไงทั้งก่อนและหลังโชว์?"
+              />
+              <PressureQuestion
+                number={4}
+                id="pressure4"
+                value={data.pressure4}
+                onChange={handleChange}
+                prompt="คลิปเก่าคุณสมัยม.ปลายที่พูดแรงถูกขุดมาเผยแพร่ แบรนด์ sponsor หลักของวงขู่ถอนสัญญา เพื่อนร่วมวงอาจเสียรายได้เพราะคุณ คุณจะรับผิดชอบต่อเพื่อน ต่อค่าย และต่อตัวเองยังไง?"
+              />
+              <PressureQuestion
+                number={5}
+                id="pressure5"
+                value={data.pressure5}
+                onChange={handleChange}
+                prompt="หลังวงเพิ่งติดตลาด 2 ปี ค่ายใหญ่กว่ายื่น solo contract ให้คุณคนเดียวไม่รวมเพื่อน เพื่อนร่วมวงได้ข่าวก่อนคุณจะตัดสินใจ คืนนั้นเพื่อนคนหนึ่งโทรมา เสียงสั่น ถามว่า 'จริงไหม?' คุณจะตอบว่าอะไร และภายในหัวคุณจริงๆ คิดอะไร?"
+              />
+              <PressureQuestion
+                number={6}
+                id="pressure6"
+                value={data.pressure6}
+                onChange={handleChange}
+                prompt="คุณเห็นกับตา senior ที่ปั้นคุณมาตั้งแต่เดย์วัน ทำร้ายจิตใจ junior ใหม่จนร้องไห้หลังกล้อง ถ้าพูดออกมา career คุณอาจจบ ถ้าเงียบ คุณจะทนมองเด็กคนนั้นทุกวันไหวไหม ตัดสินใจคืนนั้นคุณจะทำอะไร แล้วพรุ่งนี้คุณจะเจอ senior แบบไหน?"
+              />
+              <PressureQuestion
+                number={7}
+                id="pressure7"
+                value={data.pressure7}
+                onChange={handleChange}
+                prompt="ไลฟ์คอนเสิร์ตคนดู stream หลักแสน คุณลืมเนื้อ bridge เพลง signature คลิปเป็น meme ภายใน 1 ชั่วโมง กลับหอ ปิดไฟ อยากลบทุก social ทิ้ง ไม่ต้องตอบแบบ PR ว่า 'เรียนรู้จากความผิดพลาด' เขียนมาตรงๆ ว่าในหัวคุณเป็นยังไงคืนนั้น และพรุ่งนี้เช้าคุณจะลุกจากเตียงยังไง?"
+              />
+            </div>
+          </section>
+        )}
+
+        {currentStep === REVIEW_STEP && (
+          <section className="space-y-8 animate-fade-in">
+            <SectionHeader
+              kicker="STAGE 05 · FINAL"
               title="ตรวจสอบและส่ง"
-              desc="กรุณาตรวจคำตอบก่อนส่ง · สามารถกลับไปแก้ไขในแต่ละขั้นตอนได้"
+              desc="กรุณาตรวจคำตอบก่อนส่ง สามารถกลับไปแก้ไขในแต่ละขั้นตอนได้"
             />
 
             <div className="space-y-5">
@@ -509,7 +590,7 @@ export default function AuditionFormY2K({
                   { label: 'วันเกิด', value: data.dateOfBirth },
                   { label: 'อีเมล', value: data.email },
                   { label: 'เบอร์โทร', value: data.phone },
-                  { label: 'Social Media', value: data.socialMedia || '—' },
+                  { label: 'Social Media', value: data.socialMedia || '-' },
                 ]}
               />
               <ReviewCardY2K
@@ -533,14 +614,35 @@ export default function AuditionFormY2K({
                   { label: 'ไฟล์เสียง', value: uploadedFile ? uploadedFile.name : 'ยังไม่ได้อัพโหลด' },
                 ]}
               />
+              <ReviewCardY2K
+                title="สถานการณ์กดดัน"
+                step={4}
+                onEdit={() => handleGoToStep(4)}
+                items={[
+                  { label: '???  (Q1)', value: data.pressure1, truncate: true },
+                  { label: '???  (Q2)', value: data.pressure2, truncate: true },
+                  { label: '???  (Q3)', value: data.pressure3, truncate: true },
+                  { label: '???  (Q4)', value: data.pressure4, truncate: true },
+                  { label: '???  (Q5)', value: data.pressure5, truncate: true },
+                  { label: '???  (Q6)', value: data.pressure6, truncate: true },
+                  { label: '???  (Q7)', value: data.pressure7, truncate: true },
+                ]}
+              />
             </div>
 
             <div className="flex gap-3 p-4 y2k-card-mint">
               <Info size={18} className="text-y2k-ink flex-shrink-0 mt-0.5" />
-              <p className="font-prompt text-sm text-y2k-ink/80 leading-relaxed">
-                การส่งแบบฟอร์มนี้ถือว่าคุณยืนยันว่าข้อมูลทั้งหมดเป็นความจริง และ
-                ไฟล์เสียงเป็นผลงานของคุณเอง · ข้อมูลจะใช้สำหรับการออดิชั่นเท่านั้น
-              </p>
+              <div className="font-prompt text-sm text-y2k-ink/80 leading-relaxed space-y-2">
+                <p>
+                  การส่งแบบฟอร์มนี้ถือว่าคุณยืนยันว่าข้อมูลทั้งหมดเป็นความจริง และ
+                  ไฟล์เสียงเป็นผลงานของคุณเอง ข้อมูลจะใช้สำหรับการออดิชั่นเท่านั้น
+                </p>
+                <p>
+                  <strong>เงื่อนไขเพิ่มเติม:</strong> คุณยินยอมให้ทีม LiKQ Music
+                  นำคำตอบบางส่วนของคุณไปใช้ประกอบคลิปวิดีโอ บทสัมภาษณ์ หรือ content
+                  โปรโมตของค่ายได้ โดยจะไม่เปิดเผยข้อมูลส่วนตัว (เบอร์โทร อีเมล) ต่อสาธารณะ
+                </p>
+              </div>
             </div>
           </section>
         )}
@@ -566,7 +668,7 @@ export default function AuditionFormY2K({
             )}
           </div>
 
-          {currentStep < 4 ? (
+          {currentStep < REVIEW_STEP ? (
             <button
               key="next"
               type="button"
@@ -609,6 +711,54 @@ function Y2KField({ id, label, children }: { id: string; label: string; children
         {label}
       </label>
       {children}
+    </div>
+  )
+}
+
+function PressureQuestion({
+  number,
+  id,
+  value,
+  onChange,
+  prompt,
+}: {
+  number: number
+  id: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  prompt: string
+}) {
+  return (
+    <div className="y2k-card p-5 space-y-4">
+      <div className="flex items-start gap-3">
+        <span
+          className="w-11 h-11 bg-y2k-pink text-white border-[3px] border-y2k-ink flex items-center justify-center font-pixel text-[12px] flex-shrink-0"
+          style={{ boxShadow: '3px 3px 0 0 #0D0A2C' }}
+        >
+          Q{number}
+        </span>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-2">
+            <PixelHeart filled color="#FF3AA5" size={14} />
+            <span className="font-pixel text-[11px] uppercase tracking-wider text-y2k-pink">
+              ???
+            </span>
+          </div>
+          <p className="font-prompt text-[15px] leading-relaxed text-y2k-ink">
+            {prompt}
+          </p>
+        </div>
+      </div>
+      <textarea
+        id={id}
+        name={id}
+        rows={5}
+        className="y2k-input resize-y"
+        placeholder="เขียนตามจริงได้เลย ไม่ต้องเป๊ะ"
+        value={value}
+        onChange={onChange}
+        required
+      />
     </div>
   )
 }

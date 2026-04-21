@@ -125,7 +125,7 @@ export default function FileUploadY2K({
         ลากไฟล์มาวาง หรือกดเพื่อเลือก
       </p>
       <p className="font-pixel text-[9px] text-y2k-ink/60 uppercase tracking-wider mt-3">
-        MP3 · WAV · M4A — MAX 50MB
+        MP3 · WAV · M4A · MAX 50MB
       </p>
     </div>
   )

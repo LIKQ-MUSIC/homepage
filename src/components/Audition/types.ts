@@ -19,6 +19,15 @@ export interface AuditionFormData {
 
   // Section B: The Commercial Beat
   commercialResponse: string
+
+  // Pressure Test scenarios (Y2K form)
+  pressure1: string
+  pressure2: string
+  pressure3: string
+  pressure4: string
+  pressure5: string
+  pressure6: string
+  pressure7: string
 }
 
 export interface AuditionFormState {
@@ -43,6 +52,13 @@ export const INITIAL_FORM_DATA: AuditionFormData = {
   oneYearVision: '',
   demoAnalysis: '',
   commercialResponse: '',
+  pressure1: '',
+  pressure2: '',
+  pressure3: '',
+  pressure4: '',
+  pressure5: '',
+  pressure6: '',
+  pressure7: '',
 }
 
 export const STEPS = [
@@ -50,4 +66,12 @@ export const STEPS = [
   { id: 2, label: 'Your Mindset', labelTh: 'ทัศนคติของคุณ' },
   { id: 3, label: 'Audio Assignments', labelTh: 'โจทย์เสียงเพลง' },
   { id: 4, label: 'Review & Submit', labelTh: 'ตรวจสอบและส่ง' },
+] as const
+
+export const Y2K_STEPS = [
+  { id: 1, label: 'Personal Info', labelTh: 'ข้อมูลส่วนตัว' },
+  { id: 2, label: 'Your Mindset', labelTh: 'ทัศนคติของคุณ' },
+  { id: 3, label: 'Audio Assignments', labelTh: 'โจทย์เสียงเพลง' },
+  { id: 4, label: 'Pressure Test', labelTh: 'สถานการณ์กดดัน' },
+  { id: 5, label: 'Review & Submit', labelTh: 'ตรวจสอบและส่ง' },
 ] as const

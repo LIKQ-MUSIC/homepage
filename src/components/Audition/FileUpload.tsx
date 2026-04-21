@@ -73,7 +73,7 @@ export default function FileUpload({
           type="button"
           onClick={removeFile}
           className="w-8 h-8 rounded-full hover:bg-red-50 text-neutral-400 hover:text-danger flex items-center justify-center transition-colors"
-          aria-label="Remove file"
+          aria-label="ลบไฟล์"
         >
           <X size={16} />
         </button>
@@ -105,10 +105,10 @@ export default function FileUpload({
         className={`mx-auto mb-3 ${isDragging ? 'text-primary' : 'text-neutral-300'}`}
       />
       <p className="text-sm text-neutral-500">
-        Drag & drop your audio file here, or{' '}
-        <span className="text-primary font-medium">browse</span>
+        ลากไฟล์เสียงมาวางที่นี่ หรือ{' '}
+        <span className="text-primary font-medium">กดเลือกไฟล์</span>
       </p>
-      <p className="text-xs text-neutral-400 mt-1">MP3, WAV, M4A up to 50MB</p>
+      <p className="text-xs text-neutral-400 mt-1">รองรับ MP3, WAV, M4A ไม่เกิน 50MB</p>
     </div>
   )
 }

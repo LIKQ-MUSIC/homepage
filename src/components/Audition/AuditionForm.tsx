@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { ChevronRight, ChevronLeft, Send, Trash2, Info } from 'lucide-react'
+import { ChevronRight, ChevronLeft, Send, Trash2, Info, Sparkles } from 'lucide-react'
 import Image from 'next/image'
 import { useAuditionForm } from './useAuditionForm'
 import AudioPlayer from './AudioPlayer'
@@ -48,7 +48,7 @@ export default function AuditionForm({
     e.preventDefault()
     // TODO: Wire to API endpoint
     saveDraft()
-    alert('Application submitted! We will review your audition and get back to you.')
+    alert('ส่งใบสมัครเรียบร้อย! เราจะตรวจสอบและติดต่อกลับเร็วๆ นี้')
   }
 
   return (
@@ -68,12 +68,16 @@ export default function AuditionForm({
               LiKQ Music
             </span>
           </div>
+          <div className="inline-flex items-center gap-1.5 mb-3 px-2.5 py-1 rounded-full bg-secondary text-primary text-[11px] font-bold tracking-wider uppercase shadow-md motion-safe:animate-pulse">
+            <Sparkles size={12} />
+            เปิดรับสมัครแล้ว
+          </div>
           <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-3">
-            Idol Audition
+            ออดิชั่น Idol
           </h1>
           <p className="text-white/70 text-lg max-w-xl">
-            We&apos;re building something new. If you have the passion, the voice,
-            and the vision — we want to hear from you.
+            เรากำลังสร้างสิ่งใหม่ ถ้าคุณมีแพสชั่น เสียงร้อง และวิสัยทัศน์ —
+            เราอยากรู้จักคุณ
           </p>
           {heroImageSrc && (
             <div className="mt-8 rounded-xl overflow-hidden">
@@ -127,7 +131,7 @@ export default function AuditionForm({
                     >
                       {isCompleted ? '✓' : step.id}
                     </span>
-                    <span className="hidden sm:inline">{step.label}</span>
+                    <span className="hidden sm:inline">{step.labelTh}</span>
                   </button>
                 </React.Fragment>
               )
@@ -143,16 +147,16 @@ export default function AuditionForm({
           <section className="space-y-8 animate-fade-in">
             <div>
               <h2 className="text-xl font-bold text-primary mb-1">
-                Personal Information
+                ข้อมูลส่วนตัว
               </h2>
               <p className="text-sm text-neutral-500">
-                Tell us about yourself. All fields marked with * are required.
+                เล่าเกี่ยวกับตัวคุณ · ช่องที่มี * จำเป็นต้องกรอก
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <Label htmlFor="fullName">Full Name *</Label>
+                <Label htmlFor="fullName">ชื่อ-นามสกุล *</Label>
                 <Input
                   id="fullName"
                   name="fullName"
@@ -163,7 +167,7 @@ export default function AuditionForm({
                 />
               </div>
               <div>
-                <Label htmlFor="nickname">Nickname / Stage Name *</Label>
+                <Label htmlFor="nickname">ชื่อเล่น / Stage Name *</Label>
                 <Input
                   id="nickname"
                   name="nickname"
@@ -174,7 +178,7 @@ export default function AuditionForm({
                 />
               </div>
               <div>
-                <Label htmlFor="dateOfBirth">Date of Birth *</Label>
+                <Label htmlFor="dateOfBirth">วันเกิด *</Label>
                 <Input
                   id="dateOfBirth"
                   name="dateOfBirth"
@@ -185,7 +189,7 @@ export default function AuditionForm({
                 />
               </div>
               <div>
-                <Label htmlFor="email">Email *</Label>
+                <Label htmlFor="email">อีเมล *</Label>
                 <Input
                   id="email"
                   name="email"
@@ -197,7 +201,7 @@ export default function AuditionForm({
                 />
               </div>
               <div>
-                <Label htmlFor="phone">Phone Number *</Label>
+                <Label htmlFor="phone">เบอร์โทรศัพท์ *</Label>
                 <Input
                   id="phone"
                   name="phone"
@@ -222,17 +226,17 @@ export default function AuditionForm({
 
             <div>
               <Label htmlFor="portfolioLink">
-                Portfolio / Demo Reel Link (optional)
+                ลิงก์ Portfolio / Demo (ถ้ามี)
               </Label>
               <Input
                 id="portfolioLink"
                 name="portfolioLink"
-                placeholder="https://youtube.com/... or https://soundcloud.com/..."
+                placeholder="https://youtube.com/... หรือ https://soundcloud.com/..."
                 value={data.portfolioLink}
                 onChange={handleChange}
               />
               <p className="text-xs text-neutral-400 mt-1">
-                YouTube, SoundCloud, Google Drive, or any link to your work.
+                YouTube, SoundCloud, Google Drive หรือลิงก์ผลงานอะไรก็ได้
               </p>
             </div>
           </section>
@@ -243,11 +247,11 @@ export default function AuditionForm({
           <section className="space-y-8 animate-fade-in">
             <div>
               <h2 className="text-xl font-bold text-primary mb-1">
-                Your Mindset
+                ทัศนคติของคุณ
               </h2>
               <p className="text-sm text-neutral-500">
-                We want to understand how you think, not just what you can do.
-                Be honest — there are no wrong answers.
+                เราอยากเข้าใจวิธีคิดของคุณ ไม่ใช่แค่ว่าทำอะไรเป็น ·
+                ตอบตามความจริง — ไม่มีคำตอบไหนผิด
               </p>
             </div>
 
@@ -266,13 +270,13 @@ export default function AuditionForm({
             <div className="space-y-6">
               <div>
                 <Label htmlFor="idolMeaning">
-                  What does being an idol mean to you, beyond performing on stage? *
+                  การเป็น idol สำหรับคุณคืออะไร นอกเหนือจากการขึ้นเวทีแสดง? *
                 </Label>
                 <Textarea
                   id="idolMeaning"
                   name="idolMeaning"
                   rows={4}
-                  placeholder="Share your perspective on the idol industry, the relationship with fans, and the responsibilities that come with it..."
+                  placeholder="แชร์มุมมองของคุณต่อวงการ idol ความสัมพันธ์กับแฟน และความรับผิดชอบที่มาพร้อมกัน..."
                   value={data.idolMeaning}
                   onChange={handleChange}
                   required
@@ -281,14 +285,14 @@ export default function AuditionForm({
 
               <div>
                 <Label htmlFor="creativeProject">
-                  Describe a creative project you&apos;ve worked on that you&apos;re most
-                  proud of. What was your role and what did you learn? *
+                  เล่าโปรเจ็กต์สร้างสรรค์ที่ภูมิใจที่สุดที่เคยทำ
+                  บทบาทของคุณคืออะไร ได้เรียนรู้อะไรบ้าง? *
                 </Label>
                 <Textarea
                   id="creativeProject"
                   name="creativeProject"
                   rows={4}
-                  placeholder="This can be anything — a song you wrote, a video you edited, a dance cover, an art piece, a school project..."
+                  placeholder="เพลงที่แต่ง, วิดีโอที่ตัด, แดนซ์คัฟเวอร์, งานศิลปะ, โปรเจ็กต์นักเรียน — อะไรก็ได้..."
                   value={data.creativeProject}
                   onChange={handleChange}
                   required
@@ -297,14 +301,14 @@ export default function AuditionForm({
 
               <div>
                 <Label htmlFor="handleCriticism">
-                  How do you handle criticism of your creative work? Tell us about
-                  a specific time it happened. *
+                  คุณรับมือกับคำวิจารณ์ผลงานสร้างสรรค์ของตัวเองยังไง?
+                  เล่าเหตุการณ์ครั้งที่เคยเกิดขึ้นจริง *
                 </Label>
                 <Textarea
                   id="handleCriticism"
                   name="handleCriticism"
                   rows={4}
-                  placeholder="We're looking for honesty and self-awareness, not a perfect answer..."
+                  placeholder="เราอยากเห็นความจริงใจและการรู้จักตัวเอง ไม่ใช่คำตอบที่สมบูรณ์แบบ..."
                   value={data.handleCriticism}
                   onChange={handleChange}
                   required
@@ -313,17 +317,17 @@ export default function AuditionForm({
 
               <div className="bg-secondary-light p-5 rounded-xl border border-secondary/20">
                 <Label htmlFor="oneYearVision" className="!text-primary font-bold !mb-3">
-                  Where do you see yourself in one year? *
+                  อีก 1 ปี คุณเห็นตัวเองเป็นแบบไหน? *
                 </Label>
                 <p className="text-xs text-neutral-500 mb-3">
-                  Think about your growth as an artist, your skills, your place in
-                  the group, and the kind of music you want to create.
+                  คิดถึงการเติบโตในฐานะศิลปิน ทักษะ ตำแหน่งในกลุ่ม และ
+                  แนวเพลงที่อยากทำ
                 </p>
                 <Textarea
                   id="oneYearVision"
                   name="oneYearVision"
                   rows={5}
-                  placeholder="In one year, I see myself..."
+                  placeholder="ในอีก 1 ปี ฉันเห็นตัวเอง..."
                   value={data.oneYearVision}
                   onChange={handleChange}
                   required
@@ -338,11 +342,10 @@ export default function AuditionForm({
           <section className="space-y-10 animate-fade-in">
             <div>
               <h2 className="text-xl font-bold text-primary mb-1">
-                Audio Assignments
+                โจทย์เสียงเพลง
               </h2>
               <p className="text-sm text-neutral-500">
-                Listen carefully, then tell us what you hear and what you&apos;d
-                create.
+                ฟังให้ตั้งใจ แล้วเล่าให้ฟังว่าได้ยินอะไร และคุณจะต่อยอดเป็นอะไร
               </p>
             </div>
 
@@ -351,13 +354,13 @@ export default function AuditionForm({
               <Info size={20} className="text-warning flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-semibold text-neutral-800">
-                  Important Note
+                  หมายเหตุสำคัญ
                 </p>
                 <p className="text-sm text-neutral-600 mt-1">
-                  We do not expect perfection on your first attempt. We want to
-                  see your <strong>creative ideas</strong> and understand your{' '}
-                  <strong>current capabilities</strong>. Show us how you think
-                  about music.
+                  เราไม่ได้คาดหวังว่าครั้งแรกจะต้องสมบูรณ์แบบ ·
+                  เราอยากเห็น <strong>ไอเดียสร้างสรรค์</strong> และเข้าใจ{' '}
+                  <strong>ความสามารถปัจจุบัน</strong> ของคุณ
+                  โชว์ให้เราเห็นว่าคุณคิดกับดนตรียังไง
                 </p>
               </div>
             </div>
@@ -368,32 +371,32 @@ export default function AuditionForm({
                 <span className="w-7 h-7 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center">
                   A
                 </span>
-                <h3 className="text-lg font-bold text-primary">The Demo</h3>
+                <h3 className="text-lg font-bold text-primary">เพลง Demo</h3>
               </div>
 
               <div className="bg-white rounded-xl border border-neutral-100 p-5 space-y-4">
                 <p className="text-sm text-neutral-600">
-                  This is a <strong>raw demo with lyrics</strong>, unmixed, and
-                  without full instrumentation. Listen to it as a starting point,
-                  not a finished product.
+                  นี่คือ <strong>เดโม่ดิบพร้อมเนื้อร้อง</strong>
+                  ยังไม่ได้มิกซ์ และยังไม่มีดนตรีเต็ม ·
+                  ฟังในฐานะจุดเริ่มต้น ไม่ใช่ผลงานที่เสร็จสมบูรณ์
                 </p>
 
                 <AudioPlayer
                   src={DEMO_TRACK_SRC}
                   title="Demo Track"
-                  subtitle="Raw demo — lyrics included, unmixed"
+                  subtitle="เดโม่ดิบ — มีเนื้อร้อง ยังไม่ได้มิกซ์"
                 />
 
                 <div>
                   <Label htmlFor="demoAnalysis">
-                    What potential do you see in this track, and what direction
-                    would you take to develop it into a full song? *
+                    คุณเห็นศักยภาพอะไรในเพลงนี้
+                    และจะพัฒนาต่อให้เป็นเพลงเต็มไปในทิศทางไหน? *
                   </Label>
                   <Textarea
                     id="demoAnalysis"
                     name="demoAnalysis"
                     rows={5}
-                    placeholder="Talk about the melody, the lyrics, the arrangement, the mood — anything that stands out to you. Then describe how you'd develop it further..."
+                    placeholder="พูดถึงเมโลดี้ เนื้อร้อง การเรียบเรียง อารมณ์ — อะไรก็ได้ที่สะดุดหู แล้วบอกว่าจะต่อยอดยังไง..."
                     value={data.demoAnalysis}
                     onChange={handleChange}
                     required
@@ -409,33 +412,33 @@ export default function AuditionForm({
                   B
                 </span>
                 <h3 className="text-lg font-bold text-primary">
-                  The Commercial Beat
+                  บีทสำหรับงานโปรโมต
                 </h3>
               </div>
 
               <div className="bg-white rounded-xl border border-neutral-100 p-5 space-y-4">
                 <p className="text-sm text-neutral-600">
-                  This is a <strong>product-promotion beat</strong>. Your task:
-                  write new lyrics, extend, or modify the track in any way you
-                  see fit. Record your version and upload it below.
+                  นี่คือ <strong>บีทสำหรับโปรโมตสินค้า</strong> · โจทย์ของคุณ:
+                  แต่งเนื้อร้องใหม่ ต่อเพลง หรือปรับแต่งตามสไตล์ที่คุณคิด
+                  แล้วอัดผลงานอัพโหลดที่ด้านล่าง
                 </p>
 
                 <AudioPlayer
                   src={COMMERCIAL_BEAT_SRC}
                   title="Commercial Beat"
-                  subtitle="Product-promotion beat — open for your interpretation"
+                  subtitle="บีทสำหรับโปรโมตสินค้า — เปิดให้ตีความตามสไตล์"
                 />
 
                 <div>
                   <Label htmlFor="commercialResponse">
-                    Describe your creative approach — what did you change or add,
-                    and why? *
+                    เล่าแนวทางสร้างสรรค์ของคุณ —
+                    เปลี่ยนหรือเพิ่มอะไรไปบ้าง ทำไมถึงเลือกแบบนี้? *
                   </Label>
                   <Textarea
                     id="commercialResponse"
                     name="commercialResponse"
                     rows={4}
-                    placeholder="Explain your thought process: the lyrics you wrote, the modifications you made, the direction you chose..."
+                    placeholder="อธิบายกระบวนการคิด: เนื้อที่แต่ง การปรับแก้ ทิศทางที่เลือก..."
                     value={data.commercialResponse}
                     onChange={handleChange}
                     required
@@ -443,7 +446,7 @@ export default function AuditionForm({
                 </div>
 
                 <div>
-                  <Label>Upload Your Audio Submission *</Label>
+                  <Label>อัพโหลดไฟล์เสียงที่บันทึกไว้ *</Label>
                   <FileUpload
                     file={uploadedFile}
                     onFileChange={setUploadedFile}
@@ -460,50 +463,49 @@ export default function AuditionForm({
           <section className="space-y-8 animate-fade-in">
             <div>
               <h2 className="text-xl font-bold text-primary mb-1">
-                Review & Submit
+                ตรวจสอบและส่ง
               </h2>
               <p className="text-sm text-neutral-500">
-                Please review your answers before submitting. You can go back to
-                any section to make changes.
+                กรุณาตรวจคำตอบก่อนส่ง · สามารถกลับไปแก้ไขในแต่ละขั้นตอนได้
               </p>
             </div>
 
             {/* Summary cards */}
             <div className="space-y-4">
               <ReviewCard
-                title="Personal Information"
+                title="ข้อมูลส่วนตัว"
                 step={1}
                 onEdit={() => goToStep(1)}
                 items={[
-                  { label: 'Name', value: data.fullName },
-                  { label: 'Nickname', value: data.nickname },
-                  { label: 'Date of Birth', value: data.dateOfBirth },
-                  { label: 'Email', value: data.email },
-                  { label: 'Phone', value: data.phone },
+                  { label: 'ชื่อ-นามสกุล', value: data.fullName },
+                  { label: 'ชื่อเล่น', value: data.nickname },
+                  { label: 'วันเกิด', value: data.dateOfBirth },
+                  { label: 'อีเมล', value: data.email },
+                  { label: 'เบอร์โทร', value: data.phone },
                   { label: 'Social Media', value: data.socialMedia || '—' },
                 ]}
               />
               <ReviewCard
-                title="Your Mindset"
+                title="ทัศนคติของคุณ"
                 step={2}
                 onEdit={() => goToStep(2)}
                 items={[
-                  { label: 'Idol meaning', value: data.idolMeaning, truncate: true },
-                  { label: 'Creative project', value: data.creativeProject, truncate: true },
-                  { label: 'Handling criticism', value: data.handleCriticism, truncate: true },
-                  { label: 'One-year vision', value: data.oneYearVision, truncate: true },
+                  { label: 'ความหมาย idol', value: data.idolMeaning, truncate: true },
+                  { label: 'โปรเจ็กต์สร้างสรรค์', value: data.creativeProject, truncate: true },
+                  { label: 'การรับมือคำวิจารณ์', value: data.handleCriticism, truncate: true },
+                  { label: 'วิสัยทัศน์ 1 ปี', value: data.oneYearVision, truncate: true },
                 ]}
               />
               <ReviewCard
-                title="Audio Assignments"
+                title="โจทย์เสียงเพลง"
                 step={3}
                 onEdit={() => goToStep(3)}
                 items={[
-                  { label: 'Demo analysis', value: data.demoAnalysis, truncate: true },
-                  { label: 'Commercial approach', value: data.commercialResponse, truncate: true },
+                  { label: 'วิเคราะห์ Demo', value: data.demoAnalysis, truncate: true },
+                  { label: 'แนวทาง Commercial', value: data.commercialResponse, truncate: true },
                   {
-                    label: 'Audio file',
-                    value: uploadedFile ? uploadedFile.name : 'No file uploaded',
+                    label: 'ไฟล์เสียง',
+                    value: uploadedFile ? uploadedFile.name : 'ยังไม่ได้อัพโหลด',
                   },
                 ]}
               />
@@ -513,9 +515,8 @@ export default function AuditionForm({
             <div className="flex gap-3 p-4 bg-primary/5 border border-primary/10 rounded-xl">
               <Info size={18} className="text-primary flex-shrink-0 mt-0.5" />
               <p className="text-sm text-neutral-600">
-                By submitting this form, you confirm that all information is
-                accurate and that the audio submission is your own work. Your
-                data will only be used for the audition process.
+                การส่งแบบฟอร์มนี้ถือว่าคุณยืนยันว่าข้อมูลทั้งหมดเป็นความจริง และ
+                ไฟล์เสียงเป็นผลงานของคุณเอง · ข้อมูลจะใช้สำหรับการออดิชั่นเท่านั้น
               </p>
             </div>
           </section>
@@ -533,7 +534,7 @@ export default function AuditionForm({
                 className="gap-1"
               >
                 <ChevronLeft size={16} />
-                Back
+                ย้อนกลับ
               </Button>
             )}
             {lastSaved && (
@@ -543,7 +544,7 @@ export default function AuditionForm({
                 className="text-xs text-neutral-400 hover:text-danger flex items-center gap-1 transition-colors ml-2"
               >
                 <Trash2 size={12} />
-                Clear draft
+                ล้าง draft
               </button>
             )}
           </div>
@@ -556,7 +557,7 @@ export default function AuditionForm({
               onClick={nextStep}
               className="gap-1"
             >
-              Continue
+              ถัดไป
               <ChevronRight size={16} />
             </Button>
           ) : (
@@ -567,7 +568,7 @@ export default function AuditionForm({
               className="gap-2"
             >
               <Send size={16} />
-              Submit Application
+              ส่งใบสมัคร
             </Button>
           )}
         </div>
@@ -609,7 +610,7 @@ function ReviewCard({
           onClick={onEdit}
           className="text-xs text-primary hover:underline font-medium"
         >
-          Edit
+          แก้ไข
         </button>
       </div>
       <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
@@ -623,7 +624,7 @@ function ReviewCard({
                 item.truncate ? 'line-clamp-2' : ''
               } ${!item.value ? 'text-neutral-300 italic' : ''}`}
             >
-              {item.value || 'Not provided'}
+              {item.value || 'ยังไม่ระบุ'}
             </dd>
           </div>
         ))}

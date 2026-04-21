@@ -26,7 +26,7 @@ export default function SaveDraftButton({
     <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-1.5">
       {lastSaved && (
         <span className="text-[11px] text-neutral-400 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full shadow-sm">
-          Saved {formatSavedTime(lastSaved)}
+          บันทึกล่าสุด {formatSavedTime(lastSaved)}
         </span>
       )}
       <button
@@ -37,17 +37,17 @@ export default function SaveDraftButton({
             ? 'bg-success text-white scale-105'
             : 'bg-primary text-white hover:bg-primary-hover hover:shadow-xl active:scale-95'
         }`}
-        aria-label="Save draft"
+        aria-label="บันทึก draft"
       >
         {showFlash ? (
           <>
             <Check size={16} />
-            <span>Saved!</span>
+            <span>บันทึกแล้ว!</span>
           </>
         ) : (
           <>
             <Save size={16} />
-            <span>Save Draft</span>
+            <span>บันทึก draft</span>
           </>
         )}
       </button>

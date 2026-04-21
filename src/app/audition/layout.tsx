@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Idol Audition',
+  title: 'ออดิชั่น Idol',
   description:
-    'LiKQ Music is looking for new talent. Apply now to join our idol group — show us your voice, your creativity, and your vision.',
+    'LiKQ Music เปิดรับสมาชิกวง idol หน้าใหม่ · สมัครเลยเพื่อโชว์เสียงร้อง ความคิดสร้างสรรค์ และวิสัยทัศน์ของคุณ',
   openGraph: {
-    title: 'Idol Audition | LiKQ MUSIC',
+    title: 'ออดิชั่น Idol | LiKQ MUSIC',
     description:
-      'Apply to join LiKQ Music\'s new idol group. Show us your passion, your voice, and your creative vision.',
+      'สมัครร่วมวง idol หน้าใหม่ของ LiKQ Music · โชว์แพสชั่น เสียงร้อง และวิสัยทัศน์สร้างสรรค์ของคุณ',
     type: 'website',
   },
 }

@@ -84,6 +84,25 @@ export default function AuditionFormY2K({
     goToStep,
   } = useAuditionForm()
 
+  const scrollToTop = () => {
+    if (typeof window === 'undefined') return
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' })
+  }
+
+  const handleNext = () => {
+    nextStep()
+    scrollToTop()
+  }
+  const handlePrev = () => {
+    prevStep()
+    scrollToTop()
+  }
+  const handleGoToStep = (id: number) => {
+    goToStep(id)
+    scrollToTop()
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     saveDraft()
@@ -164,7 +183,7 @@ export default function AuditionFormY2K({
                   )}
                   <button
                     type="button"
-                    onClick={() => goToStep(step.id)}
+                    onClick={() => handleGoToStep(step.id)}
                     className={`group flex items-center gap-2 px-3 py-2 font-pixel text-[9px] uppercase tracking-wider whitespace-nowrap border-[2px] border-y2k-ink transition-all y2k-focus-ring ${
                       isActive
                         ? 'bg-y2k-pink text-white'
@@ -482,7 +501,7 @@ export default function AuditionFormY2K({
               <ReviewCardY2K
                 title="ข้อมูลส่วนตัว"
                 step={1}
-                onEdit={() => goToStep(1)}
+                onEdit={() => handleGoToStep(1)}
                 items={[
                   { label: 'ชื่อ-นามสกุล', value: data.fullName },
                   { label: 'ชื่อเล่น', value: data.nickname },
@@ -495,7 +514,7 @@ export default function AuditionFormY2K({
               <ReviewCardY2K
                 title="ทัศนคติของคุณ"
                 step={2}
-                onEdit={() => goToStep(2)}
+                onEdit={() => handleGoToStep(2)}
                 items={[
                   { label: 'ความหมาย idol', value: data.idolMeaning, truncate: true },
                   { label: 'โปรเจ็กต์สร้างสรรค์', value: data.creativeProject, truncate: true },
@@ -506,7 +525,7 @@ export default function AuditionFormY2K({
               <ReviewCardY2K
                 title="โจทย์เสียงเพลง"
                 step={3}
-                onEdit={() => goToStep(3)}
+                onEdit={() => handleGoToStep(3)}
                 items={[
                   { label: 'วิเคราะห์ Demo', value: data.demoAnalysis, truncate: true },
                   { label: 'แนวทาง Commercial', value: data.commercialResponse, truncate: true },
@@ -529,7 +548,7 @@ export default function AuditionFormY2K({
         <div className="flex items-center justify-between mt-12 pt-6 border-t-[3px] border-y2k-ink gap-3 flex-wrap">
           <div className="flex items-center gap-3 flex-wrap">
             {currentStep > 1 && (
-              <button type="button" onClick={prevStep} className="y2k-btn-ghost y2k-focus-ring">
+              <button type="button" onClick={handlePrev} className="y2k-btn-ghost y2k-focus-ring">
                 <ChevronLeft size={14} />
                 BACK
               </button>
@@ -547,7 +566,7 @@ export default function AuditionFormY2K({
           </div>
 
           {currentStep < 4 ? (
-            <button type="button" onClick={nextStep} className="y2k-btn-primary y2k-focus-ring">
+            <button type="button" onClick={handleNext} className="y2k-btn-primary y2k-focus-ring">
               NEXT
               <ChevronRight size={14} />
             </button>

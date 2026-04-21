@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
 /* WorkDetail styles inlined */
 @layer components {
   .video-card {
@@ -247,5 +249,123 @@ body {
            border border-[#e0e4ea] dark:border-[#334155]
            text-neutral-700 dark:text-neutral-300
            focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary;
+  }
+}
+
+/* ============================================
+   Y2K theme — scoped to .theme-y2k wrapper
+   ============================================ */
+
+@layer components {
+  .theme-y2k {
+    background-color: #FFF6E6;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(13, 10, 44, 0.08) 1px, transparent 0),
+      radial-gradient(circle at 20px 20px, rgba(255, 58, 165, 0.05) 1px, transparent 0);
+    background-size: 24px 24px, 48px 48px;
+    color: #0D0A2C;
+  }
+
+  .y2k-card {
+    @apply bg-y2k-cream border-[3px] border-y2k-ink rounded-none;
+    box-shadow: 4px 4px 0 0 #0D0A2C;
+  }
+
+  .y2k-card-mint {
+    @apply bg-y2k-mint/30 border-[3px] border-y2k-ink rounded-none;
+    box-shadow: 4px 4px 0 0 #0D0A2C;
+  }
+
+  .y2k-card-yellow {
+    @apply bg-y2k-yellow/40 border-[3px] border-y2k-ink rounded-none;
+    box-shadow: 4px 4px 0 0 #0D0A2C;
+  }
+
+  .y2k-input {
+    @apply w-full bg-white border-[2px] border-y2k-ink rounded-none
+           px-3 py-2.5 text-y2k-ink placeholder:text-y2k-ink/40
+           focus:outline-none focus:border-y2k-pink
+           focus:ring-0 focus:shadow-[3px_3px_0_0_#FF3AA5]
+           transition-shadow;
+  }
+
+  .y2k-btn {
+    @apply inline-flex items-center justify-center gap-2
+           px-5 py-3 font-pixel text-[11px] uppercase tracking-wider
+           border-[3px] border-y2k-ink rounded-none
+           transition-all duration-100
+           active:translate-x-[3px] active:translate-y-[3px];
+    box-shadow: 4px 4px 0 0 #0D0A2C;
+  }
+
+  .y2k-btn:active {
+    box-shadow: 1px 1px 0 0 #0D0A2C;
+  }
+
+  .y2k-btn-primary {
+    @apply y2k-btn bg-y2k-pink text-white
+           hover:bg-y2k-pink-soft hover:text-y2k-ink;
+  }
+
+  .y2k-btn-mint {
+    @apply y2k-btn bg-y2k-mint text-y2k-ink
+           hover:bg-y2k-yellow;
+  }
+
+  .y2k-btn-ghost {
+    @apply y2k-btn bg-y2k-cream text-y2k-ink
+           hover:bg-y2k-yellow;
+  }
+
+  .y2k-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1
+           bg-y2k-pink text-white font-pixel text-[10px] uppercase tracking-wider
+           border-[2px] border-y2k-ink rounded-none;
+    box-shadow: 3px 3px 0 0 #0D0A2C;
+  }
+
+  .y2k-chip {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1
+           font-pixel text-[9px] uppercase tracking-wider
+           border-[2px] border-y2k-ink rounded-none bg-white text-y2k-ink;
+  }
+
+  .y2k-label {
+    @apply block font-pixel-mono text-[18px] leading-tight
+           text-y2k-ink mb-2;
+  }
+
+  .y2k-heading {
+    @apply font-pixel text-y2k-pink uppercase tracking-wider;
+  }
+
+  .y2k-focus-ring:focus-visible {
+    @apply outline-none;
+    box-shadow: 0 0 0 3px #FFE14C, 0 0 0 5px #0D0A2C;
+  }
+
+  .y2k-scanlines {
+    position: relative;
+  }
+  .y2k-scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 3px,
+      rgba(13, 10, 44, 0.06) 3px,
+      rgba(13, 10, 44, 0.06) 4px
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-y2k .animate-y2k-blink,
+  .theme-y2k .animate-y2k-bob,
+  .theme-y2k .animate-y2k-marquee {
+    animation: none !important;
   }
 }

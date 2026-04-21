@@ -105,6 +105,7 @@ export default function AuditionFormY2K({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (currentStep !== 4) return
     saveDraft()
     alert('ส่งใบสมัครเรียบร้อย! เราจะตรวจสอบและติดต่อกลับเร็วๆ นี้')
   }
@@ -566,12 +567,17 @@ export default function AuditionFormY2K({
           </div>
 
           {currentStep < 4 ? (
-            <button type="button" onClick={handleNext} className="y2k-btn-primary y2k-focus-ring">
+            <button
+              key="next"
+              type="button"
+              onClick={handleNext}
+              className="y2k-btn-primary y2k-focus-ring"
+            >
               NEXT
               <ChevronRight size={14} />
             </button>
           ) : (
-            <button type="submit" className="y2k-btn-primary y2k-focus-ring">
+            <button key="submit" type="submit" className="y2k-btn-primary y2k-focus-ring">
               <Send size={14} />
               SUBMIT
             </button>

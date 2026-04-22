@@ -3,11 +3,43 @@
 import React from 'react'
 import Image from 'next/image'
 import { ChevronRight, ChevronLeft, Send, Trash2, Info, Sparkles } from 'lucide-react'
+import { apiClient } from '@/lib/api-client'
 import { useAuditionForm } from './useAuditionForm'
 import AudioPlayerY2K from './AudioPlayerY2K'
 import FileUploadY2K from './FileUploadY2K'
 import SaveDraftButtonY2K from './SaveDraftButtonY2K'
-import { Y2K_STEPS as STEPS } from './types'
+import { AuditionFormData, Y2K_STEPS as STEPS } from './types'
+
+const REQUIRED_FIELDS: { key: keyof AuditionFormData; label: string }[] = [
+  { key: 'fullName', label: 'ชื่อ-นามสกุล' },
+  { key: 'nickname', label: 'ชื่อในวงการ' },
+  { key: 'dateOfBirth', label: 'วันเกิด' },
+  { key: 'email', label: 'อีเมล' },
+  { key: 'phone', label: 'เบอร์โทรศัพท์' },
+]
+
+const FIELD_KEY_MAP: Record<keyof AuditionFormData, string> = {
+  fullName: 'full_name',
+  nickname: 'nickname',
+  dateOfBirth: 'date_of_birth',
+  email: 'email',
+  phone: 'phone',
+  socialMedia: 'social_media',
+  portfolioLink: 'portfolio_link',
+  idolMeaning: 'idol_meaning',
+  creativeProject: 'creative_project',
+  handleCriticism: 'handle_criticism',
+  oneYearVision: 'one_year_vision',
+  demoAnalysis: 'demo_analysis',
+  commercialResponse: 'commercial_response',
+  pressure1: 'pressure_1',
+  pressure2: 'pressure_2',
+  pressure3: 'pressure_3',
+  pressure4: 'pressure_4',
+  pressure5: 'pressure_5',
+  pressure6: 'pressure_6',
+  pressure7: 'pressure_7',
+}
 
 const TOTAL_STEPS = 5
 const REVIEW_STEP = 5
@@ -87,6 +119,10 @@ export default function AuditionFormY2K({
     setCurrentStep,
   } = useAuditionForm()
 
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const [submitError, setSubmitError] = React.useState<string | null>(null)
+  const [submittedRef, setSubmittedRef] = React.useState<string | null>(null)
+
   const scrollToTop = () => {
     if (typeof window === 'undefined') return
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -107,11 +143,69 @@ export default function AuditionFormY2K({
     scrollToTop()
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (currentStep !== REVIEW_STEP) return
-    saveDraft()
-    alert('ส่งใบสมัครเรียบร้อย. เราจะตรวจสอบและติดต่อกลับเร็วๆ นี้')
+    if (currentStep !== REVIEW_STEP || isSubmitting) return
+
+    const missing = REQUIRED_FIELDS.filter((f) => !data[f.key].trim())
+    if (missing.length) {
+      setSubmitError(`กรุณากรอก: ${missing.map((f) => f.label).join(', ')}`)
+      return
+    }
+
+    setSubmitError(null)
+    setIsSubmitting(true)
+    try {
+      const form = new FormData()
+      for (const [formKey, apiKey] of Object.entries(FIELD_KEY_MAP)) {
+        const value = data[formKey as keyof AuditionFormData]
+        if (value && value.trim()) form.append(apiKey, value)
+      }
+      if (uploadedFile) form.append('vocal_file', uploadedFile)
+
+      const { data: res } = await apiClient.post<{
+        id: string
+        reference_number: string
+      }>('/auditions', form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+
+      setSubmittedRef(res.reference_number)
+      clearDraft()
+      scrollToTop()
+    } catch (err: unknown) {
+      const message =
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
+        'ส่งใบสมัครไม่สำเร็จ ลองใหม่อีกครั้ง หรือเช็คการเชื่อมต่ออินเทอร์เน็ต'
+      setSubmitError(message)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  if (submittedRef) {
+    return (
+      <div className="theme-y2k min-h-screen bg-y2k-cobalt flex items-center justify-center px-4 py-16 y2k-scanlines">
+        <div className="max-w-lg w-full bg-y2k-cream border-[4px] border-y2k-ink p-8 text-center"
+             style={{ boxShadow: '8px 8px 0 0 #0D0A2C' }}>
+          <div className="inline-flex items-center gap-1.5 mb-5 y2k-badge bg-y2k-mint !text-y2k-ink">
+            <Sparkles size={11} />
+            SUBMITTED
+          </div>
+          <h1 className="font-pixel text-[26px] md:text-[32px] leading-tight text-y2k-ink mb-4">
+            ได้รับออดิชั่นของคุณแล้ว
+          </h1>
+          <p className="font-prompt text-sm text-y2k-ink/70 mb-2">หมายเลขอ้างอิง</p>
+          <p className="font-pixel-mono text-[24px] md:text-[28px] text-y2k-pink mb-6 tracking-wider">
+            {submittedRef}
+          </p>
+          <p className="font-prompt text-sm text-y2k-ink/80 leading-relaxed">
+            เก็บหมายเลขนี้ไว้ใช้ติดตามสถานะได้ ทีม A&amp;R ของ LIKQ MUSIC จะใช้เวลาประมาณ 14 ถึง 21 วัน
+            แล้วกลับมาหาคุณผ่านอีเมลที่คุณให้ไว้ ไม่ว่าคำตอบจะเป็นอย่างไร คุณจะได้รับคำตอบแน่นอน
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -673,12 +767,23 @@ export default function AuditionFormY2K({
               <ChevronRight size={14} />
             </button>
           ) : (
-            <button key="submit" type="submit" className="y2k-btn-primary y2k-focus-ring">
+            <button
+              key="submit"
+              type="submit"
+              disabled={isSubmitting}
+              className="y2k-btn-primary y2k-focus-ring disabled:opacity-60 disabled:cursor-not-allowed"
+            >
               <Send size={14} />
-              SUBMIT
+              {isSubmitting ? 'SUBMITTING…' : 'SUBMIT'}
             </button>
           )}
         </div>
+
+        {submitError && currentStep === REVIEW_STEP && (
+          <div className="mt-4 p-3 border-[2px] border-y2k-ink bg-y2k-pink/20 font-prompt text-sm text-y2k-ink">
+            {submitError}
+          </div>
+        )}
       </form>
 
       <SaveDraftButtonY2K onSave={saveDraft} lastSaved={lastSaved} showFlash={saveFlash} />

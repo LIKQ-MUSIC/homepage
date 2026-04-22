@@ -173,23 +173,16 @@ export default function AuditionFormY2K({
       {/* ═══ PROGRESS (sticky) ═══ */}
       <div className="sticky top-0 z-30 bg-y2k-cream border-b-[3px] border-y2k-ink">
         <div className="max-w-3xl mx-auto px-4 py-3">
-          <div className="flex items-center gap-2 overflow-x-auto">
-            {STEPS.map((step, i) => {
+          <div className="flex flex-wrap items-center gap-1.5">
+            {STEPS.map((step) => {
               const isActive = currentStep === step.id
               const isCompleted = currentStep > step.id
               return (
                 <React.Fragment key={step.id}>
-                  {i > 0 && (
-                    <div
-                      className={`hidden sm:block flex-1 h-[3px] ${
-                        isCompleted ? 'bg-y2k-mint' : 'bg-y2k-ink/20'
-                      }`}
-                    />
-                  )}
                   <button
                     type="button"
                     onClick={() => handleGoToStep(step.id)}
-                    className={`group flex items-center gap-2 px-3 py-2 font-pixel text-[9px] uppercase tracking-wider whitespace-nowrap border-[2px] border-y2k-ink transition-all y2k-focus-ring ${
+                    className={`group flex items-center gap-1.5 px-2.5 py-1.5 font-pixel text-[9px] uppercase tracking-wider whitespace-nowrap border-[2px] border-y2k-ink transition-all y2k-focus-ring ${
                       isActive
                         ? 'bg-y2k-pink text-white'
                         : isCompleted

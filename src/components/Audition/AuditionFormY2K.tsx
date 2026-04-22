@@ -143,11 +143,12 @@ export default function AuditionFormY2K({
             AUDITION
           </h1>
           <p className="font-pixel-mono text-[22px] md:text-[26px] text-y2k-yellow leading-tight mb-4">
-            ออดิชั่น Idol ครั้งแรกของคุณเริ่มที่นี่
+            LIKQ MUSIC เปิดออดิชั่น Idol-Artist เก่งหนึ่งด้านก็เริ่มที่นี่ได้
           </p>
           <p className="font-prompt text-white/90 text-base md:text-lg max-w-xl leading-relaxed">
-            เรากำลังสร้างสิ่งใหม่ ถ้าคุณมีแพสชั่น เสียงร้อง และวิสัยทัศน์
-            เราอยากรู้จักคุณ
+            Idol-Artist ที่แท้จริงต้องครบ 4 ด้าน: Vocals ที่คนจำ, Visual ที่คนมอง,
+            Variety ที่คนยิ้มตาม และ Dance ที่คนอยากดู เราไม่ได้คัดคนที่เก่งครบตั้งแต่วันแรก
+            เราคัดคนที่มีสกิลอย่างน้อยหนึ่งด้าน ที่เหลือเป็นหน้าที่เรา
           </p>
 
           {heroImageSrc && (

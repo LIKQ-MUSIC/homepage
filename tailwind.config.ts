@@ -53,6 +53,15 @@ export default {
         disabled: {
           DEFAULT: '#E8EAEE',
           text: '#B6BFC9'
+        },
+        y2k: {
+          cobalt: '#3B1EFF',
+          pink: '#FF3AA5',
+          'pink-soft': '#FFB8DB',
+          mint: '#2DE8C3',
+          yellow: '#FFE14C',
+          cream: '#FFF6E6',
+          ink: '#0D0A2C'
         }
       },
       fontSize: {
@@ -66,7 +75,9 @@ export default {
       },
       fontFamily: {
         sans: ['var(--font-noto-sans-thai)', 'var(--font-inter)', 'sans-serif'],
-        prompt: ['var(--font-prompt)']
+        prompt: ['var(--font-prompt)'],
+        pixel: ['"Press Start 2P"', 'ui-monospace', 'monospace'],
+        'pixel-mono': ['"VT323"', 'ui-monospace', 'monospace']
       },
       keyframes: {
         fadeIn: {
@@ -76,11 +87,26 @@ export default {
         scaleIn: {
           '0%': { transform: 'scale(0.95)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' }
+        },
+        y2kBlink: {
+          '0%, 60%': { opacity: '1' },
+          '61%, 100%': { opacity: '0' }
+        },
+        y2kBob: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-4px)' }
+        },
+        y2kMarquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' }
         }
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out forwards',
-        'scale-in': 'scaleIn 0.3s ease-out forwards'
+        'scale-in': 'scaleIn 0.3s ease-out forwards',
+        'y2k-blink': 'y2kBlink 1s steps(2, end) infinite',
+        'y2k-bob': 'y2kBob 1.6s ease-in-out infinite',
+        'y2k-marquee': 'y2kMarquee 18s linear infinite'
       }
     }
   },

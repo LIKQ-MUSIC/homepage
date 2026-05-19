@@ -42,11 +42,25 @@ export function useAuditionForm() {
     initialized.current = true
     const saved = loadFromStorage()
     if (saved) {
-      setData(saved.data)
+      // Merge with INITIAL_FORM_DATA so fields added after the draft was
+      // saved (e.g. pressure1–7) don't end up undefined and turn inputs
+      // into uncontrolled components.
+      setData({ ...INITIAL_FORM_DATA, ...saved.data })
       setCurrentStep(saved.currentStep)
       setLastSaved(saved.lastSaved)
     }
   }, [])
+
+  // Autosave on change so a user who never clicks "Save Draft" doesn't
+  // lose progress when closing the tab. Debounced to avoid hammering
+  // localStorage on every keystroke.
+  useEffect(() => {
+    if (!initialized.current) return
+    const t = setTimeout(() => {
+      saveToStorage({ data, currentStep, lastSaved: new Date().toISOString() })
+    }, 500)
+    return () => clearTimeout(t)
+  }, [data, currentStep])
 
   const updateField = useCallback(
     (field: keyof AuditionFormData, value: string) => {
@@ -88,9 +102,11 @@ export function useAuditionForm() {
   }, [])
 
   const nextStep = useCallback(() => {
+    // Don't call saveDraft() here: it would close over the old currentStep
+    // and persist the wrong step. The autosave effect picks up the new
+    // step on the next render.
     setCurrentStep(prev => Math.min(prev + 1, 4))
-    saveDraft()
-  }, [saveDraft])
+  }, [])
 
   const prevStep = useCallback(() => {
     setCurrentStep(prev => Math.max(prev - 1, 1))

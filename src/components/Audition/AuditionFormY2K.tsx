@@ -130,8 +130,9 @@ export default function AuditionFormY2K({
   }
 
   const handleNext = () => {
+    // Autosave (in useAuditionForm) picks up the new step on the next
+    // render — don't call saveDraft() here, it would persist the old step.
     setCurrentStep((prev) => Math.min(prev + 1, TOTAL_STEPS))
-    saveDraft()
     scrollToTop()
   }
   const handlePrev = () => {

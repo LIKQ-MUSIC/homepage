@@ -124,6 +124,51 @@ export default async function CandidateProfilePage({ params }: Props) {
         </div>
       </header>
 
+      {/* ═══ DANCE VIDEO ═══ */}
+      <section className="relative max-w-3xl mx-auto px-4 pt-2 pb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <span className={`y2k-badge ${t.badgeBg} !text-y2k-ink`}>Dance Video</span>
+          <span aria-hidden className="flex-1 border-t-[2px] border-dashed border-white/30" />
+        </div>
+        {candidate.danceVideoUrl ? (
+          <div
+            className="relative border-[4px] border-y2k-ink overflow-hidden"
+            style={{ boxShadow: t.shadow }}
+          >
+            <div className="aspect-video">
+              <iframe
+                src={toYouTubeEmbed(candidate.danceVideoUrl)}
+                title={`Dance video ของ ${candidate.nickname}`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </div>
+          </div>
+        ) : (
+          <div
+            className="relative bg-y2k-ink border-[4px] border-y2k-ink overflow-hidden"
+            style={{ boxShadow: t.shadow }}
+          >
+            <div className="aspect-video flex flex-col items-center justify-center gap-3">
+              <div
+                className="absolute inset-0 opacity-20"
+                style={{
+                  backgroundImage:
+                    'repeating-linear-gradient(0deg, rgba(255,255,255,0.15) 0 1px, transparent 1px 6px)',
+                }}
+              />
+              <span className={`font-pixel text-[clamp(14px,4vw,22px)] tracking-widest uppercase ${t.accentText}`}>
+                Dance Video
+              </span>
+              <span className="font-pixel text-[10px] tracking-[0.3em] uppercase text-white/50">
+                Coming soon
+              </span>
+            </div>
+          </div>
+        )}
+      </section>
+
       {/* ═══ Q&A SECTIONS ═══ */}
       <section className="relative max-w-3xl mx-auto px-4 pb-20 space-y-6">
         <QABlock
@@ -193,6 +238,14 @@ export default async function CandidateProfilePage({ params }: Props) {
       </section>
     </div>
   )
+}
+
+function toYouTubeEmbed(url: string): string {
+  const watchMatch = url.match(/[?&]v=([^&]+)/)
+  if (watchMatch) return `https://www.youtube.com/embed/${watchMatch[1]}`
+  const shortMatch = url.match(/youtu\.be\/([^?]+)/)
+  if (shortMatch) return `https://www.youtube.com/embed/${shortMatch[1]}`
+  return url
 }
 
 function themeHex(theme: 'pink' | 'mint' | 'yellow'): string {

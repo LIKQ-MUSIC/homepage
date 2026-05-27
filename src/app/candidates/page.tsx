@@ -35,7 +35,7 @@ export default function CandidatesLandingPage() {
             <span className="text-y2k-yellow">CANDIDATE</span>
           </h1>
           <p className="font-pixel-mono text-[20px] md:text-[26px] text-white/90 leading-tight mb-5 max-w-2xl">
-            3 candidates. 1 รุ่นที่กำลังจะเริ่ม. เลือกใครก่อนก็ได้ — แล้วเดี๋ยวพวกเขาเล่าให้ฟังเอง
+            {CANDIDATES.length} candidates. 1 รุ่นที่กำลังจะเริ่ม. เลือกใครก่อนก็ได้ — แล้วเดี๋ยวพวกเขาเล่าให้ฟังเอง
           </p>
           <p className="font-prompt text-white/75 text-base md:text-lg max-w-xl leading-relaxed">
             ทั้งสามคนนี้ผ่านคำถามชุดเดียวกันกับทุกคนที่สมัครออดิชั่น

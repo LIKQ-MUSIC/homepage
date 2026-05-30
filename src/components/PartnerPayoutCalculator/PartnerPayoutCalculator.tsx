@@ -7,9 +7,10 @@ type Method = 'qr' | 'card'
 
 const LIKQ_RATE = 0.15
 
+// Rates are VAT-inclusive (already contain the 7% VAT on the processing fee).
 const OMISE: Record<Method, { rate: number; label: string; icon: typeof QrCode }> = {
-  qr: { rate: 0.016, label: 'PromptPay QR', icon: QrCode },
-  card: { rate: 0.036, label: 'บัตรเครดิต / เดบิต', icon: CreditCard }
+  qr: { rate: 0.0165, label: 'PromptPay QR', icon: QrCode },
+  card: { rate: 0.0365, label: 'บัตรเครดิต / เดบิต', icon: CreditCard }
 }
 
 // Round to 2 decimals to avoid floating-point noise while keeping satang precision.
@@ -75,7 +76,7 @@ const PartnerPayoutCalculator = () => {
                 <Icon size={16} />
                 {label}
                 <span className={active ? 'text-secondary' : 'text-primary/40'}>
-                  {(rate * 100).toLocaleString('th-TH', { maximumFractionDigits: 1 })}%
+                  {(rate * 100).toLocaleString('th-TH', { maximumFractionDigits: 2 })}%
                 </span>
               </button>
             )
@@ -136,7 +137,7 @@ const PartnerPayoutCalculator = () => {
         </div>
         <div className="flex items-center justify-between px-5 py-3.5">
           <span className="text-neutral-600">
-            หัก Omise fee · {OMISE[method].label} ({(omiseRate * 100).toLocaleString('th-TH', { maximumFractionDigits: 1 })}%)
+            หัก Omise fee · {OMISE[method].label} ({(omiseRate * 100).toLocaleString('th-TH', { maximumFractionDigits: 2 })}%)
           </span>
           <span className="font-semibold text-rose-500 tabular-nums">
             −{fmt(breakdown.omiseFee)} ฿
@@ -160,7 +161,7 @@ const PartnerPayoutCalculator = () => {
       <div className="mt-6 flex gap-3 rounded-2xl bg-secondary/15 p-4 md:p-5">
         <Info className="flex-shrink-0 text-primary mt-0.5" size={20} />
         <p className="text-sm md:text-base text-primary/80 leading-relaxed">
-          เราแนะนำให้ตั้งราคาเผื่อค่าธรรมเนียม Omise (1.6% / 3.6%) ไปเลยตั้งแต่แรก
+          เราแนะนำให้ตั้งราคาเผื่อค่าธรรมเนียมให้ครอบคลุมทั้ง 2 แบบไปเลยตั้งแต่แรก
           นโยบายของเราคือไม่อยากให้ลูกค้าต้องจ่ายแพงกว่าราคาที่เห็น
           ค่าธรรมเนียมจึงควรรวมอยู่ในราคาตั้งขายตั้งแต่ต้น
         </p>

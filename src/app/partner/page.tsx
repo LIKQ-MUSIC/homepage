@@ -1,0 +1,419 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+import {
+  ArrowRight,
+  Check,
+  ShieldCheck,
+  Receipt,
+  Store,
+  Truck,
+  MessageSquareWarning,
+  Wallet,
+  LayoutPanelLeft,
+  Users,
+  Star,
+  Percent,
+  Sparkles,
+  QrCode
+} from 'lucide-react'
+
+export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title: 'ฝากขายสินค้าสำหรับศิลปินอิสระ',
+  description:
+    'หน้าร้านของคุณเองบนระบบที่พร้อมใช้ ดีไซน์ตามแบรนด์ จ่ายเงินผ่าน PromptPay และบัตรเครดิตด้วย Omise ระบบสมาชิกและคูปองพร้อมใช้ เริ่มต้นฟรี จ่าย commission เฉพาะตอนขายได้จริง',
+  alternates: { canonical: '/partner' },
+  openGraph: {
+    title: 'ฝากขายสินค้าสำหรับศิลปินอิสระ | LiKQ MUSIC',
+    description:
+      'หน้าร้านของคุณเองบนระบบที่พร้อมใช้ เริ่มต้นฟรี จ่าย commission เฉพาะตอนขายได้จริง',
+    url: 'https://www.likqmusic.com/partner',
+    type: 'website'
+  }
+}
+
+const pains = [
+  {
+    num: '01',
+    icon: MessageSquareWarning,
+    title: 'ออเดอร์ล้นแชท',
+    desc: 'จดเองในโน้ต ไล่ตอบทีละคน ตกหล่นง่าย พอของเยอะก็จัดการแทบไม่ทัน'
+  },
+  {
+    num: '02',
+    icon: Wallet,
+    title: 'ลูกค้าไม่กล้าโอน',
+    desc: 'โอนเข้าบัญชีส่วนตัว ไม่มีระบบ ไม่มีสลิปกลาง ลูกค้าใหม่ลังเลที่จะจ่าย'
+  },
+  {
+    num: '03',
+    icon: Store,
+    title: 'ไม่มีหน้าร้านเป็นของตัวเอง',
+    desc: 'อยากมีเว็บสวย ๆ มีระบบจ่ายเงิน แต่ทำเองก็แพงและกินเวลาทำเพลง'
+  }
+]
+
+const features = [
+  {
+    icon: LayoutPanelLeft,
+    title: 'หน้าเว็บร้านดีไซน์ตามแบรนด์',
+    desc: 'Custom design ให้ตามตัวตนของศิลปิน ที่ likqmusic.com/ชื่อร้านคุณ'
+  },
+  {
+    icon: ShieldCheck,
+    title: 'ระบบจ่ายเงินอัตโนมัติ',
+    desc: 'PromptPay และบัตรเครดิตผ่าน Omise ปลอดภัย ลูกค้าเชื่อมั่น'
+  },
+  {
+    icon: Sparkles,
+    title: 'ระบบสมาชิก & คูปองพร้อมใช้',
+    desc: 'member แต้มสะสม และส่วนลด ที่เรา manage ให้กระตุ้นยอด'
+  }
+]
+
+const ecosystem = [
+  {
+    icon: Users,
+    title: 'Cross-discovery',
+    desc: 'ลูกค้าของศิลปินคนอื่นอาจเดินมาเจอร้านคุณ ฐานแฟนใหม่โดยไม่ต้องยิงแอดเพิ่ม'
+  },
+  {
+    icon: Star,
+    title: 'แต้มสะสมข้ามร้าน',
+    desc: 'แฟน ๆ สะสมแต้มจากทุกร้านในแพลตฟอร์มได้ จูงใจให้กลับมาซื้อซ้ำ'
+  },
+  {
+    icon: Percent,
+    title: 'คูปองที่เรา manage ให้',
+    desc: 'แคมเปญส่วนลดทั้งระบบช่วยกระตุ้นยอด โดยที่คุณไม่ต้องคิดเอง'
+  }
+]
+
+const caseStats = [
+  { value: '8', label: 'เมมเบอร์ในร้านเดียว' },
+  { value: 'QR', label: 'PromptPay ไม่มีค่าธรรมเนียม' },
+  { value: '100%', label: 'custom design ตามแบรนด์' }
+]
+
+export default function PartnerPage() {
+  return (
+    <main className="min-h-screen bg-[#f8f9fb] text-neutral-900 font-sans overflow-x-hidden">
+      <Navbar />
+
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden bg-primary text-white">
+        <div className="absolute -top-32 -right-24 w-96 h-96 rounded-full bg-secondary/10 pointer-events-none" />
+        <div className="absolute top-24 right-44 w-6 h-6 rounded-full bg-secondary pointer-events-none" />
+        <div className="absolute bottom-32 right-32 w-4 h-4 rounded-full bg-secondary/70 pointer-events-none" />
+
+        <div className="relative max-w-6xl mx-auto px-4 md:px-8 pt-36 md:pt-44 pb-20 md:pb-28">
+          <div className="inline-flex items-center gap-2 mb-7 px-3 py-1.5 rounded-full bg-white/10 ring-1 ring-secondary/30 text-secondary text-xs font-bold tracking-wider uppercase">
+            <Sparkles size={13} />
+            Merchant Partnership 2026
+          </div>
+
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight max-w-3xl">
+            ฝากขายสินค้า
+            <br />
+            สำหรับศิลปินอิสระ
+          </h1>
+          <p className="mt-6 text-lg md:text-2xl text-secondary max-w-2xl">
+            หน้าร้านของคุณเอง บนระบบที่พร้อมใช้ เราสร้างให้ ดูแลให้ และทำให้ปลอดภัย
+            ส่วนคุณโฟกัสที่การทำเพลง
+          </p>
+
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <a
+              href="mailto:contact@likqmusic.com"
+              className="inline-flex items-center gap-2 bg-white text-primary font-bold px-7 py-3.5 rounded-full hover:bg-neutral-100 transition-colors active:scale-95 shadow-lg"
+            >
+              เริ่มคุยกับเรา
+              <ArrowRight size={18} />
+            </a>
+            <a
+              href="/pitch/index.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-bold text-white ring-1 ring-white/40 hover:bg-white/10 transition-colors active:scale-95"
+            >
+              ดู Pitch Deck
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Problem ── */}
+      <section className="max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-24">
+        <p className="text-sm tracking-[0.3em] uppercase text-secondary-dark mb-3">
+          The problem
+        </p>
+        <h2 className="text-2xl md:text-4xl font-bold text-primary leading-snug">
+          ขายของผ่าน DM มันเหนื่อยกว่าที่คิด
+        </h2>
+        <p className="mt-3 text-base md:text-lg text-neutral-500 max-w-2xl">
+          การขายผ่านแชทกินเวลาของคุณ และกินความเชื่อใจของแฟน ๆ ไปเรื่อย ๆ
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
+          {pains.map(({ num, icon: Icon, title, desc }) => (
+            <div
+              key={num}
+              className="bg-white rounded-2xl p-7 shadow-sm ring-1 ring-black/5"
+            >
+              <div className="flex items-center justify-between mb-5">
+                <span className="text-xl font-bold text-secondary tabular-nums">
+                  {num}
+                </span>
+                <Icon className="text-secondary" size={26} />
+              </div>
+              <h3 className="text-lg md:text-xl font-bold text-primary mb-2">
+                {title}
+              </h3>
+              <p className="text-neutral-500 leading-relaxed">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Solution ── */}
+      <section className="bg-white border-y border-black/5">
+        <div className="max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-24">
+          <p className="text-sm tracking-[0.3em] uppercase text-secondary-dark mb-3">
+            What LiKQ does
+          </p>
+          <h2 className="text-2xl md:text-4xl font-bold text-primary leading-snug max-w-2xl">
+            หน้าร้านของคุณเอง บนระบบที่พร้อมใช้
+          </h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-10 items-start">
+            <div className="space-y-6">
+              {features.map(({ icon: Icon, title, desc }) => (
+                <div key={title} className="flex gap-4">
+                  <div className="flex-shrink-0 w-11 h-11 rounded-full bg-secondary/20 text-primary flex items-center justify-center">
+                    <Icon size={22} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg md:text-xl font-bold text-primary">
+                      {title}
+                    </h3>
+                    <p className="text-neutral-500 leading-relaxed mt-1">
+                      {desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-primary text-white rounded-2xl p-8 md:p-10">
+              <p className="text-secondary font-bold tracking-wide mb-6">
+                คุณทำแค่ 2 อย่าง
+              </p>
+              <div className="space-y-5">
+                <div className="flex items-center gap-4 text-lg">
+                  <Check className="text-secondary flex-shrink-0" size={22} />
+                  <span>เตรียมรูป + ข้อมูลสินค้า</span>
+                </div>
+                <div className="flex items-center gap-4 text-lg">
+                  <Truck className="text-secondary flex-shrink-0" size={22} />
+                  <span>จัดส่งสินค้าเองถึงมือแฟน ๆ</span>
+                </div>
+              </div>
+              <p className="mt-8 pt-6 border-t border-white/15 text-white/70 leading-relaxed">
+                เราไม่ถือสต็อก ไม่ยุ่งกับ logistics ส่วนเว็บ ระบบ
+                และการจ่ายเงิน ปล่อยให้เราดูแล
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── No risk / Pricing ── */}
+      <section className="bg-primary text-white">
+        <div className="relative max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-28 overflow-hidden">
+          <div className="absolute -bottom-24 -left-20 w-80 h-80 rounded-full bg-secondary/10 pointer-events-none" />
+          <p className="text-sm tracking-[0.3em] uppercase text-secondary mb-5">
+            Starter tier · ไม่มีค่าธรรมเนียมรายเดือน
+          </p>
+          <h2 className="text-4xl md:text-6xl font-bold leading-tight">
+            ขายไม่ได้ <span className="text-secondary">= ไม่เสียอะไร</span>
+          </h2>
+          <p className="mt-6 text-lg md:text-2xl text-secondary max-w-xl">
+            เริ่มต้นฟรี จ่าย commission เฉพาะตอนที่ขายได้จริงเท่านั้น
+          </p>
+
+          <div className="mt-10 flex flex-wrap gap-4">
+            <div className="inline-flex items-center gap-3 rounded-full ring-1 ring-white/25 px-7 py-4">
+              <span className="text-3xl font-bold text-secondary">0฿</span>
+              <span className="text-white/80">ค่าเปิดร้าน / รายเดือน</span>
+            </div>
+            <div className="inline-flex items-center gap-3 rounded-full ring-1 ring-white/25 px-7 py-4">
+              <span className="text-3xl font-bold text-secondary">15%</span>
+              <span className="text-white/80">commission เมื่อขายได้</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Trust ── */}
+      <section className="max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-24">
+        <p className="text-sm tracking-[0.3em] uppercase text-secondary-dark mb-3">
+          Trust &amp; transparency
+        </p>
+        <h2 className="text-2xl md:text-4xl font-bold text-primary leading-snug">
+          จ่ายเงินปลอดภัย โปร่งใสทุกบาท
+        </h2>
+        <p className="mt-3 text-base md:text-lg text-neutral-500">
+          ระบบจ่ายเงินจริง ไม่ใช่การโอนเข้าบัญชีส่วนตัว
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+          <div className="bg-white rounded-2xl p-8 shadow-sm ring-1 ring-black/5">
+            <div className="flex items-center gap-3 mb-4">
+              <ShieldCheck className="text-secondary" size={26} />
+              <span className="text-sm font-bold tracking-wider uppercase text-secondary-dark">
+                Secure payments
+              </span>
+            </div>
+            <h3 className="text-xl font-bold text-primary mb-2">
+              รับเงินผ่านระบบมาตรฐาน
+            </h3>
+            <p className="text-neutral-500 leading-relaxed">
+              PromptPay สแกน QR และบัตรเครดิต/เดบิตแบบ 3D Secure ผ่าน Omise
+              ลูกค้าใหม่กล้าจ่ายเต็มจำนวน
+            </p>
+            <div className="flex flex-wrap gap-2 mt-5">
+              {['PromptPay', 'Visa', 'Mastercard', 'JCB', 'Omise'].map(b => (
+                <span
+                  key={b}
+                  className="px-4 py-1.5 rounded-full text-sm font-medium text-primary bg-[#f0f4f8] ring-1 ring-black/5"
+                >
+                  {b}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-8 shadow-sm ring-1 ring-black/5">
+            <div className="flex items-center gap-3 mb-4">
+              <Receipt className="text-secondary" size={26} />
+              <span className="text-sm font-bold tracking-wider uppercase text-secondary-dark">
+                Transparent commission
+              </span>
+            </div>
+            <h3 className="text-xl font-bold text-primary mb-2">
+              คำนวณ commission อัตโนมัติ
+            </h3>
+            <p className="text-neutral-500 leading-relaxed">
+              เห็นยอดขายทุกออเดอร์ ระบบหัก commission ให้เอง ตรวจสอบย้อนหลังได้
+              ไม่ต้องมานั่งกระทบยอดเอง
+            </p>
+            <div className="flex flex-wrap gap-2 mt-5">
+              {['ยอดขายเรียลไทม์', 'สรุปอัตโนมัติ'].map(b => (
+                <span
+                  key={b}
+                  className="px-4 py-1.5 rounded-full text-sm font-medium text-primary bg-secondary/20"
+                >
+                  {b}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Ecosystem ── */}
+      <section className="bg-white border-y border-black/5">
+        <div className="max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-24">
+          <p className="text-sm tracking-[0.3em] uppercase text-secondary-dark mb-3">
+            One ecosystem
+          </p>
+          <h2 className="text-2xl md:text-4xl font-bold text-primary leading-snug">
+            ระบบนิเวศที่แฟน ๆ เจอกัน
+          </h2>
+          <p className="mt-3 text-base md:text-lg text-neutral-500 max-w-2xl">
+            ทุกร้านของศิลปินใช้ฐานแฟนเดียวกัน และกระเป๋าแต้มเดียวกัน
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
+            {ecosystem.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="rounded-2xl p-7 bg-[#f8f9fb] ring-1 ring-black/5">
+                <div className="w-12 h-12 rounded-xl bg-secondary/20 text-primary flex items-center justify-center mb-4">
+                  <Icon size={24} />
+                </div>
+                <h3 className="text-lg md:text-xl font-bold text-primary mb-2">
+                  {title}
+                </h3>
+                <p className="text-neutral-500 leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Case study ── */}
+      <section className="bg-primary text-white">
+        <div className="relative max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-24 overflow-hidden">
+          <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-secondary/10 pointer-events-none" />
+          <p className="text-sm tracking-[0.3em] uppercase text-secondary mb-3">
+            Live case study
+          </p>
+          <h2 className="text-3xl md:text-5xl font-bold flex items-center gap-3">
+            NekoWink
+          </h2>
+          <p className="mt-2 text-xl md:text-2xl text-secondary font-semibold">
+            ร้านจริงที่เปิดอยู่ตอนนี้
+          </p>
+          <p className="mt-4 text-white/70 max-w-xl leading-relaxed">
+            หน้าร้านดีไซน์เฉพาะ ระบบสมาชิก และ PromptPay / Omise ทำงานจริงทั้งหมด
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-10">
+            {caseStats.map(({ value, label }) => (
+              <div
+                key={label}
+                className="rounded-2xl p-7 bg-white/5 ring-1 ring-white/10"
+              >
+                <div className="text-4xl md:text-5xl font-bold text-secondary leading-none flex items-center gap-2">
+                  {value === 'QR' ? <QrCode size={40} /> : value}
+                </div>
+                <p className="mt-3 text-white/80">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="bg-[#f8f9fb]">
+        <div className="max-w-4xl mx-auto px-4 md:px-8 py-20 md:py-28 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold text-primary leading-tight">
+            มาเปิดร้านด้วยกันไหม?
+          </h2>
+          <p className="mt-5 text-lg text-neutral-500 max-w-xl mx-auto">
+            เริ่มต้นแบบไม่มีความเสี่ยง เราขอแค่คุยกันก่อน ไม่ผูกมัด
+          </p>
+          <div className="mt-9 flex flex-wrap justify-center items-center gap-4">
+            <a
+              href="mailto:contact@likqmusic.com"
+              className="inline-flex items-center gap-2 bg-primary text-white font-bold px-8 py-4 rounded-full hover:bg-primary-hover transition-colors active:scale-95 shadow-lg"
+            >
+              contact@likqmusic.com
+              <ArrowRight size={18} />
+            </a>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-primary ring-1 ring-primary/20 hover:bg-primary/5 transition-colors active:scale-95"
+            >
+              กลับหน้าหลัก
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </main>
+  )
+}

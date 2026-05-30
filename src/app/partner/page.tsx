@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import PartnerPayoutCalculator from '@/components/PartnerPayoutCalculator/PartnerPayoutCalculator'
 import {
   ArrowRight,
   Check,
@@ -268,6 +269,24 @@ export default function PartnerPage() {
               <span className="text-white/80">commission เมื่อขายได้</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── Payout calculator ── */}
+      <section className="max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-24">
+        <p className="text-sm tracking-[0.3em] uppercase text-secondary-dark mb-3">
+          Payout calculator
+        </p>
+        <h2 className="text-2xl md:text-4xl font-bold text-primary leading-snug">
+          ตั้งราคาเท่านี้ วงได้รับเท่าไหร่?
+        </h2>
+        <p className="mt-3 text-base md:text-lg text-neutral-500 max-w-2xl">
+          ลองกรอกราคาตั้งขาย หรือยอดที่อยากได้รับ อีกฝั่งจะคำนวณให้อัตโนมัติ
+          พร้อมแจกแจงทุกบาทแบบโปร่งใส
+        </p>
+
+        <div className="mt-10">
+          <PartnerPayoutCalculator />
         </div>
       </section>
 

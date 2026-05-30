@@ -14,6 +14,7 @@ const links: NavLink[] = [
   { href: '#services', label: 'Our Services' },
   { href: '#work', label: 'Our Work' },
   { href: '#team', label: 'Our Team' },
+  { href: '/partner', label: 'ฝากขาย' },
   { href: '/audition', label: 'Audition' }
 ]
 

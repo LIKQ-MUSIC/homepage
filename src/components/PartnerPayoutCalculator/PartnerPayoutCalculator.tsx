@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react'
 import { QrCode, CreditCard, ArrowDown, Info } from 'lucide-react'
 
 type Method = 'qr' | 'card'
+type Field = 'sale' | 'payout'
 
 const LIKQ_RATE = 0.15
 
@@ -13,41 +14,71 @@ const OMISE: Record<Method, { rate: number; label: string; icon: typeof QrCode }
   card: { rate: 0.0365, label: 'บัตรเครดิต / เดบิต', icon: CreditCard }
 }
 
-// Round to 2 decimals to avoid floating-point noise while keeping satang precision.
-const r2 = (n: number) => Math.round(n * 100) / 100
+// All money is computed in integer satang (1 บาท = 100 สตางค์) so there is no
+// floating-point drift; we only divide by 100 at display time.
+const toSatang = (s: string): number => {
+  const n = parseFloat(s)
+  if (!Number.isFinite(n) || n < 0) return 0
+  return Math.round(n * 100)
+}
 
-const fmt = (n: number) =>
-  n.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+// Pretty format with thousands separators — for read-only display (breakdown).
+const fmtSatang = (sat: number): string =>
+  (sat / 100).toLocaleString('th-TH', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })
+
+// Plain format (no separators) — safe as the value of <input type="number">,
+// which blanks itself if the value contains a comma.
+const plainBaht = (sat: number): string => (sat / 100).toFixed(2)
+
+// Forward: sale → { omise fee, after-omise, likq fee, payout }, all in satang.
+const forward = (saleSat: number, rate: number) => {
+  const omiseFee = Math.round(saleSat * rate)
+  const afterOmise = saleSat - omiseFee
+  const likqFee = Math.round(afterOmise * LIKQ_RATE)
+  const payout = afterOmise - likqFee
+  return { omiseFee, afterOmise, likqFee, payout }
+}
+
+// Inverse: given a target payout in satang, find the sale price (satang) whose
+// forward calculation lands exactly on that payout. The closed-form estimate
+// can be off by a satang because of the two rounding steps, so we nudge it into
+// the exact match when one exists in range.
+const saleForPayout = (payoutSat: number, rate: number): number => {
+  const estimate = Math.round(payoutSat / ((1 - rate) * (1 - LIKQ_RATE)))
+  for (const cand of [estimate, estimate + 1, estimate - 1, estimate + 2, estimate - 2]) {
+    if (cand >= 0 && forward(cand, rate).payout === payoutSat) return cand
+  }
+  return Math.max(0, estimate)
+}
 
 const PartnerPayoutCalculator = () => {
   const [method, setMethod] = useState<Method>('qr')
-  // Sale price is the source of truth; the payout input edits it back via the
-  // inverse formula so either field can be typed into.
-  const [sale, setSale] = useState<number>(500)
+  // The field the user last typed into is authoritative; the other is derived.
+  // We keep the raw typed string so the active input is never overwritten by a
+  // rounded round-trip while the user is still typing.
+  const [editing, setEditing] = useState<Field>('sale')
+  const [draft, setDraft] = useState<string>('500')
 
-  const omiseRate = OMISE[method].rate
+  const rate = OMISE[method].rate
 
-  const breakdown = useMemo(() => {
-    const omiseFee = r2(sale * omiseRate)
-    const afterOmise = r2(sale - omiseFee)
-    const likqFee = r2(afterOmise * LIKQ_RATE)
-    const payout = r2(afterOmise - likqFee)
-    return { omiseFee, afterOmise, likqFee, payout }
-  }, [sale, omiseRate])
+  const { saleSat, payoutSat, breakdown } = useMemo(() => {
+    const typed = toSatang(draft)
+    const sale = editing === 'sale' ? typed : saleForPayout(typed, rate)
+    const bd = forward(sale, rate)
+    return { saleSat: sale, payoutSat: bd.payout, breakdown: bd }
+  }, [draft, editing, rate])
 
-  const onSaleInput = (v: string) => {
-    const n = parseFloat(v)
-    setSale(Number.isFinite(n) && n >= 0 ? n : 0)
-  }
+  const saleValue =
+    editing === 'sale' ? draft : saleSat === 0 ? '' : plainBaht(saleSat)
+  const payoutValue =
+    editing === 'payout' ? draft : payoutSat === 0 ? '' : plainBaht(payoutSat)
 
-  const onPayoutInput = (v: string) => {
-    const n = parseFloat(v)
-    if (!Number.isFinite(n) || n < 0) {
-      setSale(0)
-      return
-    }
-    // Inverse: payout = sale × (1 − omiseRate) × (1 − 0.15)
-    setSale(r2(n / ((1 - omiseRate) * (1 - LIKQ_RATE))))
+  const onEdit = (field: Field, value: string) => {
+    setEditing(field)
+    setDraft(value)
   }
 
   return (
@@ -59,7 +90,7 @@ const PartnerPayoutCalculator = () => {
         </span>
         <div className="inline-flex rounded-full bg-[#f0f4f8] p-1 ring-1 ring-black/5">
           {(Object.keys(OMISE) as Method[]).map(key => {
-            const { label, icon: Icon, rate } = OMISE[key]
+            const { label, icon: Icon, rate: r } = OMISE[key]
             const active = method === key
             return (
               <button
@@ -76,7 +107,7 @@ const PartnerPayoutCalculator = () => {
                 <Icon size={16} />
                 {label}
                 <span className={active ? 'text-secondary' : 'text-primary/40'}>
-                  {(rate * 100).toLocaleString('th-TH', { maximumFractionDigits: 2 })}%
+                  {(r * 100).toLocaleString('th-TH', { maximumFractionDigits: 2 })}%
                 </span>
               </button>
             )
@@ -96,8 +127,8 @@ const PartnerPayoutCalculator = () => {
               type="number"
               min={0}
               inputMode="decimal"
-              value={sale === 0 ? '' : String(sale)}
-              onChange={e => onSaleInput(e.target.value)}
+              value={saleValue}
+              onChange={e => onEdit('sale', e.target.value)}
               className="w-full bg-transparent py-3.5 pr-4 text-2xl font-bold text-primary outline-none tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               placeholder="0"
             />
@@ -118,8 +149,8 @@ const PartnerPayoutCalculator = () => {
               type="number"
               min={0}
               inputMode="decimal"
-              value={breakdown.payout === 0 ? '' : String(breakdown.payout)}
-              onChange={e => onPayoutInput(e.target.value)}
+              value={payoutValue}
+              onChange={e => onEdit('payout', e.target.value)}
               className="w-full bg-transparent py-3.5 pr-4 text-2xl font-bold text-primary outline-none tabular-nums [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               placeholder="0"
             />
@@ -132,27 +163,27 @@ const PartnerPayoutCalculator = () => {
         <div className="flex items-center justify-between px-5 py-3.5">
           <span className="text-neutral-600">ราคาตั้งขาย</span>
           <span className="font-semibold text-primary tabular-nums">
-            {fmt(sale)} ฿
+            {fmtSatang(saleSat)} ฿
           </span>
         </div>
         <div className="flex items-center justify-between px-5 py-3.5">
           <span className="text-neutral-600">
-            หัก Omise fee · {OMISE[method].label} ({(omiseRate * 100).toLocaleString('th-TH', { maximumFractionDigits: 2 })}%)
+            หัก Omise fee · {OMISE[method].label} ({(rate * 100).toLocaleString('th-TH', { maximumFractionDigits: 2 })}%)
           </span>
           <span className="font-semibold text-rose-500 tabular-nums">
-            −{fmt(breakdown.omiseFee)} ฿
+            −{fmtSatang(breakdown.omiseFee)} ฿
           </span>
         </div>
         <div className="flex items-center justify-between px-5 py-3.5">
           <span className="text-neutral-600">หัก LiKQ commission (15%)</span>
           <span className="font-semibold text-rose-500 tabular-nums">
-            −{fmt(breakdown.likqFee)} ฿
+            −{fmtSatang(breakdown.likqFee)} ฿
           </span>
         </div>
         <div className="flex items-center justify-between px-5 py-4 bg-primary/5">
           <span className="font-bold text-primary">ยอดที่วงได้รับสุทธิ</span>
           <span className="text-xl font-bold text-primary tabular-nums">
-            {fmt(breakdown.payout)} ฿
+            {fmtSatang(breakdown.payout)} ฿
           </span>
         </div>
       </div>

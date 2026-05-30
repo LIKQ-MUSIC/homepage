@@ -39,12 +39,15 @@ const Navbar = () => {
       if (ticking) return
       ticking = true
       requestAnimationFrame(() => {
+        // On the home page, flip to the solid bar once past the services
+        // section. On pages without #services (e.g. /partner), fall back to a
+        // simple scroll threshold so the bar still turns solid — otherwise the
+        // white links sit invisibly over white content below the hero.
         const servicesSection = document.getElementById('services')
-        if (servicesSection && window.scrollY > servicesSection.offsetTop - 100) {
-          setIsScrolled(true)
-        } else {
-          setIsScrolled(false)
-        }
+        const threshold = servicesSection
+          ? servicesSection.offsetTop - 100
+          : 80
+        setIsScrolled(window.scrollY > threshold)
         ticking = false
       })
     }
@@ -83,19 +86,29 @@ const Navbar = () => {
         isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'
       }`}
     >
-      <nav className="w-full max-w-7xl px-4 mx-auto lg:px-8 z-50">
-        <div className="container flex flex-wrap items-center justify-between mx-auto px-[18px]">
+      {/* Contrast scrim: darkens behind the bar over light hero images so
+          white nav text stays legible (only in the transparent state). */}
+      {!isScrolled && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 via-black/15 to-transparent"
+        />
+      )}
+      <nav className="relative z-10 w-full max-w-7xl px-4 mx-auto lg:px-8">
+        <div className="flex flex-nowrap items-center justify-between gap-3 px-[18px]">
           {/* <LogoButton /> */}
-          <a href="#" className="mr-4 hidden lg:block cursor-pointer py-1.5">
+          <a href="#" className="shrink-0 mr-2 hidden lg:block cursor-pointer py-1.5">
             <Logo className="h-90 w-28" fill={navIconColor} />
           </a>
 
-          <a href="#" className="mr-4 lg:hidden cursor-pointer py-1.5">
+          <a href="#" className="shrink-0 mr-2 lg:hidden cursor-pointer py-1.5">
             {/* Mobile Logo */}
             <Logo className="h-90 w-28" fill={navIconColor} />
           </a>
           <NavbarLinks isScrolled={isScrolled} />
-          <div className="lg:flex items-center gap-8 hidden">
+          {/* Socials need room; show only at xl so the lg→xl range never
+              overflows. They remain available in the footer and mobile menu. */}
+          <div className="shrink-0 xl:flex items-center gap-4 hidden">
             {outerNavLinks}
           </div>
 

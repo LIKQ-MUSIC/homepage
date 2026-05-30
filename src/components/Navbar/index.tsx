@@ -95,21 +95,31 @@ const Navbar = () => {
         />
       )}
       <nav className="relative z-10 w-full max-w-7xl px-4 mx-auto lg:px-8">
-        <div className="flex flex-nowrap items-center justify-between gap-3 px-[18px]">
-          {/* <LogoButton /> */}
-          <a href="#" className="shrink-0 mr-2 hidden lg:block cursor-pointer py-1.5">
+        <div className="flex flex-nowrap items-center gap-3 px-[18px]">
+          {/* Logo stays left; mr-auto pushes the nav cluster to the right. */}
+          <a href="#" className="shrink-0 mr-auto hidden lg:block cursor-pointer py-1.5">
             <Logo className="h-90 w-28" fill={navIconColor} />
           </a>
 
-          <a href="#" className="shrink-0 mr-2 lg:hidden cursor-pointer py-1.5">
+          <a href="#" className="shrink-0 mr-auto lg:hidden cursor-pointer py-1.5">
             {/* Mobile Logo */}
             <Logo className="h-90 w-28" fill={navIconColor} />
           </a>
-          <NavbarLinks isScrolled={isScrolled} />
-          {/* Socials need room; show only at xl so the lg→xl range never
-              overflows. They remain available in the footer and mobile menu. */}
-          <div className="shrink-0 xl:flex items-center gap-4 hidden">
-            {outerNavLinks}
+
+          {/* Right cluster: nav links · divider · socials, grouped with an
+              even rhythm so spacing reads intentionally (not spread apart). */}
+          <div className="hidden lg:flex items-center gap-5">
+            <NavbarLinks isScrolled={isScrolled} />
+            {/* Socials show only at xl so the lg→xl range never overflows. */}
+            <span
+              aria-hidden
+              className={`hidden xl:block h-5 w-px ${
+                isScrolled ? 'bg-primary/20' : 'bg-white/30'
+              }`}
+            />
+            <div className="hidden xl:flex items-center gap-3">
+              {outerNavLinks}
+            </div>
           </div>
 
           <button

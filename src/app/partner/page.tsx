@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import {
@@ -16,8 +17,16 @@ import {
   Star,
   Percent,
   Sparkles,
+  Headset,
   QrCode
 } from 'lucide-react'
+
+const storeShots = [
+  { src: '/images/nekowink/neko-home.png', label: 'หน้าร้าน', alt: 'หน้าร้าน NekoWink' },
+  { src: '/images/nekowink/neko-product.png', label: 'เลือกสินค้า', alt: 'หน้าเลือกสินค้าและเมมเบอร์' },
+  { src: '/images/nekowink/neko-cart.png', label: 'ตะกร้า', alt: 'ตะกร้าสินค้า' },
+  { src: '/images/nekowink/neko-checkout.png', label: 'ชำระเงิน', alt: 'หน้าชำระเงิน PromptPay และบัตร' }
+]
 
 export const revalidate = 3600
 
@@ -71,6 +80,11 @@ const features = [
     icon: Sparkles,
     title: 'ระบบสมาชิก & คูปองพร้อมใช้',
     desc: 'member แต้มสะสม และส่วนลด ที่เรา manage ให้กระตุ้นยอด'
+  },
+  {
+    icon: Headset,
+    title: 'ทีม Tech คอยซัพพอร์ต',
+    desc: 'มีทีมพัฒนาดูแลระบบและพร้อมช่วยแก้ปัญหาให้ คุณไม่ต้องปวดหัวเรื่องเทคนิคเอง'
   }
 ]
 
@@ -94,7 +108,7 @@ const ecosystem = [
 
 const caseStats = [
   { value: '8', label: 'เมมเบอร์ในร้านเดียว' },
-  { value: 'QR', label: 'PromptPay ไม่มีค่าธรรมเนียม' },
+  { value: 'QR', label: 'PromptPay & บัตรเครดิต' },
   { value: '100%', label: 'custom design ตามแบรนด์' }
 ]
 
@@ -370,7 +384,29 @@ export default function PartnerPage() {
             หน้าร้านดีไซน์เฉพาะ ระบบสมาชิก และ PromptPay / Omise ทำงานจริงทั้งหมด
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-10">
+          {/* Real store screenshots */}
+          <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-7">
+            {storeShots.map(({ src, label, alt }, idx) => (
+              <figure
+                key={src}
+                className={`flex flex-col items-center ${idx % 2 === 1 ? 'lg:translate-y-7' : ''}`}
+              >
+                <div className="w-full rounded-[20px] border-[5px] border-[#0d1322] bg-[#0d1322] shadow-2xl shadow-black/40 overflow-hidden">
+                  <Image
+                    src={src}
+                    alt={alt}
+                    width={520}
+                    height={1130}
+                    className="w-full h-auto block"
+                    sizes="(max-width: 1024px) 45vw, 22vw"
+                  />
+                </div>
+                <figcaption className="mt-3 text-sm text-white/60">{label}</figcaption>
+              </figure>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-14">
             {caseStats.map(({ value, label }) => (
               <div
                 key={label}
@@ -393,7 +429,7 @@ export default function PartnerPage() {
             มาเปิดร้านด้วยกันไหม?
           </h2>
           <p className="mt-5 text-lg text-neutral-500 max-w-xl mx-auto">
-            เริ่มต้นแบบไม่มีความเสี่ยง เราขอแค่คุยกันก่อน ไม่ผูกมัด
+            เริ่มต้นไม่มีความเสี่ยง คุยก่อนได้ ไม่มีผูกมัด
           </p>
           <div className="mt-9 flex flex-wrap justify-center items-center gap-4">
             <a

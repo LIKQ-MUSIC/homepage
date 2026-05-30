@@ -102,14 +102,13 @@ h1.headline {
 }
 .pageno.light { color: var(--muted-on-navy); }
 
-/* ── logo (text) ── */
-.logo { display: inline-flex; align-items: baseline; font-weight: 700; letter-spacing: -0.02em; color: var(--paper); }
-.footer .logo { font-size: 22px; color: var(--muted); }
-.slide.navy .footer .logo { color: var(--paper); }
-.logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--lavender); margin-left: 5px; align-self: flex-end; margin-bottom: 4px; }
-.logo-dot.sm { width: 7px; height: 7px; margin-left: 4px; margin-bottom: 3px; }
-.logo-lg { font-size: 110px; line-height: 1; margin-bottom: 48px; }
-.logo-lg .logo-dot { width: 28px; height: 28px; margin-left: 10px; margin-bottom: 14px; }
+/* ── logo (real wordmark image) ── */
+.cover-logo { display: block; width: 360px; height: auto; align-self: flex-start; margin-bottom: 50px; }
+.footer-logo {
+  display: inline-block; width: 86px; height: 27px;
+  background: url('/pitch/logo-navy.png?v=20260530b') left center / contain no-repeat;
+}
+.slide.navy .footer-logo { background-image: url('/pitch/logo-paper.png?v=20260530b'); }
 
 /* ── 1 · cover ── */
 .cover {

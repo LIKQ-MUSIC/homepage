@@ -10,6 +10,7 @@ const links: { href: string; label: string; kind: Kind; isRoute?: boolean }[] = 
   { href: '#services', label: 'Our Services', kind: 'text' },
   { href: '#work', label: 'Our Work', kind: 'text' },
   { href: '#team', label: 'Our Team', kind: 'text' },
+  { href: '/artists', label: 'ศิลปิน', kind: 'text', isRoute: true },
   { href: '/partner', label: 'ฝากขาย', kind: 'secondary', isRoute: true },
   { href: '/audition', label: 'Audition', kind: 'primary', isRoute: true }
 ]

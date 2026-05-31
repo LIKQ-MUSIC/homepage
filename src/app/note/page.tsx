@@ -21,7 +21,9 @@ export const metadata: Metadata = {
 
 const artists: { name: string; href: string | null; live: boolean }[] = [
   { name: 'NekoWink', href: '/nekowink', live: true },
-  { name: 'KIMYORA', href: null, live: false }
+  { name: 'KIMYORA', href: null, live: false },
+  { name: 'LIKE YOU PROJECT', href: null, live: false },
+  { name: 'INSEKI PROJECT', href: null, live: false }
 ]
 
 const steps = [
@@ -102,7 +104,7 @@ export default function NotePage() {
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-24">
           <p className="text-sm tracking-[0.3em] uppercase text-secondary-dark mb-3">เก็บ Note ได้จากใครบ้าง</p>
           <h2 className="text-2xl md:text-4xl font-bold text-primary leading-snug max-w-2xl">
-            ศิลปินในค่ายที่ใช้ Note ร่วมกัน
+            ศิลปินพาร์ทเนอร์ที่ใช้ Note ร่วมกัน
           </h2>
           <p className="mt-3 text-base md:text-lg text-neutral-500 max-w-2xl">
             ยิ่งค่ายโต Note ในมือคุณก็ยิ่งมีที่ใช้ และกำลังเพิ่มขึ้นเรื่อย ๆ
@@ -112,21 +114,23 @@ export default function NotePage() {
             {artists.map(({ name, href, live }) => {
               const inner = (
                 <>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-secondary/20 text-primary flex items-center justify-center">
+                  <div className="flex items-center gap-4 min-w-0">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-secondary/20 text-primary flex items-center justify-center">
                       <Music size={24} />
                     </div>
-                    <span className="text-xl font-bold text-primary">{name}</span>
+                    <span className="text-xl font-bold text-primary truncate">{name}</span>
                   </div>
-                  {live ? (
-                    <span className="inline-flex items-center gap-1 text-sm font-bold text-secondary-dark group-hover:gap-2 transition-all">
-                      ช้อปเลย <ArrowRight size={16} />
-                    </span>
-                  ) : (
-                    <span className="rounded-full bg-black/5 px-3 py-1 text-xs font-bold text-neutral-400">
-                      เร็ว ๆ นี้
-                    </span>
-                  )}
+                  <div className="flex-shrink-0 ml-4">
+                    {live ? (
+                      <span className="inline-flex items-center gap-1 text-sm font-bold text-secondary-dark group-hover:gap-2 transition-all">
+                        ช้อปเลย <ArrowRight size={16} />
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-black/5 px-3 py-1 text-xs font-bold text-neutral-400">
+                        เร็ว ๆ นี้
+                      </span>
+                    )}
+                  </div>
                 </>
               )
               return live && href ? (
@@ -189,10 +193,10 @@ export default function NotePage() {
             </p>
             <div className="mt-9 flex flex-wrap justify-center items-center gap-3">
               <Link
-                href="/partner"
+                href="/artists"
                 className="inline-flex items-center gap-2 bg-white text-primary font-bold px-7 py-3.5 rounded-full hover:bg-neutral-100 transition-colors active:scale-95 shadow-lg"
               >
-                ดูศิลปินในค่าย
+                ดูศิลปินพาร์ทเนอร์
                 <ArrowRight size={18} />
               </Link>
               <Link

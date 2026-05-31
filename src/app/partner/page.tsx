@@ -400,7 +400,7 @@ export default function PartnerPage() {
               </h2>
               <p className="mt-3 text-secondary leading-relaxed">
                 ลูกค้าช้อปร้านไหนในค่าย ก็สะสม Note เข้ากระเป๋าใบเดียวกัน เก็บจากร้านนึง
-                ไปใช้อีกร้านได้ ตอนนี้มี KIMYORA กับ NekoWink ใช้ร่วมกันแล้ว
+                ไปใช้อีกร้านได้ เริ่มเปิดใช้จริงแล้วที่ NekoWink และกำลังขยายไปทุกศิลปินในค่าย
               </p>
             </div>
             <Link

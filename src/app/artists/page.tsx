@@ -17,31 +17,26 @@ export const metadata: Metadata = {
 }
 
 const artists: {
-  index: string
   name: string
   description: string
   url?: string
 }[] = [
   {
-    index: 'A',
-    name: 'NekoWink',
-    description: 'วงไอดอลสาว 8 คน สไตล์คาวาอี้ญี่ปุ่น',
-    url: 'https://www.likqmusic.com/nekowink'
-  },
-  {
-    index: 'B',
-    name: 'LIKE YOU PROJECT',
-    description: 'โปรเจกต์ไอดอลหน้าใหม่ของ LiKQ MUSIC'
-  },
-  {
-    index: 'C',
     name: 'INSEKI PROJECT',
-    description: 'โปรเจกต์ศิลปินใต้สังกัด LiKQ MUSIC'
+    description: 'ไอดอล JPOP อุกาบาตที่จะสั่นสะเทือน'
   },
   {
-    index: 'D',
     name: 'KIMYORA',
-    description: 'ศิลปินโซโล่ในสังกัด LiKQ MUSIC'
+    description: 'โซโล่หลากหลายผู้หลุดกรอบสร้างสรรค์'
+  },
+  {
+    name: 'LIKE YOU PROJECT',
+    description: 'เทรนนีเกิร์ลกรุ๊บมากความสามารถภายใต้ค่าย LIKQ MUSIC'
+  },
+  {
+    name: 'NekoWink',
+    description: 'ไอดอลสาวแมวดำ 8 คน สไตล์คาวาอี้ญี่ปุ่น',
+    url: 'https://www.likqmusic.com/nekowink'
   }
 ]
 
@@ -65,45 +60,53 @@ export default function ArtistsPage() {
         </div>
       </section>
 
-      {/* Index list */}
+      {/* Dictionary index list */}
       <section className="max-w-4xl mx-auto px-4 md:px-8 py-16">
-        <ol className="space-y-0 divide-y divide-neutral-200">
-          {artists.map((a) => (
-            <li key={a.index}>
-              {a.url ? (
-                <Link
-                  href={a.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-6 py-6 hover:bg-white rounded-xl px-4 -mx-4 transition-colors"
-                >
-                  <span className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-sm font-mono">
-                    {a.index}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-lg text-neutral-900 group-hover:text-primary transition-colors">
-                      {a.name}
-                    </p>
-                    <p className="text-sm text-neutral-500 mt-0.5">{a.description}</p>
+        <ol className="space-y-0">
+          {artists.map((a, i) => {
+            const letter = a.name[0].toUpperCase()
+            const prevLetter = i > 0 ? artists[i - 1].name[0].toUpperCase() : null
+            const showLetter = letter !== prevLetter
+
+            return (
+              <li key={a.name}>
+                {showLetter && (
+                  <div className="pt-8 pb-2 first:pt-0">
+                    <span className="text-3xl font-black text-primary/15 font-mono select-none">
+                      {letter}
+                    </span>
+                    <hr className="border-neutral-200 mt-1" />
                   </div>
-                  <ExternalLink
-                    size={16}
-                    className="flex-shrink-0 text-neutral-400 group-hover:text-primary transition-colors"
-                  />
-                </Link>
-              ) : (
-                <div className="flex items-center gap-6 py-6 px-4 -mx-4">
-                  <span className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-neutral-100 text-neutral-500 font-bold text-sm font-mono">
-                    {a.index}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-lg text-neutral-900">{a.name}</p>
-                    <p className="text-sm text-neutral-500 mt-0.5">{a.description}</p>
+                )}
+                {a.url ? (
+                  <Link
+                    href={a.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between gap-4 py-5 px-2 -mx-2 hover:bg-white rounded-xl transition-colors"
+                  >
+                    <div className="min-w-0">
+                      <p className="font-bold text-lg text-neutral-900 group-hover:text-primary transition-colors">
+                        {a.name}
+                      </p>
+                      <p className="text-sm text-neutral-500 mt-0.5">{a.description}</p>
+                    </div>
+                    <ExternalLink
+                      size={16}
+                      className="flex-shrink-0 text-neutral-400 group-hover:text-primary transition-colors"
+                    />
+                  </Link>
+                ) : (
+                  <div className="flex items-center justify-between gap-4 py-5 px-2 -mx-2">
+                    <div className="min-w-0">
+                      <p className="font-bold text-lg text-neutral-900">{a.name}</p>
+                      <p className="text-sm text-neutral-500 mt-0.5">{a.description}</p>
+                    </div>
                   </div>
-                </div>
-              )}
-            </li>
-          ))}
+                )}
+              </li>
+            )
+          })}
         </ol>
       </section>
 

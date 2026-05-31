@@ -45,7 +45,7 @@ const steps = [
 const facts = [
   { icon: LogIn, text: 'แต้มผูกกับอีเมล ใช้ตอนไหนก็ต้องล็อกอินก่อน' },
   { icon: Clock, text: 'Note มีอายุ 6 เดือนนับจากวันที่ได้รับ ใช้ก่อนหมดอายุนะ' },
-  { icon: Sparkles, text: 'ยอดส่วนที่จ่ายด้วย Note จะไม่งอก Note กลับ นับเฉพาะเงินจริง' }
+  { icon: Sparkles, text: 'ได้รับ Note เฉพาะยอดที่จ่ายจริงเท่านั้น' }
 ]
 
 export default function NotePage() {

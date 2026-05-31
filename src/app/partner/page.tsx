@@ -386,6 +386,35 @@ export default function PartnerPage() {
         </div>
       </section>
 
+      {/* ── Note rewards ── */}
+      <section className="max-w-6xl mx-auto px-4 md:px-8 py-14 md:py-20">
+        <div className="relative overflow-hidden rounded-2xl bg-primary text-white p-8 md:p-12">
+          <div className="absolute -top-16 -right-12 w-64 h-64 rounded-full bg-secondary/10 pointer-events-none" />
+          <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="max-w-xl">
+              <div className="inline-flex items-center gap-2 mb-4 text-secondary text-xs font-bold tracking-wider uppercase">
+                <Sparkles size={13} /> ♪ Note · ระบบแต้มกลาง
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold leading-snug">
+                แต้มเดียว ใช้ได้กับศิลปินทุกคนในค่าย
+              </h2>
+              <p className="mt-3 text-secondary leading-relaxed">
+                ลูกค้าช้อปร้านไหนในค่าย ก็สะสม Note เข้ากระเป๋าใบเดียวกัน เก็บจากร้านนึง
+                ไปใช้อีกร้านได้ เริ่มเปิดใช้จริงแล้วที่ NekoWink และกำลังขยายไปทุกศิลปินในค่าย
+              </p>
+            </div>
+            <Link
+              href="/note"
+              className="inline-flex items-center gap-2 bg-white text-primary font-bold px-7 py-3.5 rounded-full hover:bg-neutral-100 transition-colors active:scale-95 shadow-lg shrink-0"
+            >
+              ระบบ Note คืออะไร
+              <ArrowRight size={18} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+
       {/* ── Case study ── */}
       <section className="bg-primary text-white">
         <div className="relative max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-24 overflow-hidden">

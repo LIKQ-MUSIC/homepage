@@ -168,29 +168,40 @@ export default function NotePage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="bg-primary text-white">
-        <div className="relative max-w-4xl mx-auto px-4 md:px-8 py-20 md:py-28 text-center overflow-hidden">
-          <div className="absolute -bottom-24 -left-20 w-80 h-80 rounded-full bg-secondary/10 pointer-events-none" />
-          <h2 className="relative text-3xl md:text-5xl font-bold leading-tight">
-            ล็อกอินแล้วเริ่มเก็บ Note ได้ตั้งแต่ออเดอร์แรก
-          </h2>
-          <p className="relative mt-5 text-lg text-secondary max-w-xl mx-auto">
-            ไว้ใช้กับศิลปินที่คุณรัก ทุกคนในค่าย LiKQ
-          </p>
-          <div className="relative mt-9 flex flex-wrap justify-center items-center gap-4">
-            <Link
-              href="/partner"
-              className="inline-flex items-center gap-2 bg-white text-primary font-bold px-8 py-4 rounded-full hover:bg-neutral-100 transition-colors active:scale-95 shadow-lg"
-            >
-              ดูศิลปินในค่าย
-              <ArrowRight size={18} />
-            </Link>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-white ring-1 ring-white/40 hover:bg-white/10 transition-colors active:scale-95"
-            >
-              กลับหน้าหลัก
-            </Link>
+      <section className="px-4 md:px-8 pb-16 md:pb-24 pt-4">
+        <div className="relative max-w-5xl mx-auto rounded-[2rem] overflow-hidden bg-gradient-to-br from-primary via-primary to-[#0c1d34] text-white px-6 sm:px-10 md:px-16 py-16 md:py-20 text-center shadow-xl shadow-primary/20">
+          <div className="absolute -top-16 -right-16 w-72 h-72 rounded-full bg-secondary/10 pointer-events-none" />
+          <div className="absolute -bottom-20 -left-16 w-80 h-80 rounded-full bg-secondary/[0.07] pointer-events-none" />
+          <div className="absolute top-12 left-12 w-2.5 h-2.5 rounded-full bg-secondary/70 pointer-events-none" />
+
+          <div className="relative">
+            <div className="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-full bg-white/10 ring-1 ring-secondary/30 text-secondary text-xs font-bold tracking-wider uppercase">
+              <Music size={13} />
+              เริ่มเก็บเลย
+            </div>
+            <h2 className="text-2xl md:text-5xl font-bold leading-snug text-balance">
+              <span className="inline-block">ล็อกอินแล้ว</span>{' '}
+              <span className="inline-block">เริ่มเก็บ Note</span>{' '}
+              <span className="inline-block">ได้ตั้งแต่ออเดอร์แรก</span>
+            </h2>
+            <p className="mt-5 text-base md:text-lg text-secondary max-w-md mx-auto">
+              ไว้ใช้กับศิลปินที่คุณรัก ทุกคนในค่าย LiKQ
+            </p>
+            <div className="mt-9 flex flex-wrap justify-center items-center gap-3">
+              <Link
+                href="/partner"
+                className="inline-flex items-center gap-2 bg-white text-primary font-bold px-7 py-3.5 rounded-full hover:bg-neutral-100 transition-colors active:scale-95 shadow-lg"
+              >
+                ดูศิลปินในค่าย
+                <ArrowRight size={18} />
+              </Link>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-bold text-white ring-1 ring-white/40 hover:bg-white/10 transition-colors active:scale-95"
+              >
+                กลับหน้าหลัก
+              </Link>
+            </div>
           </div>
         </div>
       </section>

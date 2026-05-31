@@ -26,6 +26,10 @@ const artists: {
     description: 'เทรนนีสไตล์ JPOP อุกาบาตที่จะสร้างความแตกต่าง ภายใต้ LIKQ MUSIC'
   },
   {
+    name: 'JOM KORR',
+    description: 'ศัตรูคู่แข่งและคู่หูของ YORA ร็อคเกอร์แหวกขนบที่จะทำให้คุณแปลกใจ'
+  },
+  {
     name: 'KIMYORA',
     description: 'โซโล่หลากหลายผู้หลุดกรอบสร้างสรรค์'
   },

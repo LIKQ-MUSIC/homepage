@@ -19,9 +19,9 @@ export const metadata: Metadata = {
   }
 }
 
-const artists = [
-  { name: 'KIMYORA', href: '/kimyora' },
-  { name: 'NekoWink', href: '/nekowink' }
+const artists: { name: string; href: string | null; live: boolean }[] = [
+  { name: 'NekoWink', href: '/nekowink', live: true },
+  { name: 'KIMYORA', href: null, live: false }
 ]
 
 const steps = [
@@ -109,23 +109,43 @@ export default function NotePage() {
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-10">
-            {artists.map(({ name, href }) => (
-              <Link
-                key={name}
-                href={href}
-                className="group flex items-center justify-between rounded-2xl p-7 bg-[#f8f9fb] ring-1 ring-black/5 hover:ring-secondary/50 transition-colors"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-secondary/20 text-primary flex items-center justify-center">
-                    <Music size={24} />
+            {artists.map(({ name, href, live }) => {
+              const inner = (
+                <>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-secondary/20 text-primary flex items-center justify-center">
+                      <Music size={24} />
+                    </div>
+                    <span className="text-xl font-bold text-primary">{name}</span>
                   </div>
-                  <span className="text-xl font-bold text-primary">{name}</span>
+                  {live ? (
+                    <span className="inline-flex items-center gap-1 text-sm font-bold text-secondary-dark group-hover:gap-2 transition-all">
+                      ช้อปเลย <ArrowRight size={16} />
+                    </span>
+                  ) : (
+                    <span className="rounded-full bg-black/5 px-3 py-1 text-xs font-bold text-neutral-400">
+                      เร็ว ๆ นี้
+                    </span>
+                  )}
+                </>
+              )
+              return live && href ? (
+                <Link
+                  key={name}
+                  href={href}
+                  className="group flex items-center justify-between rounded-2xl p-7 bg-[#f8f9fb] ring-1 ring-black/5 hover:ring-secondary/50 transition-colors"
+                >
+                  {inner}
+                </Link>
+              ) : (
+                <div
+                  key={name}
+                  className="flex items-center justify-between rounded-2xl p-7 bg-[#f8f9fb] ring-1 ring-black/5 opacity-75"
+                >
+                  {inner}
                 </div>
-                <span className="inline-flex items-center gap-1 text-sm font-bold text-secondary-dark group-hover:gap-2 transition-all">
-                  ช้อปเลย <ArrowRight size={16} />
-                </span>
-              </Link>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>

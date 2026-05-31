@@ -23,7 +23,7 @@ const artists: {
 }[] = [
   {
     name: 'INSEKI PROJECT',
-    description: 'ไอดอล JPOP อุกาบาตที่จะสั่นสะเทือน'
+    description: 'เทรนนีสไตล์ JPOP อุกาบาตที่จะสร้างความแตกต่าง ภายใต้ LIKQ MUSIC'
   },
   {
     name: 'KIMYORA',
@@ -35,7 +35,7 @@ const artists: {
   },
   {
     name: 'NekoWink',
-    description: 'ไอดอลสาวแมวดำ 8 คน สไตล์คาวาอี้ญี่ปุ่น',
+    description: 'ไอดอลสาวแมวดำ 8 คน สไตล์คาวาอี้ญี่ปุ่น จาก BLT WORLD ENTERTAINMENT',
     url: 'https://www.likqmusic.com/nekowink'
   }
 ]

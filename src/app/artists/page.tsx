@@ -16,11 +16,8 @@ export const metadata: Metadata = {
   }
 }
 
-const artists: {
-  name: string
-  description: string
-  url?: string
-}[] = [
+// ── Add artists here. Page groups + sorts automatically. ──────────────────
+const ARTISTS: { name: string; description: string; url?: string }[] = [
   {
     name: 'INSEKI PROJECT',
     description: 'เทรนนีสไตล์ JPOP อุกาบาตที่จะสร้างความแตกต่าง ภายใต้ LIKQ MUSIC'
@@ -44,7 +41,23 @@ const artists: {
   }
 ]
 
+// Group by first character, sort groups and entries within each group
+function buildIndex(artists: typeof ARTISTS) {
+  const map = new Map<string, typeof ARTISTS>()
+  const sorted = [...artists].sort((a, b) =>
+    a.name.localeCompare(b.name, 'en', { sensitivity: 'base' })
+  )
+  for (const artist of sorted) {
+    const key = artist.name[0].toUpperCase()
+    if (!map.has(key)) map.set(key, [])
+    map.get(key)!.push(artist)
+  }
+  return [...map.entries()].sort(([a], [b]) => a.localeCompare(b, 'en'))
+}
+
 export default function ArtistsPage() {
+  const groups = buildIndex(ARTISTS)
+
   return (
     <main className="min-h-screen bg-[#f8f9fb] text-neutral-900 font-sans overflow-x-hidden">
       <Navbar />
@@ -64,54 +77,50 @@ export default function ArtistsPage() {
         </div>
       </section>
 
-      {/* Dictionary index list */}
+      {/* Dictionary index */}
       <section className="max-w-4xl mx-auto px-4 md:px-8 py-16">
-        <ol className="space-y-0">
-          {artists.map((a, i) => {
-            const letter = a.name[0].toUpperCase()
-            const prevLetter = i > 0 ? artists[i - 1].name[0].toUpperCase() : null
-            const showLetter = letter !== prevLetter
-
-            return (
-              <li key={a.name}>
-                {showLetter && (
-                  <div className="pt-8 pb-2 first:pt-0">
-                    <span className="text-3xl font-black text-primary/15 font-mono select-none">
-                      {letter}
-                    </span>
-                    <hr className="border-neutral-200 mt-1" />
+        {groups.map(([letter, entries]) => (
+          <div key={letter} className="mb-2">
+            <div className="flex items-center gap-3 pt-8 pb-2">
+              <span className="text-3xl font-black text-primary/15 font-mono w-8 select-none">
+                {letter}
+              </span>
+              <hr className="flex-1 border-neutral-200" />
+            </div>
+            {entries.map((a) =>
+              a.url ? (
+                <Link
+                  key={a.name}
+                  href={a.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center justify-between gap-4 py-5 px-2 -mx-2 hover:bg-white rounded-xl transition-colors"
+                >
+                  <div className="min-w-0">
+                    <p className="font-bold text-lg text-neutral-900 group-hover:text-primary transition-colors">
+                      {a.name}
+                    </p>
+                    <p className="text-sm text-neutral-500 mt-0.5">{a.description}</p>
                   </div>
-                )}
-                {a.url ? (
-                  <Link
-                    href={a.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center justify-between gap-4 py-5 px-2 -mx-2 hover:bg-white rounded-xl transition-colors"
-                  >
-                    <div className="min-w-0">
-                      <p className="font-bold text-lg text-neutral-900 group-hover:text-primary transition-colors">
-                        {a.name}
-                      </p>
-                      <p className="text-sm text-neutral-500 mt-0.5">{a.description}</p>
-                    </div>
-                    <ExternalLink
-                      size={16}
-                      className="flex-shrink-0 text-neutral-400 group-hover:text-primary transition-colors"
-                    />
-                  </Link>
-                ) : (
-                  <div className="flex items-center justify-between gap-4 py-5 px-2 -mx-2">
-                    <div className="min-w-0">
-                      <p className="font-bold text-lg text-neutral-900">{a.name}</p>
-                      <p className="text-sm text-neutral-500 mt-0.5">{a.description}</p>
-                    </div>
+                  <ExternalLink
+                    size={16}
+                    className="flex-shrink-0 text-neutral-400 group-hover:text-primary transition-colors"
+                  />
+                </Link>
+              ) : (
+                <div
+                  key={a.name}
+                  className="flex items-center justify-between gap-4 py-5 px-2 -mx-2"
+                >
+                  <div className="min-w-0">
+                    <p className="font-bold text-lg text-neutral-900">{a.name}</p>
+                    <p className="text-sm text-neutral-500 mt-0.5">{a.description}</p>
                   </div>
-                )}
-              </li>
-            )
-          })}
-        </ol>
+                </div>
+              )
+            )}
+          </div>
+        ))}
       </section>
 
       <Footer />

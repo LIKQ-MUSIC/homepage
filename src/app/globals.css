@@ -124,6 +124,18 @@ body {
   animation: ripple 0.6s linear;
 }
 
+/* Reduced motion: skip the entrance animation but keep the content visible
+   (these utilities start at opacity:0, so they must be forced on, not just
+   paused, or the section would ship blank for reduced-motion users). */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-scale-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 .youtube-icon circle {
   fill: white;
   transition: fill 0.3s ease;

@@ -14,7 +14,7 @@ const Section = ({ id, label, title, dark, children, className }: ISectionProps)
       ])}
     >
       {label && (
-        <Paragraph variant="label" className={cn(['mb-4', dark && 'text-white/60'])}>
+        <Paragraph variant="label" className={cn(['mb-4', dark && 'text-white/70'])}>
           {label}
         </Paragraph>
       )}

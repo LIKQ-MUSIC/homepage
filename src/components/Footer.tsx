@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import dayjs from 'dayjs'
 import { Title } from '@/ui/Typography'
+import Button from '@/ui/Button'
 import Youtube from '@/ui/Icons/YouTube'
 import Mailbox from '@/ui/Icons/Mailbox'
 import SoundCloud from '@/ui/Icons/SoundCloud'
@@ -141,10 +142,11 @@ const Footer = () => {
                 </div>
               )}
 
-              <button
+              <Button
                 type="submit"
+                variant="onDark"
                 disabled={isPending}
-                className={`w-full bg-white text-[#153051] font-bold py-3 rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center ${isPending ? 'opacity-70 cursor-not-allowed' : ''}`}
+                className="w-full h-auto py-3 rounded-lg font-bold"
               >
                 {isPending ? (
                   <>
@@ -154,7 +156,7 @@ const Footer = () => {
                 ) : (
                   'ส่งข้อความ'
                 )}
-              </button>
+              </Button>
             </form>
           </div>
         </div>

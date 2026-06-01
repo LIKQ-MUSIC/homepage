@@ -1,4 +1,5 @@
 import Section from '@/components/Section'
+import Button from '@/ui/Button'
 
 const AboutUs = () => {
   return (
@@ -26,13 +27,14 @@ const AboutUs = () => {
             เพื่อให้ได้ผลงานที่ตรงตามวิสัยทัศน์ของคุณมากที่สุด
           </p>
 
-          <div className="pt-4">
-            <a
+          <div className="pt-4 flex justify-center">
+            <Button
               href="#work"
-              className="inline-block px-8 py-3 rounded-full border border-white/20 hover:bg-white hover:text-[#030827] transition-all duration-300 transform hover:scale-105"
+              variant="onDarkOutline"
+              className="h-auto px-8 py-3 rounded-full"
             >
               ดูผลงานของเรา
-            </a>
+            </Button>
           </div>
         </div>
       </div>

@@ -36,9 +36,13 @@ const Team = async () => {
 
   return (
     <Section id="team" className="" label="Our Team" title="ทีมงานของเรา">
-      <div className="grid grid-cols-1 md:grid-cols-3 mt-8 gap-4">
+      {/* Centred wrap keeps the last row balanced for any head-count
+          (e.g. 4 members read as 3 + 1 centred, not 3 + 1 stranded left). */}
+      <div className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-12">
         {staffMembers.map((staffMember: StaffMember) => (
-          <StaffCard key={staffMember.name} {...staffMember} />
+          <div key={staffMember.name} className="w-full sm:w-64">
+            <StaffCard {...staffMember} />
+          </div>
         ))}
       </div>
     </Section>

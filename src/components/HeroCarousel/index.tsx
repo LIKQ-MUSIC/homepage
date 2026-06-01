@@ -9,6 +9,7 @@ import {
   CarouselContent,
   CarouselItem
 } from '@/ui/Carousel'
+import Button from '@/ui/Button'
 
 interface HeroCarouselProps {
   images: { src: string; alt: string }[]
@@ -65,14 +66,14 @@ const HeroCarousel = ({ images }: HeroCarouselProps) => {
             ดีไซน์ตัวตนผ่านเสียงเพลง <br className="md:hidden" />{' '}
             บรรเลงทุกคำให้เป็นคุณ
           </p>
-          <a
+          <Button
             href="#contact"
-            className="inline-block px-10 py-4 bg-white text-[#030827] text-lg font-semibold rounded-full 
-                       hover:bg-[#E8EAEE] hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)] opacity-0 animate-scale-in"
+            variant="onDark"
+            className="h-auto px-10 py-4 rounded-full text-lg font-semibold shadow-[0_0_24px_rgba(255,255,255,0.28)] opacity-0 animate-scale-in"
             style={{ animationDelay: '0.4s' }}
           >
             เริ่มโปรเจกต์กับเรา
-          </a>
+          </Button>
         </div>
       </div>
     </section>

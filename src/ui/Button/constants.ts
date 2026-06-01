@@ -13,7 +13,39 @@ export const variantClasses: Record<ButtonVariant, string> = {
   success:
     'bg-success text-white hover:bg-success-hover active:bg-success-active',
   outline:
-    'border border-primary text-primary hover:bg-primary-light dark:border-[#334155] dark:text-neutral-300 dark:hover:bg-white/10'
+    'border border-primary text-primary hover:bg-primary-light dark:border-[#334155] dark:text-neutral-300 dark:hover:bg-white/10',
+  onDark:
+    'bg-white text-primary hover:bg-primary-light focus-visible:ring-white/70',
+  onDarkOutline:
+    'bg-transparent text-white border border-white/40 hover:bg-white hover:text-primary focus-visible:ring-white/70'
+}
+
+// Tint of the diagonal highlight that sweeps across on hover. Light against
+// dark fills, navy against light fills, so the sheen reads on every surface.
+export const sheenClasses: Record<ButtonVariant, string> = {
+  primary: 'via-white/25',
+  secondary: 'via-white/30',
+  ghost: 'via-primary/10',
+  danger: 'via-white/25',
+  warning: 'via-white/25',
+  success: 'via-white/25',
+  outline: 'via-primary/10',
+  onDark: 'via-primary/15',
+  onDarkOutline: 'via-white/25'
+}
+
+// Hover shadow + coloured glow so the lift feels lit, not just shadowed.
+// ghost stays flat (keeps its own hover:shadow-none) so it reads as quiet.
+export const glowClasses: Record<ButtonVariant, string> = {
+  primary: 'hover:shadow-lg hover:shadow-primary/30',
+  secondary: 'hover:shadow-lg hover:shadow-secondary/40',
+  ghost: '',
+  danger: 'hover:shadow-lg hover:shadow-danger/30',
+  warning: 'hover:shadow-lg hover:shadow-warning/30',
+  success: 'hover:shadow-lg hover:shadow-success/30',
+  outline: 'hover:shadow-lg hover:shadow-primary/20',
+  onDark: 'hover:shadow-lg hover:shadow-black/25',
+  onDarkOutline: 'hover:shadow-lg hover:shadow-black/20'
 }
 
 export const buttonSizesClass: Record<ButtonSize, string> = {

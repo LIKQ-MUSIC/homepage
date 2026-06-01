@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import { Mic, Sparkles } from 'lucide-react'
+import Button from '@/ui/Button'
 
 export default function AuditionCTA() {
   return (
@@ -35,18 +35,13 @@ export default function AuditionCTA() {
               </p>
             </div>
 
-            <Link
+            <Button
               href="/audition"
-              className="relative flex-shrink-0 inline-flex items-center gap-2 bg-white text-primary font-bold px-8 py-3.5 rounded-full hover:bg-neutral-100 transition-colors active:scale-95 shadow-lg"
+              variant="onDark"
+              className="flex-shrink-0 h-auto px-8 py-3.5 rounded-full font-bold shadow-lg"
             >
-              {/* Outer pulse ring for attention — absolute so it doesn't
-                  shift layout; motion-safe so reduced-motion users skip it */}
-              <span
-                aria-hidden
-                className="absolute inset-0 rounded-full ring-2 ring-white/70 motion-safe:animate-ping"
-              />
-              <span className="relative">สมัครเลย →</span>
-            </Link>
+              สมัครเลย →
+            </Button>
           </div>
         </div>
       </div>

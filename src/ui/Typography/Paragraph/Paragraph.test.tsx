@@ -31,7 +31,7 @@ describe('Paragraph Component', () => {
     expect(paragraph).toHaveClass('text-sm')
     expect(paragraph).toHaveClass('tracking-[0.3em]')
     expect(paragraph).toHaveClass('uppercase')
-    expect(paragraph).toHaveClass('text-gray-400')
+    expect(paragraph).toHaveClass('text-primary/70')
   })
 
   it('should merge custom class with label variant', () => {

@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Title } from '@/ui/Typography'
+import Button from '@/ui/Button'
+import { cn } from '@/utils'
 import dayjs from '@/utils/dayjs'
 
 interface BlogPost {
@@ -40,14 +42,23 @@ const BlogSection = ({ posts }: BlogSectionProps) => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div
+          className={cn([
+            'grid gap-6',
+            // Balance the layout when the API returns only one or two posts
+            // instead of leaving a lone card stranded in a 3-up grid.
+            posts.length === 1 && 'max-w-sm mx-auto',
+            posts.length === 2 && 'sm:grid-cols-2 max-w-3xl mx-auto',
+            posts.length >= 3 && 'sm:grid-cols-2 md:grid-cols-3'
+          ])}
+        >
           {posts.map(post => (
             <Link
               key={post.id}
               href={`/blogs/${post.slug}`}
               className="group block animate-scale-in"
             >
-              <article className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group-hover:scale-[1.02] h-full flex flex-col">
+              <article className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 motion-safe:group-hover:scale-[1.02] h-full flex flex-col">
                 <div className="aspect-video relative overflow-hidden bg-gray-100">
                   {post.thumbnail_url ? (
                     <Image
@@ -87,13 +98,16 @@ const BlogSection = ({ posts }: BlogSectionProps) => {
           ))}
         </div>
 
-        <div className="mt-10 text-center">
-          <Link
+        <div className="mt-10 flex justify-center">
+          <Button
             href="/blogs"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#153051] text-white rounded-full hover:bg-[#1e4a7a] transition-colors font-medium"
+            variant="primary"
+            // Homepage is a forced-light brand surface; keep the pill navy even
+            // when the OS sets html.dark (otherwise primary's dark: variant goes blue).
+            className="h-auto px-6 py-3 rounded-full dark:bg-primary dark:hover:bg-primary-hover dark:active:bg-primary-active"
           >
             ดูบทความทั้งหมด
-          </Link>
+          </Button>
         </div>
       </div>
     </section>

@@ -102,10 +102,21 @@ export const CANDIDATES: Candidate[] = [
   },
   {
     slug: 'satang',
-    nickname: 'สตางค์',
+    nickname: 'Yada',
     fullName: 'ญดา หงษ์ประภาส',
     referenceNumber: 'LIKQ-382BDE50',
     theme: 'yellow',
+    images: [
+      '/candidates/satang.jpg',
+      '/candidates/satang-2.jpg',
+      '/candidates/satang-3.jpg',
+      '/candidates/satang-4.jpg',
+    ],
+    danceVideos: [
+      'https://cdn.likqmusic.com/candidates/satang-dance-1.mp4',
+      'https://cdn.likqmusic.com/candidates/satang-dance-2.mp4',
+      'https://cdn.likqmusic.com/candidates/satang-dance-3.mp4',
+    ],
     tagline: 'Introvert ที่เลือกก้าวข้าม comfort zone — ด้วยเหตุผลทุกครั้ง',
     curatorNote:
       'Vocabulary ของผู้ใหญ่ คิดเป็นระบบ และมี nuance สูงทุกคำตอบ — ไม่ตอบ binary',

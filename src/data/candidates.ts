@@ -130,6 +130,10 @@ export const CANDIDATES: Candidate[] = [
     fullName: 'วาสิณี ขุนจง',
     referenceNumber: 'LIKQ-4FFB02AB',
     theme: 'pink',
+    images: ['/candidates/wawa.jpg', '/candidates/wawa-2.jpg'],
+    danceVideos: [
+      'https://drive.google.com/file/d/1W3fHo3JTDE4XnC-X_ZAANxNu4S3w_n07/view?usp=sharing',
+    ],
     tagline: 'ไม่ลังเลถ้ามันถูกต้อง ตรงไปตรงมาทุกครั้ง',
     curatorNote:
       'ตอบตรงโดยไม่มีคำเยินยอ ทำให้รู้ว่าเธอตัดสินใจจากหลักการไม่ใช่อารมณ์',

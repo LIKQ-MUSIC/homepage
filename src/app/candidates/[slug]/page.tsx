@@ -144,7 +144,7 @@ export default async function CandidateProfilePage({ params }: Props) {
           <span aria-hidden className="flex-1 border-t-[2px] border-dashed border-white/30" />
         </div>
         {candidate.danceVideos && candidate.danceVideos.length > 0 ? (
-          <div className="flex flex-wrap justify-center gap-5">
+          <div className="flex flex-col items-center gap-6">
             {candidate.danceVideos.map((src, i) => (
               <DanceVideoFrame
                 key={src}
@@ -280,35 +280,48 @@ function DanceVideoFrame({
   const isFile = src.startsWith('/') || /\.(mp4|webm|mov)(\?|$)/i.test(src)
   const label = total > 1 ? ` (คลิป ${index})` : ''
 
+  const tag = total > 1 && (
+    <span className="absolute left-2 top-2 z-10 inline-flex h-7 min-w-7 items-center justify-center border-[2px] border-y2k-yellow bg-y2k-ink px-1.5 font-pixel text-[11px] text-y2k-yellow">
+      {String(index).padStart(2, '0')}
+    </span>
+  )
+
+  if (isFile) {
+    // Keep the clip's own aspect ratio. Bounding by both height and width sizes
+    // portrait and landscape footage sensibly; the frame shrinks to fit.
+    return (
+      <div
+        className="relative inline-block w-fit max-w-full overflow-hidden border-[4px] border-y2k-ink bg-y2k-ink"
+        style={{ boxShadow: shadow }}
+      >
+        {tag}
+        <video
+          src={src}
+          controls
+          playsInline
+          preload="metadata"
+          aria-label={`Dance video ของ ${nickname}${label}`}
+          className="block h-auto w-auto max-h-[560px] max-w-full md:max-w-[480px]"
+        />
+      </div>
+    )
+  }
+
+  // Embeds need a fixed box; assume a portrait clip.
   return (
     <div
       className="relative w-full max-w-[340px] overflow-hidden border-[4px] border-y2k-ink bg-y2k-ink"
       style={{ boxShadow: shadow }}
     >
-      {total > 1 && (
-        <span className="absolute left-2 top-2 z-10 inline-flex h-7 min-w-7 items-center justify-center border-[2px] border-y2k-yellow bg-y2k-ink px-1.5 font-pixel text-[11px] text-y2k-yellow">
-          {String(index).padStart(2, '0')}
-        </span>
-      )}
+      {tag}
       <div className="aspect-[9/16]">
-        {isFile ? (
-          <video
-            src={src}
-            controls
-            playsInline
-            preload="metadata"
-            aria-label={`Dance video ของ ${nickname}${label}`}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <iframe
-            src={toEmbedUrl(src)}
-            title={`Dance video ของ ${nickname}${label}`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="h-full w-full"
-          />
-        )}
+        <iframe
+          src={toEmbedUrl(src)}
+          title={`Dance video ของ ${nickname}${label}`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="h-full w-full"
+        />
       </div>
     </div>
   )

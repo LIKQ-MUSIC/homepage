@@ -14,8 +14,17 @@ export type Candidate = {
    * themed placeholder block when empty.
    */
   images?: string[]
-  /** YouTube or Google Drive file URL. If missing, profile shows the placeholder. */
-  danceVideoUrl?: string
+  /**
+   * Dance clips. Each entry is either a local file under /public (e.g.
+   * `/candidates/x.mp4`, rendered with a <video> player) or a YouTube / Google
+   * Drive share URL (rendered as an embed). Empty shows the placeholder.
+   */
+  danceVideos?: string[]
+  /** Public social profiles, shown as follow buttons on the profile page. */
+  socials?: {
+    instagram?: string
+    tiktok?: string
+  }
   /** One-line hook on the landing card. */
   tagline: string
   /** Curator note — why they were picked. Shows on profile hero. */
@@ -64,6 +73,15 @@ export const CANDIDATES: Candidate[] = [
     fullName: 'สิรินทร์ โปร่งศิริวัฒนา',
     referenceNumber: 'LIKQ-786F84AC',
     theme: 'mint',
+    images: ['/candidates/nuey.jpg', '/candidates/nuey-2.jpg'],
+    danceVideos: [
+      'https://cdn.likqmusic.com/candidates/nuey-dance-1.mp4',
+      'https://cdn.likqmusic.com/candidates/nuey-dance-2.mp4',
+    ],
+    socials: {
+      instagram: 'https://www.instagram.com/nuey_1208',
+      tiktok: 'https://www.tiktok.com/@nuey.sp',
+    },
     tagline: 'ดรัมเมเยอร์ตัวแม่ที่รู้จักตัวเอง เพราะของจริงไม่ต้องการโบว์',
     curatorNote:
       'ความมั่นใจที่ไม่เสแสร้ง รู้ว่าตัวเองดี และรู้ว่าต้องหาคนนอกช่วยประเมินเมื่อต้อง self-check จริงๆ',
@@ -138,8 +156,9 @@ export const CANDIDATES: Candidate[] = [
     referenceNumber: 'LIKQ-1C07A085',
     theme: 'yellow',
     images: ['/candidates/caila.jpg', '/candidates/caila-2.jpg'],
-    danceVideoUrl:
+    danceVideos: [
       'https://drive.google.com/file/d/1btVzZwG61SFG7nk8PIZUrGLOY8jU7Rxh/view?usp=sharing',
+    ],
     tagline: 'โชว์ทุกครั้งเพื่อพิสูจน์ว่าตั้งใจจริง ไม่ใช่แค่อยากดัง',
     curatorNote:
       'ตั้งใจแสดงออกถึงความพยายามในทุกงาน มองว่า feedback ทุกข้อมีประโยชน์แม้ไม่เห็นด้วยทั้งหมด',

@@ -9,6 +9,7 @@ import {
 } from '@/data/candidates'
 import { CandidatePortrait } from '../_components/CandidatePortrait'
 import { CandidatePhotoCarousel } from '../_components/CandidatePhotoCarousel'
+import { SocialLinks } from '../_components/SocialLinks'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -130,6 +131,8 @@ export default async function CandidateProfilePage({ params }: Props) {
                 {candidate.curatorNote}
               </p>
             </div>
+
+            <SocialLinks socials={candidate.socials} nickname={candidate.nickname} />
           </div>
         </div>
       </header>
@@ -140,20 +143,18 @@ export default async function CandidateProfilePage({ params }: Props) {
           <span className={`y2k-badge ${t.badgeBg} !text-y2k-ink`}>Dance Video</span>
           <span aria-hidden className="flex-1 border-t-[2px] border-dashed border-white/30" />
         </div>
-        {candidate.danceVideoUrl ? (
-          <div
-            className="relative mx-auto w-full max-w-[360px] border-[4px] border-y2k-ink overflow-hidden"
-            style={{ boxShadow: t.shadow }}
-          >
-            <div className="aspect-[9/16]">
-              <iframe
-                src={toEmbedUrl(candidate.danceVideoUrl)}
-                title={`Dance video ของ ${candidate.nickname}`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
+        {candidate.danceVideos && candidate.danceVideos.length > 0 ? (
+          <div className="flex flex-wrap justify-center gap-5">
+            {candidate.danceVideos.map((src, i) => (
+              <DanceVideoFrame
+                key={src}
+                src={src}
+                shadow={t.shadow}
+                nickname={candidate.nickname}
+                index={i + 1}
+                total={candidate.danceVideos!.length}
               />
-            </div>
+            ))}
           </div>
         ) : (
           <div
@@ -260,6 +261,57 @@ function toEmbedUrl(url: string): string {
   const shortMatch = url.match(/youtu\.be\/([^?]+)/)
   if (shortMatch) return `https://www.youtube.com/embed/${shortMatch[1]}`
   return url
+}
+
+function DanceVideoFrame({
+  src,
+  shadow,
+  nickname,
+  index,
+  total,
+}: {
+  src: string
+  shadow: string
+  nickname: string
+  index: number
+  total: number
+}) {
+  // Local /public files play in a <video>; remote share links are embedded.
+  const isFile = src.startsWith('/') || /\.(mp4|webm|mov)(\?|$)/i.test(src)
+  const label = total > 1 ? ` (คลิป ${index})` : ''
+
+  return (
+    <div
+      className="relative w-full max-w-[340px] overflow-hidden border-[4px] border-y2k-ink bg-y2k-ink"
+      style={{ boxShadow: shadow }}
+    >
+      {total > 1 && (
+        <span className="absolute left-2 top-2 z-10 inline-flex h-7 min-w-7 items-center justify-center border-[2px] border-y2k-yellow bg-y2k-ink px-1.5 font-pixel text-[11px] text-y2k-yellow">
+          {String(index).padStart(2, '0')}
+        </span>
+      )}
+      <div className="aspect-[9/16]">
+        {isFile ? (
+          <video
+            src={src}
+            controls
+            playsInline
+            preload="metadata"
+            aria-label={`Dance video ของ ${nickname}${label}`}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <iframe
+            src={toEmbedUrl(src)}
+            title={`Dance video ของ ${nickname}${label}`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="h-full w-full"
+          />
+        )}
+      </div>
+    </div>
+  )
 }
 
 function themeHex(theme: 'pink' | 'mint' | 'yellow'): string {

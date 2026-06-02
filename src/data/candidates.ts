@@ -6,9 +6,15 @@ export type Candidate = {
   fullName: string
   referenceNumber: string
   theme: CandidateTheme
-  /** Path under /public. If missing, profile renders the placeholder block. */
+  /** Single portrait path under /public. Legacy; prefer `images`. */
   image?: string
-  /** YouTube URL or embed URL. If missing, profile renders the video placeholder. */
+  /**
+   * Portrait photos under /public. The list card uses the first; the profile
+   * page shows all of them in a carousel. Falls back to `image`, then to the
+   * themed placeholder block when empty.
+   */
+  images?: string[]
+  /** YouTube or Google Drive file URL. If missing, profile shows the placeholder. */
   danceVideoUrl?: string
   /** One-line hook on the landing card. */
   tagline: string
@@ -131,6 +137,9 @@ export const CANDIDATES: Candidate[] = [
     fullName: 'ชิดชนก ยอดน้ำคำ',
     referenceNumber: 'LIKQ-1C07A085',
     theme: 'yellow',
+    images: ['/candidates/caila.jpg', '/candidates/caila-2.jpg'],
+    danceVideoUrl:
+      'https://drive.google.com/file/d/1btVzZwG61SFG7nk8PIZUrGLOY8jU7Rxh/view?usp=sharing',
     tagline: 'โชว์ทุกครั้งเพื่อพิสูจน์ว่าตั้งใจจริง ไม่ใช่แค่อยากดัง',
     curatorNote:
       'ตั้งใจแสดงออกถึงความพยายามในทุกงาน มองว่า feedback ทุกข้อมีประโยชน์แม้ไม่เห็นด้วยทั้งหมด',

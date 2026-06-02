@@ -314,6 +314,12 @@ body {
     box-shadow: 1px 1px 0 0 #0D0A2C;
   }
 
+  /* On-brand keyboard focus (outline keeps the hard offset shadow intact). */
+  .y2k-btn:focus-visible {
+    outline: 3px solid #FFE14C;
+    outline-offset: 2px;
+  }
+
   .y2k-btn-primary {
     @apply y2k-btn bg-y2k-pink text-white
            hover:bg-y2k-pink-soft hover:text-y2k-ink;

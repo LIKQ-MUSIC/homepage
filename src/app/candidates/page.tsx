@@ -58,12 +58,12 @@ export default function CandidatesLandingPage() {
               <Link
                 key={candidate.slug}
                 href={`/candidates/${candidate.slug}`}
-                className="group relative block focus:outline-none"
+                className="group relative block h-full focus:outline-none"
                 aria-label={`เปิดโปรไฟล์ของ ${candidate.nickname}`}
               >
                 {/* Card frame */}
                 <div
-                  className="relative bg-y2k-cream border-[4px] border-y2k-ink transition-transform duration-200 ease-out group-hover:-translate-y-1 group-active:translate-y-0 group-focus-visible:-translate-y-1"
+                  className="relative flex h-full flex-col bg-y2k-cream border-[4px] border-y2k-ink transition-transform duration-200 ease-out group-hover:-translate-y-1 group-active:translate-y-0 group-focus-visible:-translate-y-1"
                   style={{ boxShadow: t.shadow }}
                 >
                   {/* Number tag */}
@@ -74,12 +74,12 @@ export default function CandidatesLandingPage() {
                   {/* Portrait */}
                   <CandidatePortrait
                     candidate={candidate}
-                    className="aspect-[4/5] w-full border-b-[4px] border-y2k-ink"
+                    className="aspect-[4/5] w-full shrink-0 border-b-[4px] border-y2k-ink"
                     priority={idx === 0}
                   />
 
                   {/* Body */}
-                  <div className="p-4 md:p-5">
+                  <div className="flex flex-1 flex-col p-4 md:p-5">
                     <div className="flex flex-wrap items-center gap-1.5 mb-3">
                       {candidate.traits.map((trait) => (
                         <span
@@ -97,7 +97,7 @@ export default function CandidatesLandingPage() {
                     <h2 className="font-pixel text-[28px] md:text-[32px] leading-none text-y2k-ink mb-3">
                       {candidate.nickname}
                     </h2>
-                    <p className="font-prompt text-sm text-y2k-ink/80 leading-relaxed min-h-[3.5em]">
+                    <p className="font-prompt text-sm text-y2k-ink/80 leading-relaxed flex-1">
                       {candidate.tagline}
                     </p>
 

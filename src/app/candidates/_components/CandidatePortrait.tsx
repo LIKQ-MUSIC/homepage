@@ -8,7 +8,7 @@ const PLACEHOLDER_BG: Record<CandidateTheme, string> = {
 }
 
 interface CandidatePortraitProps {
-  candidate: Pick<Candidate, 'nickname' | 'image' | 'theme'>
+  candidate: Pick<Candidate, 'nickname' | 'image' | 'images' | 'theme'>
   /** Tailwind aspect or fixed-size container provided by parent */
   className?: string
   priority?: boolean
@@ -26,11 +26,12 @@ export function CandidatePortrait({
   priority = false,
   alt,
 }: CandidatePortraitProps) {
-  if (candidate.image) {
+  const src = candidate.images?.[0] ?? candidate.image
+  if (src) {
     return (
       <div className={`relative overflow-hidden ${className}`}>
         <Image
-          src={candidate.image}
+          src={src}
           alt={alt ?? candidate.nickname}
           fill
           sizes="(max-width: 768px) 100vw, 33vw"

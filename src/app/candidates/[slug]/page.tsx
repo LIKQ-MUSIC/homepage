@@ -8,6 +8,7 @@ import {
   getCandidateBySlug,
 } from '@/data/candidates'
 import { CandidatePortrait } from '../_components/CandidatePortrait'
+import { CandidatePhotoCarousel } from '../_components/CandidatePhotoCarousel'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -41,7 +42,7 @@ export default async function CandidateProfilePage({ params }: Props) {
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link
             href="/candidates"
-            className="inline-flex items-center gap-2 font-pixel text-[10px] tracking-wider uppercase text-y2k-mint hover:text-y2k-yellow transition-colors"
+            className="-mx-2 -my-1 inline-flex items-center gap-2 px-2 py-2 font-pixel text-[10px] tracking-wider uppercase text-y2k-mint transition-colors hover:text-y2k-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFE14C]"
           >
             <ArrowLeft size={14} strokeWidth={3} />
             Back to Select
@@ -72,12 +73,21 @@ export default async function CandidateProfilePage({ params }: Props) {
             className="border-[4px] border-y2k-ink bg-y2k-cream"
             style={{ boxShadow: t.shadow }}
           >
-            <CandidatePortrait
-              candidate={candidate}
-              className="aspect-[4/5] w-full"
-              priority
-              alt={`Portrait ของ ${candidate.nickname}`}
-            />
+            {candidate.images && candidate.images.length > 1 ? (
+              <CandidatePhotoCarousel
+                images={candidate.images}
+                nickname={candidate.nickname}
+                className="aspect-[4/5] w-full"
+                priority
+              />
+            ) : (
+              <CandidatePortrait
+                candidate={candidate}
+                className="aspect-[4/5] w-full"
+                priority
+                alt={`Portrait ของ ${candidate.nickname}`}
+              />
+            )}
           </div>
 
           {/* Header text */}
@@ -132,12 +142,12 @@ export default async function CandidateProfilePage({ params }: Props) {
         </div>
         {candidate.danceVideoUrl ? (
           <div
-            className="relative border-[4px] border-y2k-ink overflow-hidden"
+            className="relative mx-auto w-full max-w-[360px] border-[4px] border-y2k-ink overflow-hidden"
             style={{ boxShadow: t.shadow }}
           >
-            <div className="aspect-video">
+            <div className="aspect-[9/16]">
               <iframe
-                src={toYouTubeEmbed(candidate.danceVideoUrl)}
+                src={toEmbedUrl(candidate.danceVideoUrl)}
                 title={`Dance video ของ ${candidate.nickname}`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -147,10 +157,10 @@ export default async function CandidateProfilePage({ params }: Props) {
           </div>
         ) : (
           <div
-            className="relative bg-y2k-ink border-[4px] border-y2k-ink overflow-hidden"
+            className="relative mx-auto w-full max-w-[360px] bg-y2k-ink border-[4px] border-y2k-ink overflow-hidden"
             style={{ boxShadow: t.shadow }}
           >
-            <div className="aspect-video flex flex-col items-center justify-center gap-3">
+            <div className="aspect-[9/16] flex flex-col items-center justify-center gap-3">
               <div
                 className="absolute inset-0 opacity-20"
                 style={{
@@ -240,7 +250,11 @@ export default async function CandidateProfilePage({ params }: Props) {
   )
 }
 
-function toYouTubeEmbed(url: string): string {
+function toEmbedUrl(url: string): string {
+  // Google Drive single-file share link -> embeddable preview
+  const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/)
+  if (driveMatch) return `https://drive.google.com/file/d/${driveMatch[1]}/preview`
+  // YouTube watch / short links -> embed
   const watchMatch = url.match(/[?&]v=([^&]+)/)
   if (watchMatch) return `https://www.youtube.com/embed/${watchMatch[1]}`
   const shortMatch = url.match(/youtu\.be\/([^?]+)/)

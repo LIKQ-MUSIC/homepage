@@ -1,6 +1,6 @@
 import React from 'react'
-import Section from '@/components/Section'
 import StaffCard from '@/components/Team/_components/StaffCard'
+import SectionHead from '@/components/home/SectionHead'
 
 interface StaffMember {
   imageUrl: string
@@ -34,18 +34,23 @@ const getTeamMembers = async (): Promise<StaffMember[]> => {
 const Team = async () => {
   const staffMembers = await getTeamMembers()
 
+  if (staffMembers.length === 0) return null
+
   return (
-    <Section id="team" className="" label="Our Team" title="ทีมงานของเรา">
+    <section id="team" className="bg-ink-deep px-5 py-20 md:px-12 md:py-28">
+      <div className="mx-auto max-w-6xl">
+      <SectionHead th="ทีมงานของเรา" en="Team" />
       {/* Centred wrap keeps the last row balanced for any head-count
           (e.g. 4 members read as 3 + 1 centred, not 3 + 1 stranded left). */}
-      <div className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-12">
+      <div className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-12">
         {staffMembers.map((staffMember: StaffMember) => (
           <div key={staffMember.name} className="w-full sm:w-64">
             <StaffCard {...staffMember} />
           </div>
         ))}
       </div>
-    </Section>
+      </div>
+    </section>
   )
 }
 

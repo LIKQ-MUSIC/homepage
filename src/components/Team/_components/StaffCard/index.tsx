@@ -1,7 +1,5 @@
 import { StaffCardProps } from '@/components/Team/_components/StaffCard/types'
 import Image from 'next/image'
-import { Paragraph, Title } from '@/ui/Typography'
-
 const StaffCard = ({ imageUrl, name, description }: StaffCardProps) => {
   return (
     <div className="flex flex-col items-center text-center space-y-3">
@@ -15,8 +13,8 @@ const StaffCard = ({ imageUrl, name, description }: StaffCardProps) => {
         />
       </div>
 
-      <Title level={6}>{name}</Title>
-      <Paragraph className="whitespace-pre">{description}</Paragraph>
+      <p className="font-prompt text-lg font-bold text-ink-text">{name}</p>
+      <p className="whitespace-pre text-sm text-ink-muted">{description}</p>
     </div>
   )
 }

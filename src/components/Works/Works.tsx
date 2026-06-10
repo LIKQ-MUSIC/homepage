@@ -1,8 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Title } from '@/ui/Typography'
-import Section from '@/components/Section'
+import SectionHead from '@/components/home/SectionHead'
 import WorkDetail from './_components/WorkDetail'
 import { IWorkItem } from '@/components/Works/types'
 import WorkItem from './_components/WorkItem'
@@ -61,12 +60,14 @@ const Works = ({ items = [] }: WorksProps) => {
   ]
 
   return (
-    <Section id="work" className="" label="Our Works" title="ผลงานของเรา">
-      <Title className="text-center" level={5}>
+    <section id="work" className="bg-ink-deep px-5 py-20 md:px-12 md:py-28">
+      <div className="mx-auto max-w-6xl">
+      <SectionHead th="ผลงานของเรา" en="Works" />
+      <p className="mt-6 max-w-2xl text-base md:text-lg text-ink-muted">
         ตัวอย่างผลงานของ LiKQ Music
-      </Title>
+      </p>
 
-      <div className="flex justify-center gap-2 md:gap-4 mt-8 flex-wrap">
+      <div className="flex gap-2 md:gap-3 mt-10 flex-wrap">
         {tabs.map(tab => (
           <button
             key={tab.id}
@@ -75,8 +76,8 @@ const Works = ({ items = [] }: WorksProps) => {
               px-6 py-2 rounded-full transition-all duration-300 border
               ${
                 activeTab === tab.id
-                  ? 'bg-primary text-white border-primary shadow-lg scale-105'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-primary hover:text-primary hover:scale-105'
+                  ? 'bg-secondary text-primary border-secondary font-bold'
+                  : 'bg-transparent text-ink-muted border-ink-line hover:border-secondary hover:text-secondary'
               }
             `}
           >
@@ -85,7 +86,7 @@ const Works = ({ items = [] }: WorksProps) => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-1 mt-8 md:p-5 lg:p-10 min-h-[400px] items-start w-full max-w-6xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 items-start w-full">
         {filteredItems.map((item, index) => (
           <WorkItem
             key={`${item.title}-${index}`}
@@ -101,7 +102,8 @@ const Works = ({ items = [] }: WorksProps) => {
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         {selectedItem && <WorkDetail item={selectedItem} />}
       </Modal>
-    </Section>
+      </div>
+    </section>
   )
 }
 

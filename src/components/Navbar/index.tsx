@@ -10,7 +10,7 @@ import Logo from '@/ui/Icons/Logo'
 import MobileNavLinks from '@/components/MobileNavLinks/MobileNavLinks'
 import SoundCloud from '@/ui/Icons/SoundCloud'
 
-const Navbar = () => {
+const Navbar = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobileNav, setIsMobileNav] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -61,7 +61,8 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen)
   }
 
-  const navIconColor = isScrolled ? '#153051' : 'white'
+  const dark = tone === 'dark'
+  const navIconColor = isScrolled && !dark ? '#153051' : 'white'
 
   const outerNavLinks = (
     <>
@@ -83,7 +84,11 @@ const Navbar = () => {
   return (
     <div
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'
+        isScrolled
+          ? dark
+            ? 'bg-[#0A1422]/90 backdrop-blur-md border-b border-[rgba(190,173,196,0.16)] py-2'
+            : 'bg-white shadow-md py-2'
+          : 'bg-transparent py-4'
       }`}
     >
       {/* Contrast scrim: darkens behind the bar over light hero images so
@@ -109,12 +114,12 @@ const Navbar = () => {
           {/* Right cluster: nav links · divider · socials, grouped with an
               even rhythm so spacing reads intentionally (not spread apart). */}
           <div className="hidden lg:flex items-center gap-5">
-            <NavbarLinks isScrolled={isScrolled} />
+            <NavbarLinks isScrolled={isScrolled && !dark} />
             {/* Socials show only at xl so the lg→xl range never overflows. */}
             <span
               aria-hidden
               className={`hidden xl:block h-5 w-px ${
-                isScrolled ? 'bg-primary/20' : 'bg-white/30'
+                isScrolled && !dark ? 'bg-primary/20' : 'bg-white/30'
               }`}
             />
             <div className="hidden xl:flex items-center gap-3">

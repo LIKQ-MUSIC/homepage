@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { inter, notoSans, prompt } from '@/utils/font'
+import { archivo, inter, notoSans, prompt } from '@/utils/font'
 import ReactQueryProvider from '@/provider/ReactQueryProvider'
 import { ThemeProvider } from '@/provider/ThemeProvider'
 
@@ -82,9 +82,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="th">
       <body
-        className={`${inter.variable} ${notoSans.variable} ${prompt.variable} antialiased bg-page text-body`}
+        className={`${inter.variable} ${notoSans.variable} ${prompt.variable} ${archivo.variable} antialiased bg-page text-body`}
       >
         <ReactQueryProvider>
           <ThemeProvider>{children}</ThemeProvider>

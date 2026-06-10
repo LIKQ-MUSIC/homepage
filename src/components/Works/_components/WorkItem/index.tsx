@@ -22,7 +22,7 @@ const WorkItem = ({
     <div
       onClick={onClick}
       className={cn(
-        'group relative w-full overflow-hidden rounded-xl cursor-pointer bg-white shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100',
+        'group relative w-full overflow-hidden rounded-sm cursor-pointer bg-ink-raise transition-all duration-300 border border-ink-line hover:border-secondary/60',
         className
       )}
     >
@@ -43,14 +43,14 @@ const WorkItem = ({
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-400">No Image</span>
+          <div className="w-full h-full bg-ink-panel flex items-center justify-center">
+            <span className="text-ink-muted">No Image</span>
           </div>
         )}
       </div>
 
       <div className="p-4">
-        <h3 className="font-bold text-lg text-primary line-clamp-2 min-h-[3.5rem] group-hover:text-secondary transition-colors">
+        <h3 className="font-bold text-lg text-ink-text line-clamp-2 min-h-[3.5rem] group-hover:text-secondary transition-colors">
           {name}
         </h3>
       </div>

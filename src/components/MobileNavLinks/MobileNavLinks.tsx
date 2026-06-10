@@ -8,6 +8,7 @@ interface NavLink {
 
 interface MobileNavLinksProps {
   onLinkClick: () => void
+  dark?: boolean
 }
 
 const links: NavLink[] = [
@@ -19,7 +20,7 @@ const links: NavLink[] = [
   { href: '/audition', label: 'Audition' }
 ]
 
-const MobileNavLinks: React.FC<MobileNavLinksProps> = ({ onLinkClick }) => {
+const MobileNavLinks: React.FC<MobileNavLinksProps> = ({ onLinkClick, dark = false }) => {
   const goToSection = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string
@@ -36,13 +37,14 @@ const MobileNavLinks: React.FC<MobileNavLinksProps> = ({ onLinkClick }) => {
     <>
       {links.map(link => {
         const isRoute = link.href.startsWith('/')
+        const linkClass = dark
+          ? `${isRoute ? 'font-bold text-secondary bg-secondary/[0.08]' : 'text-ink-text'} hover:bg-white/5`
+          : `hover:bg-gray-50 ${isRoute ? 'font-bold text-primary bg-primary/5' : ''}`
         return (
           <Link
             key={link.href}
             href={link.href}
-            className={`px-8 py-3 text-center hover:bg-gray-50 block ${
-              isRoute ? 'font-bold text-primary bg-primary/5' : ''
-            }`}
+            className={`px-8 py-3 text-center block transition-colors ${linkClass}`}
             onClick={
               isRoute
                 ? () => onLinkClick()

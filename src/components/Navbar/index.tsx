@@ -140,11 +140,23 @@ const Navbar = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => {
 
           {/* Mobile Menu */}
           {isMenuOpen && isMobileNav && (
-            <div className="absolute rounded-xl top-16 right-0 bg-white w-64 z-50 shadow-lg lg:hidden">
+            <div
+              className={`absolute rounded-xl top-16 right-0 w-64 z-50 overflow-hidden lg:hidden ${
+                dark
+                  ? 'bg-ink-raise/95 backdrop-blur-md border border-ink-line shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)]'
+                  : 'bg-white shadow-lg'
+              }`}
+            >
               <nav className="flex flex-col py-4">
-                <MobileNavLinks onLinkClick={() => setIsMenuOpen(false)} />
+                <MobileNavLinks onLinkClick={() => setIsMenuOpen(false)} dark={dark} />
 
-                <div className="flex-all-center gap-8">{outerNavLinks}</div>
+                <div
+                  className={`flex-all-center gap-8 mx-8 mt-2 pt-4 border-t ${
+                    dark ? 'border-ink-line' : 'border-gray-100'
+                  }`}
+                >
+                  {outerNavLinks}
+                </div>
               </nav>
             </div>
           )}

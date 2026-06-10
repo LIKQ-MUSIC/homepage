@@ -6,6 +6,7 @@ import Cards from 'react-credit-cards-2'
 import 'react-credit-cards-2/dist/es/styles-compiled.css'
 import { apiClient } from '@/lib/api-client'
 import Button from '@/ui/Button'
+import SectionHead from '@/components/home/SectionHead'
 
 type PaymentMethod = 'promptpay' | 'credit_card'
 type Focused = 'number' | 'name' | 'expiry' | 'cvc' | ''
@@ -98,6 +99,16 @@ const formatExpiry = (value: string, prevValue: string): string => {
   }
   return digits.slice(0, 2) + '/' + digits.slice(2)
 }
+
+// Shared field styling for the after-dark surface: inset field on the panel,
+// bright typed text, lavender focus ring. Placeholder stays at ink-muted so it
+// clears 4.5:1 yet still reads dimmer than the typed value.
+const inputClass =
+  'w-full px-4 py-3 rounded-xl border border-ink-line bg-ink-deep/60 text-sm text-ink-text transition-all focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary/70 placeholder:text-ink-muted'
+const fieldLabelClass = 'block text-xs font-medium text-ink-muted mb-1.5'
+const groupLabelClass = 'text-xs font-semibold tracking-wide text-secondary'
+const panelClass =
+  'rounded-[28px] border border-ink-line bg-ink-raise shadow-[0_30px_70px_-30px_rgba(0,0,0,0.85)] overflow-hidden motion-safe:animate-rise-in'
 
 const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectionProps) => {
   const [step, setStep] = useState<Step>('product')
@@ -271,18 +282,8 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
     }
   }
 
-  const inputClass =
-    'w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/60 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#B4A7D6]/60 focus:border-[#B4A7D6] placeholder:text-gray-400'
-
-  const stepNumber = (n: number, label: string) => (
-    <h3 className="text-sm font-semibold text-[#153051] mb-3 flex items-center gap-2">
-      <span className="w-5 h-5 rounded-full bg-[#153051] text-white text-xs flex items-center justify-center">{n}</span>
-      {label}
-    </h3>
-  )
-
   const backButton = (onClick: () => void) => (
-    <button onClick={onClick} className="text-gray-400 hover:text-[#153051] transition-colors" aria-label="กลับ">
+    <button onClick={onClick} className="text-ink-muted hover:text-secondary transition-colors" aria-label="กลับ">
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
         <path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
       </svg>
@@ -290,7 +291,7 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
   )
 
   const errorBlock = error ? (
-    <div className="flex items-start gap-2.5 px-4 py-3 rounded-xl bg-red-50 text-red-600 text-sm border border-red-100">
+    <div className="flex items-start gap-2.5 px-4 py-3 rounded-xl bg-danger/10 text-red-300 text-sm border border-danger/30">
       <svg className="w-4 h-4 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" />
         <line x1="12" y1="8" x2="12" y2="12" />
@@ -300,41 +301,30 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
     </div>
   ) : null
 
+  const paymentOptionClass = (active: boolean) =>
+    `relative flex items-center justify-center gap-2.5 py-3.5 rounded-2xl text-sm font-medium transition-all border ${
+      active
+        ? 'border-secondary bg-secondary/[0.12] text-ink-text'
+        : 'border-ink-line bg-white/[0.02] text-ink-muted hover:border-secondary/40 hover:text-ink-text'
+    }`
+
+  const paymentCheck = (
+    <span className="absolute top-2 right-2 w-4 h-4 bg-secondary rounded-full flex items-center justify-center">
+      <svg className="w-2.5 h-2.5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 6L9 17l-5-5" />
+      </svg>
+    </span>
+  )
+
   const paymentMethodSelector = (
     <div className="grid grid-cols-2 gap-3">
-      <button
-        onClick={() => setPaymentMethod('promptpay')}
-        className={`relative flex items-center justify-center gap-2.5 py-3.5 rounded-2xl text-sm font-medium transition-all border-2 ${
-          paymentMethod === 'promptpay'
-            ? 'border-[#153051] bg-[#153051]/[0.03] text-[#153051] shadow-sm'
-            : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-        }`}
-      >
-        {paymentMethod === 'promptpay' && (
-          <span className="absolute top-2 right-2 w-4 h-4 bg-[#153051] rounded-full flex items-center justify-center">
-            <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 6L9 17l-5-5" />
-            </svg>
-          </span>
-        )}
+      <button onClick={() => setPaymentMethod('promptpay')} className={paymentOptionClass(paymentMethod === 'promptpay')}>
+        {paymentMethod === 'promptpay' && paymentCheck}
         <Image src="/images/promptpay-logo.png" alt="PromptPay" width={24} height={24} className="object-contain" />
         PromptPay
       </button>
-      <button
-        onClick={() => setPaymentMethod('credit_card')}
-        className={`relative flex items-center justify-center gap-2.5 py-3.5 rounded-2xl text-sm font-medium transition-all border-2 ${
-          paymentMethod === 'credit_card'
-            ? 'border-[#153051] bg-[#153051]/[0.03] text-[#153051] shadow-sm'
-            : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-        }`}
-      >
-        {paymentMethod === 'credit_card' && (
-          <span className="absolute top-2 right-2 w-4 h-4 bg-[#153051] rounded-full flex items-center justify-center">
-            <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 6L9 17l-5-5" />
-            </svg>
-          </span>
-        )}
+      <button onClick={() => setPaymentMethod('credit_card')} className={paymentOptionClass(paymentMethod === 'credit_card')}>
+        {paymentMethod === 'credit_card' && paymentCheck}
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
           <rect x="1" y="4" width="22" height="16" rx="2" />
           <line x1="1" y1="10" x2="23" y2="10" />
@@ -345,7 +335,7 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
   )
 
   const paymentMethodDisplay = (
-    <span className="flex items-center gap-2 text-sm font-medium text-[#153051]">
+    <span className="flex items-center gap-2 text-sm font-medium text-ink-text">
       {paymentMethod === 'promptpay' ? (
         <>
           <Image src="/images/promptpay-logo.png" alt="PromptPay" width={20} height={20} className="object-contain" />
@@ -374,18 +364,7 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-10">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-            <h2 className="font-prompt font-bold text-ink-text leading-[1.05] text-[clamp(2.25rem,6vw,4.5rem)]">
-              สินค้าพิเศษประจำซีซัน
-            </h2>
-            <span
-              aria-hidden
-              className="font-archivo font-semibold text-secondary text-sm md:text-base tracking-[0.18em] uppercase"
-            >
-              Seasonal Drop
-            </span>
-          </div>
-          <div className="mt-5 h-px w-full bg-ink-line" />
+          <SectionHead th="สินค้าพิเศษประจำซีซัน" en="Seasonal Drop" />
           <p className="mt-6 text-ink-muted text-base md:text-lg leading-relaxed">
             เลือกแพ็กเกจที่คุณต้องการ ไฟล์ดิจิทัลจะถูกส่งไปยังอีเมลของคุณ
           </p>
@@ -397,9 +376,9 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
           </div>
         ) : step === 'product' ? (
           /* ───────── Product Page ───────── */
-          <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+          <div className={panelClass}>
             {/* Top: Image Carousel — landscape, full width */}
-            <div className="relative w-full aspect-[2/1] bg-gray-100">
+            <div className="relative w-full aspect-[2/1] bg-ink-deep">
               {heroImages.length > 0 ? (
                 <>
                   {heroImages.map((img, i) => (
@@ -412,25 +391,27 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
                       <Image src={img.public_url} alt={img.filename} fill className="object-cover" priority={i === 0} />
                     </div>
                   ))}
+                  {/* Blend the image base into the panel so it doesn't read as a pasted-in card */}
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink-raise to-transparent" />
                   {heroImages.length > 1 && (
                     <>
-                      <button onClick={goToPrevImage} className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/50 transition-colors" aria-label="Previous">
+                      <button onClick={goToPrevImage} className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/60 transition-colors" aria-label="Previous">
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
                       </button>
-                      <button onClick={goToNextImage} className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/50 transition-colors" aria-label="Next">
+                      <button onClick={goToNextImage} className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/60 transition-colors" aria-label="Next">
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
                       </button>
                       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
                         {heroImages.map((_, i) => (
-                          <button key={i} onClick={() => setCarouselIndex(i)} className={`h-2 rounded-full transition-all ${i === carouselIndex ? 'bg-white w-6' : 'bg-white/50 w-2'}`} aria-label={`Image ${i + 1}`} />
+                          <button key={i} onClick={() => setCarouselIndex(i)} className={`h-2 rounded-full transition-all ${i === carouselIndex ? 'bg-secondary w-6' : 'bg-white/50 w-2'}`} aria-label={`Image ${i + 1}`} />
                         ))}
                       </div>
                     </>
                   )}
                 </>
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#B4A7D6]/20 to-[#153051]/10">
-                  <svg className="w-20 h-20 text-[#B4A7D6]/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1}>
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary/15 to-primary/25">
+                  <svg className="w-20 h-20 text-secondary/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1}>
                     <rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="M21 15l-5-5L5 21" />
                   </svg>
                 </div>
@@ -438,48 +419,51 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
             </div>
 
             {/* Bottom: 2-column content */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:divide-x divide-gray-100">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:divide-x divide-ink-line">
               {/* Left column: Product info + Price */}
               <div className="p-6 md:p-8">
-                <h3 className="text-xl font-bold text-[#153051] mb-1">LIKQ Music Seasonal Drop</h3>
-                <p className="text-sm text-gray-500 leading-relaxed mb-5">
+                <h3 className="text-xl font-bold text-ink-text mb-1">LIKQ Music Seasonal Drop</h3>
+                <p className="text-sm text-ink-muted leading-relaxed mb-5">
                   รับไฟล์เพลงดิจิทัล อาร์ตเวิร์ก และของสมนาคุณพิเศษตามระดับราคาที่เลือก ส่งตรงถึงอีเมลของคุณ
                 </p>
 
                 {/* Price pills */}
                 <div className="mb-4">
-                  <p className="text-xs font-semibold text-[#153051] mb-2 uppercase tracking-wide">เลือกแพ็กเกจ</p>
+                  <p className={`${groupLabelClass} mb-2`}>เลือกแพ็กเกจ</p>
                   <div className="flex flex-wrap gap-2">
-                    {tiers.map(tier => (
-                      <button
-                        key={tier.id}
-                        onClick={() => { setSelectedTier(tier); setError('') }}
-                        className={`relative px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-                          selectedTier?.id === tier.id
-                            ? 'bg-[#153051] text-white shadow-md'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200'
-                        }`}
-                      >
-                        ฿{(tier.price / 100).toLocaleString()}
-                        {tier.requires_shipping && (
-                          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#7B68AE] rounded-full flex items-center justify-center">
-                            <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}><path d="M5 12h14" /><path d="M12 5v14" /></svg>
-                          </span>
-                        )}
-                      </button>
-                    ))}
+                    {tiers.map(tier => {
+                      const active = selectedTier?.id === tier.id
+                      return (
+                        <button
+                          key={tier.id}
+                          onClick={() => { setSelectedTier(tier); setError('') }}
+                          className={`relative px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+                            active
+                              ? 'bg-secondary text-primary shadow-md shadow-secondary/20'
+                              : 'bg-white/[0.04] text-ink-muted border border-ink-line hover:border-secondary/50 hover:text-ink-text'
+                          }`}
+                        >
+                          ฿{(tier.price / 100).toLocaleString()}
+                          {tier.requires_shipping && (
+                            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-secondary rounded-full flex items-center justify-center ring-2 ring-ink-raise">
+                              <svg className="w-2.5 h-2.5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}><path d="M5 12h14" /><path d="M12 5v14" /></svg>
+                            </span>
+                          )}
+                        </button>
+                      )
+                    })}
                   </div>
                 </div>
 
-                {/* Tier detail card */}
+                {/* Tier detail */}
                 {selectedTier && (
-                  <div className="px-4 py-3 rounded-xl bg-[#f5f3ff]/60 border border-[#B4A7D6]/20">
-                    <p className="text-sm font-semibold text-[#153051]">{selectedTier.name}</p>
-                    {selectedTier.description && <p className="text-xs text-gray-500 mt-0.5">{selectedTier.description}</p>}
+                  <div className="px-4 py-3.5 rounded-2xl bg-ink-deep/50 border border-ink-line">
+                    <p className="text-sm font-semibold text-ink-text">{selectedTier.name}</p>
+                    {selectedTier.description && <p className="text-xs text-ink-muted mt-0.5">{selectedTier.description}</p>}
                     {selectedTier.requires_shipping && (
-                      <span className="inline-block mt-1.5 text-[10px] bg-[#7B68AE] text-white font-semibold px-2 py-0.5 rounded-full">Physical + Digital</span>
+                      <span className="inline-block mt-1.5 text-[10px] bg-secondary/15 text-secondary border border-secondary/30 font-semibold px-2 py-0.5 rounded-full">Physical + Digital</span>
                     )}
-                    <p className="text-2xl font-bold text-[#153051] mt-2">฿{priceInBaht.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-ink-text mt-2 tabular-nums">฿{priceInBaht.toLocaleString()}</p>
                   </div>
                 )}
               </div>
@@ -489,37 +473,37 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
                 {/* Email & Name */}
                 <div className="grid grid-cols-1 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1.5">อีเมล <span className="text-red-400">*</span></label>
+                    <label className={fieldLabelClass}>อีเมล <span className="text-secondary">*</span></label>
                     <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="email@example.com" className={inputClass} />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1.5">ชื่อ <span className="text-gray-400">(ไม่บังคับ)</span></label>
+                    <label className={fieldLabelClass}>ชื่อ <span className="text-ink-muted/70">(ไม่บังคับ)</span></label>
                     <input type="text" value={buyerName} onChange={e => setBuyerName(e.target.value)} placeholder="ชื่อของคุณ" className={inputClass} />
                   </div>
                 </div>
 
                 {/* Shipping (conditional) */}
                 {selectedTier?.requires_shipping && (
-                  <div className="space-y-3 pt-2 border-t border-gray-100">
-                    <p className="text-xs font-semibold text-[#153051] uppercase tracking-wide">ข้อมูลจัดส่ง</p>
+                  <div className="space-y-3 pt-3 border-t border-ink-line">
+                    <p className={groupLabelClass}>ข้อมูลจัดส่ง</p>
                     <div>
-                      <label className="block text-xs font-medium text-gray-500 mb-1.5">เบอร์โทร <span className="text-red-400">*</span></label>
+                      <label className={fieldLabelClass}>เบอร์โทร <span className="text-secondary">*</span></label>
                       <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="0812345678" className={inputClass} />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-500 mb-1.5">ที่อยู่จัดส่ง <span className="text-red-400">*</span></label>
+                      <label className={fieldLabelClass}>ที่อยู่จัดส่ง <span className="text-secondary">*</span></label>
                       <textarea value={shippingAddress} onChange={e => setShippingAddress(e.target.value)} placeholder="ที่อยู่สำหรับจัดส่งสินค้า" rows={2} className={inputClass} />
                     </div>
                   </div>
                 )}
 
                 {/* Payment method */}
-                <div className="pt-2 border-t border-gray-100">
-                  <p className="text-xs font-semibold text-[#153051] mb-2 uppercase tracking-wide">วิธีชำระเงิน</p>
+                <div className="pt-3 border-t border-ink-line">
+                  <p className={`${groupLabelClass} mb-2`}>วิธีชำระเงิน</p>
                   {paymentMethodSelector}
                   {paymentMethod === 'credit_card' && !selectedTier?.requires_shipping && (
                     <div className="mt-3">
-                      <label className="block text-xs font-medium text-gray-500 mb-1.5">เบอร์โทร <span className="text-red-400">*</span></label>
+                      <label className={fieldLabelClass}>เบอร์โทร <span className="text-secondary">*</span></label>
                       <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="0812345678" className={inputClass} />
                     </div>
                   )}
@@ -527,22 +511,22 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
 
                 {/* Terms */}
                 <label className="flex items-start gap-3 cursor-pointer group">
-                  <input type="checkbox" checked={acceptedTerms} onChange={e => setAcceptedTerms(e.target.checked)} className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#153051] focus:ring-[#B4A7D6] cursor-pointer flex-shrink-0" />
-                  <span className="text-xs text-gray-500 leading-relaxed">
+                  <input type="checkbox" checked={acceptedTerms} onChange={e => setAcceptedTerms(e.target.checked)} className="mt-0.5 w-4 h-4 rounded border-ink-line bg-ink-deep text-secondary accent-secondary focus:ring-secondary cursor-pointer flex-shrink-0" />
+                  <span className="text-xs text-ink-muted leading-relaxed">
                     ฉันยอมรับ{' '}
-                    <a href="/merch/th/policy/terms" target="_blank" rel="noopener noreferrer" className="text-[#7B68AE] underline underline-offset-2 hover:text-[#153051]">ข้อกำหนดและเงื่อนไข</a>
+                    <a href="/merch/th/policy/terms" target="_blank" rel="noopener noreferrer" className="text-secondary underline underline-offset-2 hover:text-ink-text">ข้อกำหนดและเงื่อนไข</a>
                     {', '}
-                    <a href="/merch/th/policy/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#7B68AE] underline underline-offset-2 hover:text-[#153051]">นโยบายความเป็นส่วนตัว</a>
+                    <a href="/merch/th/policy/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-secondary underline underline-offset-2 hover:text-ink-text">นโยบายความเป็นส่วนตัว</a>
                     {', '}
-                    <a href="/merch/th/policy/refund-policy" target="_blank" rel="noopener noreferrer" className="text-[#7B68AE] underline underline-offset-2 hover:text-[#153051]">นโยบายการคืนเงิน</a>
+                    <a href="/merch/th/policy/refund-policy" target="_blank" rel="noopener noreferrer" className="text-secondary underline underline-offset-2 hover:text-ink-text">นโยบายการคืนเงิน</a>
                     {' และ '}
-                    <a href="/merch/th/policy/shipping-policy" target="_blank" rel="noopener noreferrer" className="text-[#7B68AE] underline underline-offset-2 hover:text-[#153051]">นโยบายการจัดส่ง</a>
+                    <a href="/merch/th/policy/shipping-policy" target="_blank" rel="noopener noreferrer" className="text-secondary underline underline-offset-2 hover:text-ink-text">นโยบายการจัดส่ง</a>
                   </span>
                 </label>
 
                 {errorBlock}
 
-                <Button variant="primary" size="lg" className="w-full dark:bg-primary dark:hover:bg-primary-hover" onClick={handleGoToSummary} disabled={!acceptedTerms || !selectedTier}>
+                <Button variant="onDark" size="lg" className="w-full" onClick={handleGoToSummary} disabled={!acceptedTerms || !selectedTier}>
                   {selectedTier ? `ซื้อเลย ฿${priceInBaht.toLocaleString()}` : 'เลือกราคา'}
                 </Button>
               </div>
@@ -551,21 +535,21 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
         ) : step === 'summary' && selectedTier ? (
           /* ───────── Summary + Credit Card ───────── */
           <div className="max-w-3xl mx-auto">
-            <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className={panelClass}>
               <div className="p-6 md:p-10 space-y-6">
                 <div className="flex items-center gap-2 mb-2">
                   {backButton(() => setStep('product'))}
-                  <h3 className="text-lg font-bold text-[#153051]">สรุปคำสั่งซื้อ</h3>
+                  <h3 className="text-lg font-bold text-ink-text">สรุปคำสั่งซื้อ</h3>
                 </div>
 
                 {/* Line item */}
-                <div className="rounded-2xl border border-gray-100 overflow-hidden">
-                  <div className="flex items-center gap-4 p-4 bg-white">
-                    <div className="w-12 h-12 rounded-xl bg-[#153051]/5 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                <div className="rounded-2xl border border-ink-line overflow-hidden">
+                  <div className="flex items-center gap-4 p-4 bg-white/[0.02]">
+                    <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
                       {selectedTier.image_url ? (
                         <Image src={selectedTier.image_url} alt={selectedTier.name} width={48} height={48} className="object-cover w-full h-full" />
                       ) : (
-                        <svg className="w-5 h-5 text-[#153051]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                        <svg className="w-5 h-5 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                           <rect x="3" y="3" width="18" height="18" rx="2" />
                           <circle cx="8.5" cy="8.5" r="1.5" />
                           <path d="M21 15l-5-5L5 21" />
@@ -573,72 +557,72 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-[#153051]">{selectedTier.name}</p>
+                      <p className="text-sm font-semibold text-ink-text">{selectedTier.name}</p>
                       {selectedTier.description && (
-                        <p className="text-xs text-gray-400 truncate">{selectedTier.description}</p>
+                        <p className="text-xs text-ink-muted truncate">{selectedTier.description}</p>
                       )}
                       {selectedTier.requires_shipping && (
-                        <span className="inline-block mt-1 text-[10px] bg-[#7B68AE]/10 text-[#7B68AE] font-medium px-2 py-0.5 rounded-full">
+                        <span className="inline-block mt-1 text-[10px] bg-secondary/15 text-secondary font-medium px-2 py-0.5 rounded-full">
                           Physical + Digital
                         </span>
                       )}
                     </div>
-                    <p className="text-base font-bold text-[#153051] tabular-nums flex-shrink-0">
+                    <p className="text-base font-bold text-ink-text tabular-nums flex-shrink-0">
                       ฿{priceInBaht.toLocaleString()}
                     </p>
                   </div>
                 </div>
 
                 {/* Details */}
-                <div className="space-y-3 p-5 rounded-2xl bg-gray-50/80 border border-gray-100">
+                <div className="space-y-3 p-5 rounded-2xl bg-ink-deep/50 border border-ink-line">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">วิธีชำระเงิน</span>
+                    <span className="text-sm text-ink-muted">วิธีชำระเงิน</span>
                     {paymentMethodDisplay}
                   </div>
                   {buyerName && (
                     <>
-                      <div className="h-px bg-gray-200" />
+                      <div className="h-px bg-ink-line" />
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-500">ชื่อ</span>
-                        <span className="text-sm font-medium text-[#153051]">{buyerName}</span>
+                        <span className="text-sm text-ink-muted">ชื่อ</span>
+                        <span className="text-sm font-medium text-ink-text">{buyerName}</span>
                       </div>
                     </>
                   )}
-                  <div className="h-px bg-gray-200" />
+                  <div className="h-px bg-ink-line" />
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">อีเมล</span>
-                    <span className="text-sm font-medium text-[#153051]">{email}</span>
+                    <span className="text-sm text-ink-muted">อีเมล</span>
+                    <span className="text-sm font-medium text-ink-text">{email}</span>
                   </div>
                   {phoneNumber && (
                     <>
-                      <div className="h-px bg-gray-200" />
+                      <div className="h-px bg-ink-line" />
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-500">เบอร์โทร</span>
-                        <span className="text-sm font-medium text-[#153051]">{phoneNumber}</span>
+                        <span className="text-sm text-ink-muted">เบอร์โทร</span>
+                        <span className="text-sm font-medium text-ink-text">{phoneNumber}</span>
                       </div>
                     </>
                   )}
                   {shippingAddress && (
                     <>
-                      <div className="h-px bg-gray-200" />
+                      <div className="h-px bg-ink-line" />
                       <div className="flex items-start justify-between">
-                        <span className="text-sm text-gray-500">ที่อยู่จัดส่ง</span>
-                        <span className="text-sm font-medium text-[#153051] text-right max-w-[60%]">{shippingAddress}</span>
+                        <span className="text-sm text-ink-muted">ที่อยู่จัดส่ง</span>
+                        <span className="text-sm font-medium text-ink-text text-right max-w-[60%]">{shippingAddress}</span>
                       </div>
                     </>
                   )}
-                  <div className="h-px bg-gray-200" />
+                  <div className="h-px bg-ink-line" />
                   <div className="flex items-center justify-between">
-                    <span className="text-base font-semibold text-[#153051]">ยอดรวม</span>
-                    <span className="text-xl font-bold text-[#153051]">฿{priceInBaht.toLocaleString()}</span>
+                    <span className="text-base font-semibold text-ink-text">ยอดรวม</span>
+                    <span className="text-xl font-bold text-secondary tabular-nums">฿{priceInBaht.toLocaleString()}</span>
                   </div>
                 </div>
 
                 {/* Credit Card Form */}
                 {paymentMethod === 'credit_card' && (
                   <div>
-                    <h3 className="text-sm font-semibold text-[#153051] mb-4 flex items-center gap-2">
-                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                    <h3 className="text-sm font-semibold text-ink-text mb-4 flex items-center gap-2">
+                      <svg className="w-4 h-4 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                         <rect x="1" y="4" width="22" height="16" rx="2" />
                         <line x1="1" y1="10" x2="23" y2="10" />
                       </svg>
@@ -656,20 +640,20 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
                       </div>
                       <div className="space-y-3">
                         <div>
-                          <label className="block text-xs font-medium text-gray-500 mb-1.5">หมายเลขบัตร</label>
+                          <label className={fieldLabelClass}>หมายเลขบัตร</label>
                           <input type="text" inputMode="numeric" placeholder="0000 0000 0000 0000" value={cardNumber} onChange={e => handleCardNumberChange(e.target.value)} onFocus={() => setCardFocused('number')} maxLength={19} className={inputClass} />
                         </div>
                         <div>
-                          <label className="block text-xs font-medium text-gray-500 mb-1.5">ชื่อบนบัตร</label>
+                          <label className={fieldLabelClass}>ชื่อบนบัตร</label>
                           <input type="text" placeholder="JOHN DOE" value={cardName} onChange={e => setCardName(e.target.value)} onFocus={() => setCardFocused('name')} className={inputClass} />
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-xs font-medium text-gray-500 mb-1.5">วันหมดอายุ</label>
+                            <label className={fieldLabelClass}>วันหมดอายุ</label>
                             <input type="text" inputMode="numeric" placeholder="MM/YY" value={cardExpiry} onChange={e => handleExpiryChange(e.target.value)} onFocus={() => setCardFocused('expiry')} maxLength={5} className={inputClass} />
                           </div>
                           <div>
-                            <label className="block text-xs font-medium text-gray-500 mb-1.5">CVC</label>
+                            <label className={fieldLabelClass}>CVC</label>
                             <input type="text" inputMode="numeric" placeholder="123" value={cardCvc} onChange={e => handleCvcChange(e.target.value)} onFocus={() => setCardFocused('cvc')} maxLength={4} className={inputClass} />
                           </div>
                         </div>
@@ -681,15 +665,15 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
                 {errorBlock}
 
                 <Button
-                  variant="primary"
+                  variant="onDark"
                   size="lg"
-                  className="w-full dark:bg-primary dark:hover:bg-primary-hover"
+                  className="w-full"
                   onClick={handlePurchase}
                   disabled={loading}
                 >
                   {loading ? (
                     <span className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
                       {paymentMethod === 'credit_card' ? 'กำลังเปลี่ยนหน้า...' : 'กำลังดำเนินการ...'}
                     </span>
                   ) : (
@@ -702,87 +686,87 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
         ) : step === 'result' && result?.success && selectedTier ? (
           /* ───────── Result ───────── */
           <div className="max-w-3xl mx-auto">
-            <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className={panelClass}>
               <div className="p-6 md:p-10 space-y-5">
                 {/* Status Banner */}
                 {paymentStatus === 'successful' ? (
-                  <div className="flex items-center gap-3 p-4 bg-emerald-50 text-emerald-700 rounded-2xl">
-                    <div className="flex-shrink-0 w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                  <div className="flex items-center gap-3 p-4 bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 rounded-2xl">
+                    <div className="flex-shrink-0 w-10 h-10 bg-emerald-500/15 rounded-full flex items-center justify-center">
                       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                         <path d="M20 6L9 17l-5-5" />
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold text-sm">ชำระเงินสำเร็จ</p>
-                      <p className="text-xs text-emerald-600">ขอบคุณสำหรับการสั่งซื้อ</p>
+                      <p className="font-semibold text-sm text-emerald-200">ชำระเงินสำเร็จ</p>
+                      <p className="text-xs text-emerald-300/80">ขอบคุณสำหรับการสั่งซื้อ</p>
                     </div>
                   </div>
                 ) : paymentStatus === 'failed' ? (
-                  <div className="flex items-center gap-3 p-4 bg-red-50 text-red-700 rounded-2xl">
-                    <div className="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <div className="flex items-center gap-3 p-4 bg-red-500/10 text-red-300 border border-red-500/20 rounded-2xl">
+                    <div className="flex-shrink-0 w-10 h-10 bg-red-500/15 rounded-full flex items-center justify-center">
                       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18" />
                         <line x1="6" y1="6" x2="18" y2="18" />
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold text-sm">การชำระเงินล้มเหลว</p>
-                      <p className="text-xs text-red-600">กรุณาลองใหม่อีกครั้ง</p>
+                      <p className="font-semibold text-sm text-red-200">การชำระเงินล้มเหลว</p>
+                      <p className="text-xs text-red-300/80">กรุณาลองใหม่อีกครั้ง</p>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-3 p-4 bg-blue-50 text-blue-700 rounded-2xl">
-                    <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <div className="flex items-center gap-3 p-4 bg-sky-500/10 text-sky-300 border border-sky-500/20 rounded-2xl">
+                    <div className="flex-shrink-0 w-10 h-10 bg-sky-500/15 rounded-full flex items-center justify-center">
                       <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                         <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold text-sm">รอการชำระเงิน</p>
-                      <p className="text-xs text-blue-600">กรุณาดำเนินการชำระเงินด้านล่าง</p>
+                      <p className="font-semibold text-sm text-sky-200">รอการชำระเงิน</p>
+                      <p className="text-xs text-sky-300/80">กรุณาดำเนินการชำระเงินด้านล่าง</p>
                     </div>
                   </div>
                 )}
 
                 {/* Order Summary */}
-                <div className="space-y-3 p-5 rounded-2xl bg-gray-50/80 border border-gray-100">
+                <div className="space-y-3 p-5 rounded-2xl bg-ink-deep/50 border border-ink-line">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">สินค้า</span>
-                    <span className="text-sm font-medium text-[#153051]">{selectedTier.name}</span>
+                    <span className="text-sm text-ink-muted">สินค้า</span>
+                    <span className="text-sm font-medium text-ink-text">{selectedTier.name}</span>
                   </div>
-                  <div className="h-px bg-gray-200" />
+                  <div className="h-px bg-ink-line" />
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">วิธีชำระเงิน</span>
+                    <span className="text-sm text-ink-muted">วิธีชำระเงิน</span>
                     {paymentMethodDisplay}
                   </div>
-                  <div className="h-px bg-gray-200" />
+                  <div className="h-px bg-ink-line" />
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">จำนวน</span>
-                    <span className="text-lg font-bold text-[#153051]">฿{priceInBaht.toLocaleString()}</span>
+                    <span className="text-sm text-ink-muted">จำนวน</span>
+                    <span className="text-lg font-bold text-secondary tabular-nums">฿{priceInBaht.toLocaleString()}</span>
                   </div>
-                  <div className="h-px bg-gray-200" />
+                  <div className="h-px bg-ink-line" />
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Order ID</span>
-                    <span className="text-xs font-mono text-gray-400">{result.data?.orderId}</span>
+                    <span className="text-sm text-ink-muted">Order ID</span>
+                    <span className="text-xs font-mono text-ink-muted/70">{result.data?.orderId}</span>
                   </div>
                 </div>
 
-                {/* QR Code for PromptPay */}
+                {/* QR Code for PromptPay — kept on a white quiet-zone so it stays scannable */}
                 {paymentStatus === 'pending' && result.data?.payment?.qrCodeUrl && (
                   <div className="text-center py-2">
-                    <p className="text-xs text-gray-500 mb-3">สแกน QR Code เพื่อชำระเงิน</p>
+                    <p className="text-xs text-ink-muted mb-3">สแกน QR Code เพื่อชำระเงิน</p>
                     <img
                       src={result.data.payment.qrCodeUrl}
                       alt="QR Code"
-                      className="mx-auto w-52 h-52 rounded-xl border border-gray-100"
+                      className="mx-auto w-52 h-52 rounded-xl border border-ink-line bg-white p-3"
                     />
                   </div>
                 )}
 
                 <Button
-                  variant="outline"
+                  variant="onDarkOutline"
                   size="lg"
-                  className="w-full dark:border-primary dark:text-primary dark:hover:bg-primary-light"
+                  className="w-full"
                   onClick={resetAll}
                 >
                   {paymentStatus === 'pending' ? 'ยกเลิก' : 'สั่งซื้ออีกครั้ง'}

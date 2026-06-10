@@ -369,25 +369,31 @@ const SeasonalDropSection = ({ initialTiers, initialImages }: SeasonalDropSectio
   return (
     <section
       id="seasonal-drop"
-      className="py-16 md:py-24 px-4 md:px-8 bg-gradient-to-b from-[#f8f9fb] to-white"
+      className="py-20 md:py-28 px-5 md:px-12 bg-ink-deep"
     >
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-10">
-          <span className="inline-block text-xs font-semibold tracking-widest uppercase text-[#7B68AE] mb-3">
-            Seasonal Drop
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#153051] mb-3">
-            สินค้าพิเศษประจำซีซัน
-          </h2>
-          <p className="text-gray-500 text-base max-w-lg mx-auto leading-relaxed">
+        <div className="mb-10">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+            <h2 className="font-prompt font-bold text-ink-text leading-[1.05] text-[clamp(2.25rem,6vw,4.5rem)]">
+              สินค้าพิเศษประจำซีซัน
+            </h2>
+            <span
+              aria-hidden
+              className="font-archivo font-semibold text-secondary text-sm md:text-base tracking-[0.18em] uppercase"
+            >
+              Seasonal Drop
+            </span>
+          </div>
+          <div className="mt-5 h-px w-full bg-ink-line" />
+          <p className="mt-6 text-ink-muted text-base md:text-lg leading-relaxed">
             เลือกแพ็กเกจที่คุณต้องการ ไฟล์ดิจิทัลจะถูกส่งไปยังอีเมลของคุณ
           </p>
         </div>
 
         {tiers.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-gray-500">ยังไม่มีสินค้าในขณะนี้</p>
+            <p className="text-ink-muted">ยังไม่มีสินค้าในขณะนี้</p>
           </div>
         ) : step === 'product' ? (
           /* ───────── Product Page ───────── */

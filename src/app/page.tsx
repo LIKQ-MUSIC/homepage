@@ -138,9 +138,7 @@ export default async function Home() {
 
       <ColorBand />
 
-      {seasonalDropTiers.length > 0 && (
-        <SeasonalDropSection initialTiers={seasonalDropTiers} initialImages={seasonalDropImages} />
-      )}
+      <SeasonalDropSection initialTiers={seasonalDropTiers} initialImages={seasonalDropImages} />
 
       {latestPosts.length > 0 && <BlogSection posts={latestPosts} />}
 

@@ -1,4 +1,11 @@
-import { Inter, Noto_Sans_Thai, Prompt } from 'next/font/google'
+import { Archivo, Inter, Noto_Sans_Thai, Prompt } from 'next/font/google'
+
+export const archivo = Archivo({
+  weight: 'variable',
+  subsets: ['latin'],
+  variable: '--font-archivo',
+  display: 'swap'
+})
 
 export const inter = Inter({
   weight: 'variable',

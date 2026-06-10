@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Title } from '@/ui/Typography'
-import Button from '@/ui/Button'
 import { cn } from '@/utils'
 import dayjs from '@/utils/dayjs'
 
@@ -27,16 +26,16 @@ const BlogSection = ({ posts }: BlogSectionProps) => {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <Title className="!mb-0" level={3}>
+            <h3 className="font-prompt text-3xl md:text-4xl font-bold text-ink-text">
               บทความล่าสุด
-            </Title>
-            <p className="text-gray-500 text-sm mt-1">
+            </h3>
+            <p className="text-ink-muted text-sm mt-2">
               เรื่องราว บทเรียน และแรงบันดาลใจจากพวกเรา
             </p>
           </div>
           <Link
             href="/blogs"
-            className="text-sm font-medium text-[#153051] hover:text-[#1e4a7a] transition-colors underline-offset-4 hover:underline"
+            className="font-archivo text-sm font-semibold uppercase tracking-[0.18em] text-secondary transition-colors underline-offset-8 hover:underline"
           >
             ดูทั้งหมด →
           </Link>
@@ -58,8 +57,8 @@ const BlogSection = ({ posts }: BlogSectionProps) => {
               href={`/blogs/${post.slug}`}
               className="group block animate-scale-in"
             >
-              <article className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 motion-safe:group-hover:scale-[1.02] h-full flex flex-col">
-                <div className="aspect-video relative overflow-hidden bg-gray-100">
+              <article className="bg-ink-raise border border-ink-line rounded-sm overflow-hidden hover:border-secondary/60 transition-all duration-300 h-full flex flex-col">
+                <div className="aspect-video relative overflow-hidden bg-ink-panel">
                   {post.thumbnail_url ? (
                     <Image
                       src={post.thumbnail_url}
@@ -77,19 +76,19 @@ const BlogSection = ({ posts }: BlogSectionProps) => {
                 </div>
                 <div className="p-5 flex-1 flex flex-col">
                   {post.published_at && (
-                    <time className="text-xs text-gray-400 mb-2 block">
+                    <time className="text-xs text-ink-muted mb-2 block">
                       {dayjs(post.published_at).format('D MMMM YYYY')}
                     </time>
                   )}
-                  <h3 className="text-lg font-bold text-[#153051] mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                  <h3 className="text-lg font-bold text-ink-text mb-2 group-hover:text-secondary transition-colors line-clamp-2">
                     {post.title}
                   </h3>
                   {post.excerpt && (
-                    <p className="text-gray-500 text-sm line-clamp-2 flex-1">
+                    <p className="text-ink-muted text-sm line-clamp-2 flex-1">
                       {post.excerpt}
                     </p>
                   )}
-                  <span className="mt-3 text-primary text-sm font-medium group-hover:underline">
+                  <span className="mt-3 text-secondary text-sm font-medium group-hover:underline">
                     อ่านต่อ →
                   </span>
                 </div>
@@ -98,17 +97,6 @@ const BlogSection = ({ posts }: BlogSectionProps) => {
           ))}
         </div>
 
-        <div className="mt-10 flex justify-center">
-          <Button
-            href="/blogs"
-            variant="primary"
-            // Homepage is a forced-light brand surface; keep the pill navy even
-            // when the OS sets html.dark (otherwise primary's dark: variant goes blue).
-            className="h-auto px-6 py-3 rounded-full dark:bg-primary dark:hover:bg-primary-hover dark:active:bg-primary-active"
-          >
-            ดูบทความทั้งหมด
-          </Button>
-        </div>
       </div>
     </section>
   )

@@ -54,6 +54,15 @@ export default {
           DEFAULT: '#E8EAEE',
           text: '#B6BFC9'
         },
+        ink: {
+          // "after dark" home surfaces — deeper than primary so #153051 reads as elevation
+          deep: '#0A1422',
+          raise: '#10213A',
+          panel: '#153051',
+          text: '#F4F2F6',
+          muted: '#ABB6C6',
+          line: 'rgba(190, 173, 196, 0.16)'
+        },
         y2k: {
           cobalt: '#3B1EFF',
           pink: '#FF3AA5',
@@ -76,6 +85,7 @@ export default {
       fontFamily: {
         sans: ['var(--font-noto-sans-thai)', 'var(--font-inter)', 'sans-serif'],
         prompt: ['var(--font-prompt)'],
+        archivo: ['var(--font-archivo)', 'sans-serif'],
         pixel: ['"Press Start 2P"', 'ui-monospace', 'monospace'],
         'pixel-mono': ['"VT323"', 'ui-monospace', 'monospace']
       },
@@ -99,11 +109,17 @@ export default {
         y2kMarquee: {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' }
+        },
+        riseIn: {
+          '0%': { transform: 'translateY(28px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' }
         }
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out forwards',
         'scale-in': 'scaleIn 0.3s ease-out forwards',
+        'rise-in': 'riseIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+        'label-marquee': 'y2kMarquee 32s linear infinite',
         'y2k-blink': 'y2kBlink 1s steps(2, end) infinite',
         'y2k-bob': 'y2kBob 1.6s ease-in-out infinite',
         'y2k-marquee': 'y2kMarquee 18s linear infinite'

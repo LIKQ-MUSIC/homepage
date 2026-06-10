@@ -1,21 +1,14 @@
-import Section from '@/components/Section'
 import Navbar from '@/components/Navbar'
-import { Title } from '@/ui/Typography'
-import Microphone from '@/ui/Icons/Microphone'
-import Card from '@/components/Card'
-import HeroCarousel from '@/components/HeroCarousel'
 import Works from '@/components/Works'
 import Team from '@/components/Team'
 import Footer from '@/components/Footer'
-import Fansong from '@/ui/Icons/Fansong'
-import Advertised from '@/ui/Icons/Advertised'
-import MixMaster from '@/ui/Icons/MixMaster'
-import WritingComposing from '@/ui/Icons/WritingComposing'
-import Arrange from '@/ui/Icons/Arrange'
-import AboutUs from '@/components/AboutUs'
 import BlogSection from '@/components/BlogSection'
-import ColorStory from '@/components/ColorStory'
-import AuditionCTA from '@/components/Audition/AuditionCTA'
+import HeroVideo from '@/components/home/HeroVideo'
+import AboutSplit from '@/components/home/AboutSplit'
+import TrackListServices from '@/components/home/TrackListServices'
+import CandidateRail from '@/components/home/CandidateRail'
+import ColorBand from '@/components/home/ColorBand'
+import AuditionBand from '@/components/home/AuditionBand'
 import SeasonalDropSection from '@/components/SeasonalDropSection'
 import type { SeasonalDropTier, SeasonalDropImage } from '@/components/SeasonalDropSection'
 import { getAboutUsImages } from '@/services/about-us'
@@ -123,85 +116,37 @@ async function getLatestBlogs() {
 }
 
 export default async function Home() {
-  const [worksData, aboutUsData, latestPosts, seasonalDropTiers, seasonalDropImages] = await Promise.all([
+  const [worksData, latestPosts, seasonalDropTiers, seasonalDropImages] = await Promise.all([
     getWorks(),
-    getAboutUsImages(),
     getLatestBlogs(),
     getSeasonalDropTiers(),
     getSeasonalDropImages(),
   ])
 
-  // Map to component format or use default if empty/failed
-  const aboutUsImages =
-    aboutUsData && aboutUsData.length > 0
-      ? aboutUsData.map((img: any) => ({
-          src: img.image_url,
-          alt: img.alt_text || ''
-        }))
-      : []
-
-  const services = [
-    {
-      title: 'Writing and Composing',
-      description: 'แต่งเพลงและแต่งทำนอง',
-      icon: <WritingComposing className="text-primary" />
-    },
-    {
-      title: 'Edit & Tune Vocal',
-      description: 'จูนและแก้ไขเสียงร้อง',
-      icon: <Microphone className="text-primary" />
-    },
-    {
-      title: 'Arrange music',
-      description: 'เรียบเรียงดนตรี',
-      icon: <Arrange className="text-primary" />
-    },
-    {
-      title: 'Mix & Mastering',
-      description: 'ผสมเสียงและมาสเตอร์',
-      icon: <MixMaster className="text-primary" />
-    },
-    {
-      title: 'Advertised',
-      description: 'แต่งเพลง ผลิตเพลง ประกอบโฆษณา',
-      icon: <Advertised className="text-primary" />
-    },
-    {
-      title: 'Music & Gift',
-      description: 'Fansong ของขวัญ เนื่องในโอกาสพิเศษ',
-      icon: <Fansong className="text-primary" />
-    }
-  ]
   return (
-    <main className="min-h-screen bg-[#f8f9fb] text-neutral-900 font-sans overflow-x-hidden">
-      <Navbar />
-      <HeroCarousel images={aboutUsImages} />
+    <main className="min-h-screen bg-ink-deep text-ink-text font-sans overflow-x-hidden">
+      <Navbar tone="dark" />
+      <HeroVideo />
 
-      <AboutUs />
+      <AboutSplit />
 
-      <AuditionCTA />
+      <TrackListServices />
 
-      <Section id="services" label="Our Services" title="บริการของเรา">
-        <Title className="text-center" level={5}>
-          บริการผลิตดนตรีหลากหลายรูปแบบ พร้อมทีมงานมืออาชีพมากประสบการณ์
-        </Title>
+      <CandidateRail />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10">
-          {services.map(service => (
-            <Card key={service.title} {...service} />
-          ))}
-        </div>
-      </Section>
+      {worksData.length > 0 && <Works items={worksData} />}
 
-      <Works items={worksData} />
+      <ColorBand />
 
-      <ColorStory />
+      {seasonalDropTiers.length > 0 && (
+        <SeasonalDropSection initialTiers={seasonalDropTiers} initialImages={seasonalDropImages} />
+      )}
 
-      <SeasonalDropSection initialTiers={seasonalDropTiers} initialImages={seasonalDropImages} />
-
-      <BlogSection posts={latestPosts} />
+      {latestPosts.length > 0 && <BlogSection posts={latestPosts} />}
 
       <Team />
+
+      <AuditionBand />
 
       <Footer />
     </main>

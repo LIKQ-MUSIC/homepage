@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
     const backofficeUrl = (
       process.env.BACKOFFICE_URL || 'http://localhost:3001'
     ).replace(/\/$/, '')
-    return [
+    const rewrites = [
       {
         source: '/dashboard',
         destination: `${backofficeUrl}/dashboard`
@@ -57,16 +57,23 @@ const nextConfig: NextConfig = {
       {
         source: '/nekowink/:path*',
         destination: `${NEKOWINK_STOREFRONT_URL}/nekowink/:path*`
-      },
-      {
-        source: '/capybara',
-        destination: `${CAPYBARA_URL}/capybara`
-      },
-      {
-        source: '/capybara/:path*',
-        destination: `${CAPYBARA_URL}/capybara/:path*`
       }
     ]
+    // The capybara quiz isn't ready for production yet: proxy it only on
+    // non-production builds (local, dev, preview), never on the prod domain.
+    if (process.env.VERCEL_ENV !== 'production') {
+      rewrites.push(
+        {
+          source: '/capybara',
+          destination: `${CAPYBARA_URL}/capybara`
+        },
+        {
+          source: '/capybara/:path*',
+          destination: `${CAPYBARA_URL}/capybara/:path*`
+        }
+      )
+    }
+    return rewrites
   }
 }
 

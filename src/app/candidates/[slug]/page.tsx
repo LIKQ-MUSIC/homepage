@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const candidate = getCandidateBySlug(slug)
   if (!candidate) return { title: 'Candidate not found' }
   return {
-    title: `${candidate.nickname} — LIKE YOU CANDIDATE`,
+    title: `${candidate.nickname} | LIKE YOU CANDIDATE`,
     description: candidate.tagline,
   }
 }

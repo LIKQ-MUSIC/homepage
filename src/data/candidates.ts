@@ -27,9 +27,9 @@ export type Candidate = {
   }
   /** One-line hook on the landing card. */
   tagline: string
-  /** Curator note — why they were picked. Shows on profile hero. */
+  /** Curator note: why they were picked. Shows on profile hero. */
   curatorNote: string
-  /** Standout traits — 2 to 4 short bullet labels for the landing card. */
+  /** Standout traits: 2 to 4 short bullet labels for the landing card. */
   traits: string[]
   idolMeaning: string
   creativeProject: string
@@ -58,7 +58,7 @@ export const CANDIDATES: Candidate[] = [
     creativeProject:
       'ตอน ม.5 ขอผู้อำนวยการเปิดชมรมเอง พอเปิดห้องฉายหนังสั้นวันนั้น คนวิ่งเข้ามาเต็มห้อง โมเม้นที่ไม่เคยมีมาก่อน',
     oneYearVision:
-      'อยากรู้คีย์ของตัวเองในการร้องเพลง เต้นได้ดีขึ้น มีสไตล์ที่ลงตัว แนวเพลงน่ารักแต่มีความเท่ — ทุกคนในวงมีคาแรกเตอร์ของตัวเองชัด',
+      'อยากรู้คีย์ของตัวเองในการร้องเพลง เต้นได้ดีขึ้น มีสไตล์ที่ลงตัว แนวเพลงน่ารักแต่มีความเท่ ทุกคนในวงมีคาแรกเตอร์ของตัวเองชัด',
     demoAnalysis:
       'บีทน่าฟัง อยากต่อยอดให้มีท่อนแร็ป ท่าเต้นน่ารักแต่แอบเซ็กซี่เบาๆ มีความเท่เล็กน้อย',
     highlight: {
@@ -117,9 +117,9 @@ export const CANDIDATES: Candidate[] = [
       'https://cdn.likqmusic.com/candidates/satang-dance-2.mp4',
       'https://cdn.likqmusic.com/candidates/satang-dance-3.mp4',
     ],
-    tagline: 'Introvert ที่เลือกก้าวข้าม comfort zone — ด้วยเหตุผลทุกครั้ง',
+    tagline: 'Introvert ที่เลือกก้าวข้าม comfort zone ด้วยเหตุผลทุกครั้ง',
     curatorNote:
-      'Vocabulary ของผู้ใหญ่ คิดเป็นระบบ และมี nuance สูงทุกคำตอบ — ไม่ตอบ binary',
+      'Vocabulary ของผู้ใหญ่ คิดเป็นระบบ และมี nuance สูงทุกคำตอบ ไม่ตอบ binary',
     traits: ['Nuanced', 'Professional', 'Loyal'],
     idolMeaning:
       'วงการไอดอลให้แรงบันดาลใจหลายอย่าง การเป็นศิลปินที่มีคนรัก มาพร้อมความรับผิดชอบทั้งการทำผลงาน การวางตัว และการพัฒนาตัวเองตลอด',

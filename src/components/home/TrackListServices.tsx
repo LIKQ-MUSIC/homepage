@@ -22,7 +22,7 @@ const TrackListServices = () => {
   return (
     <section id="services" className="bg-ink-deep px-5 py-20 md:px-12 md:py-28">
       <div className="mx-auto max-w-6xl">
-        <SectionHead th="บริการของเรา" en="Services — Side A" />
+        <SectionHead th="บริการของเรา" en="Services · Side A" />
         <p className="mt-6 max-w-2xl text-base md:text-lg text-ink-muted">
           บริการผลิตดนตรีหลากหลายรูปแบบ พร้อมทีมงานมืออาชีพมากประสบการณ์
         </p>

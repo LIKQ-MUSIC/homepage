@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Sparkles, ArrowRight } from 'lucide-react'
 import { CANDIDATES, THEME_STYLES } from '@/data/candidates'
+import { notFound } from 'next/navigation'
 import { CandidatePortrait } from './_components/CandidatePortrait'
 
 export const metadata: Metadata = {
@@ -11,6 +12,9 @@ export const metadata: Metadata = {
 }
 
 export default function CandidatesLandingPage() {
+  // Not exposed on production yet: the homepage trainee section is enough there.
+  if (process.env.VERCEL_ENV === 'production') notFound()
+
   return (
     <div className="theme-y2k min-h-screen bg-y2k-cobalt text-white y2k-scanlines">
       {/* ═══ HERO ═══ */}

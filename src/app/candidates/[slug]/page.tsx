@@ -16,6 +16,7 @@ interface Props {
 }
 
 export async function generateStaticParams() {
+  if (process.env.VERCEL_ENV === 'production') return []
   return CANDIDATES.map((c) => ({ slug: c.slug }))
 }
 
@@ -30,6 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CandidateProfilePage({ params }: Props) {
+  // Not exposed on production yet: the homepage trainee section is enough there.
+  if (process.env.VERCEL_ENV === 'production') notFound()
+
   const { slug } = await params
   const candidate = getCandidateBySlug(slug)
   if (!candidate) notFound()

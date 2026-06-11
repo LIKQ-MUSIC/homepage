@@ -16,7 +16,7 @@ const AuditionBand = () => {
           AUDITION
         </h2>
         <p className="mt-2 font-prompt text-xl font-bold md:text-3xl">
-          ออดิชั่น Idol — LiKQ Music
+          ออดิชั่น Idol · LiKQ Music
         </p>
         <p className="mt-5 max-w-xl text-base leading-relaxed text-primary/80 md:text-lg">
           เรากำลังมองหาเสียงร้อง ความคิดสร้างสรรค์ และศิลปินหน้าใหม่ มาร่วมวง

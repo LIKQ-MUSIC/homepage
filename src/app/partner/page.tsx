@@ -56,7 +56,7 @@ const pains = [
     num: '02',
     icon: Wallet,
     title: 'ลูกค้าไม่กล้าโอน',
-    desc: 'โอนเข้าบัญชีส่วนตัว ไม่มีระบบ ไม่มีสลิปกลาง ลูกค้าใหม่ลังเลที่จะจ่าย'
+    desc: 'โอนเข้าบัญชีส่วนตัว ไม่มีระบบอะไรรองรับ ลูกค้าใหม่เลยไม่กล้าจ่าย'
   },
   {
     num: '03',
@@ -70,22 +70,22 @@ const features = [
   {
     icon: LayoutPanelLeft,
     title: 'หน้าเว็บร้านดีไซน์ตามแบรนด์',
-    desc: 'Custom design ให้ตามตัวตนของศิลปิน ที่ likqmusic.com/ชื่อร้านคุณ'
+    desc: 'ดีไซน์ให้ใหม่ทั้งร้านตามสไตล์ของแต่ละวง อยู่ที่ likqmusic.com/ชื่อร้านคุณ'
   },
   {
     icon: ShieldCheck,
     title: 'ระบบจ่ายเงินอัตโนมัติ',
-    desc: 'PromptPay และบัตรเครดิตผ่าน Omise ปลอดภัย ลูกค้าเชื่อมั่น'
+    desc: 'PromptPay และบัตรเครดิตผ่าน Omise ลูกค้าใหม่ก็กล้าจ่าย'
   },
   {
     icon: Sparkles,
     title: 'ระบบสมาชิก & คูปองพร้อมใช้',
-    desc: 'member แต้มสะสม และส่วนลด ที่เรา manage ให้กระตุ้นยอด'
+    desc: 'ระบบ member แต้มสะสม ส่วนลด เปิดร้านมาก็มีให้เลย แคมเปญเรา manage ให้'
   },
   {
     icon: Headset,
     title: 'ทีม Tech คอยซัพพอร์ต',
-    desc: 'มีทีมพัฒนาดูแลระบบและพร้อมช่วยแก้ปัญหาให้ คุณไม่ต้องปวดหัวเรื่องเทคนิคเอง'
+    desc: 'ระบบมีปัญหาอะไร ทีม dev ก็จัดการให้ ไม่ต้องปวดหัวเรื่องเทคนิคเอง'
   }
 ]
 
@@ -93,17 +93,17 @@ const ecosystem = [
   {
     icon: Users,
     title: 'Cross-discovery',
-    desc: 'ลูกค้าของศิลปินคนอื่นอาจเดินมาเจอร้านคุณ ฐานแฟนใหม่โดยไม่ต้องยิงแอดเพิ่ม'
+    desc: 'แฟนของศิลปินคนอื่นเดินมาเจอร้านคุณได้เอง ได้ฐานแฟนใหม่แบบไม่ต้องยิงแอดเพิ่ม'
   },
   {
     icon: Star,
     title: 'แต้มสะสมข้ามร้าน',
-    desc: 'แฟน ๆ สะสมแต้มจากทุกร้านในแพลตฟอร์มได้ จูงใจให้กลับมาซื้อซ้ำ'
+    desc: 'แฟน ๆ เก็บแต้มจากร้านไหนก็ได้ในแพลตฟอร์ม มีแต้มติดมือ เดี๋ยวก็กลับมาซื้อซ้ำ'
   },
   {
     icon: Percent,
     title: 'คูปองที่เรา manage ให้',
-    desc: 'แคมเปญส่วนลดทั้งระบบช่วยกระตุ้นยอด โดยที่คุณไม่ต้องคิดเอง'
+    desc: 'แคมเปญส่วนลดทั้งระบบ เราคิดให้ รันให้ ไม่ต้องทำอะไรเพิ่มเอง'
   }
 ]
 
@@ -136,8 +136,7 @@ export default function PartnerPage() {
             สำหรับศิลปินอิสระ
           </h1>
           <p className="mt-6 text-lg md:text-2xl text-secondary max-w-2xl">
-            หน้าร้านของคุณเอง บนระบบที่พร้อมใช้ เราสร้างให้ ดูแลให้ และทำให้ปลอดภัย
-            ส่วนคุณโฟกัสที่การทำเพลง
+            หน้าร้านของตัวเอง บนระบบที่พร้อมใช้ เราสร้างให้ ดูแลให้ ไปโฟกัสทำเพลงได้เลย
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -169,7 +168,7 @@ export default function PartnerPage() {
           ขายของผ่าน DM มันเหนื่อยกว่าที่คิด
         </h2>
         <p className="mt-3 text-base md:text-lg text-neutral-500 max-w-2xl">
-          การขายผ่านแชทกินเวลาของคุณ และกินความเชื่อใจของแฟน ๆ ไปเรื่อย ๆ
+          ขายผ่านแชทเสียเวลาก็เรื่องนึง ที่แย่กว่าคือแฟน ๆ เริ่มไม่มั่นใจเวลาต้องโอน
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
@@ -237,8 +236,8 @@ export default function PartnerPage() {
                 </div>
               </div>
               <p className="mt-8 pt-6 border-t border-white/15 text-white/70 leading-relaxed">
-                เราไม่ถือสต็อก ไม่ยุ่งกับ logistics ส่วนเว็บ ระบบ
-                และการจ่ายเงิน ปล่อยให้เราดูแล
+                เราไม่ถือสต็อก ไม่ยุ่งกับ logistics ส่วนเว็บกับระบบจ่ายเงิน
+                ปล่อยให้เราดูแล
               </p>
             </div>
           </div>
@@ -256,7 +255,7 @@ export default function PartnerPage() {
             ขายไม่ได้ <span className="text-secondary">= ไม่เสียอะไร</span>
           </h2>
           <p className="mt-6 text-lg md:text-2xl text-secondary max-w-xl">
-            เริ่มต้นฟรี จ่าย commission เฉพาะตอนที่ขายได้จริงเท่านั้น
+            เปิดร้านฟรี มี commission เฉพาะออเดอร์ที่ขายได้จริง
           </p>
 
           <div className="mt-10 flex flex-wrap gap-4">
@@ -281,8 +280,8 @@ export default function PartnerPage() {
           ตั้งราคาเท่านี้ วงได้รับเท่าไหร่?
         </h2>
         <p className="mt-3 text-base md:text-lg text-neutral-500 max-w-2xl">
-          ลองกรอกราคาตั้งขาย หรือยอดที่อยากได้รับ อีกฝั่งจะคำนวณให้อัตโนมัติ
-          พร้อมแจกแจงทุกบาทแบบโปร่งใส
+          กรอกราคาตั้งขายหรือยอดที่อยากได้มา อีกฝั่งก็คำนวณให้เอง
+          แตกให้ดูทุกบาทว่าหักอะไรบ้าง
         </p>
 
         <div className="mt-10">
@@ -296,10 +295,10 @@ export default function PartnerPage() {
           Trust &amp; transparency
         </p>
         <h2 className="text-2xl md:text-4xl font-bold text-primary leading-snug">
-          จ่ายเงินปลอดภัย โปร่งใสทุกบาท
+          เงินเข้าปลอดภัย เช็คได้ทุกบาท
         </h2>
         <p className="mt-3 text-base md:text-lg text-neutral-500">
-          ระบบจ่ายเงินจริง ไม่ใช่การโอนเข้าบัญชีส่วนตัว
+          เงินไม่ได้โอนเข้าบัญชีส่วนตัวใคร วิ่งผ่านระบบ payment จริงต่างหาก
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
@@ -340,8 +339,8 @@ export default function PartnerPage() {
               คำนวณ commission อัตโนมัติ
             </h3>
             <p className="text-neutral-500 leading-relaxed">
-              เห็นยอดขายทุกออเดอร์ ระบบหัก commission ให้เอง ตรวจสอบย้อนหลังได้
-              ไม่ต้องมานั่งกระทบยอดเอง
+              เห็นยอดขายทุกออเดอร์ ระบบหัก commission ให้เอง ย้อนดูได้ตลอด
+              ไม่ต้องมานั่งไล่เช็คยอดเอง
             </p>
             <div className="flex flex-wrap gap-2 mt-5">
               {['ยอดขายเรียลไทม์', 'สรุปอัตโนมัติ'].map(b => (
@@ -364,7 +363,7 @@ export default function PartnerPage() {
             One ecosystem
           </p>
           <h2 className="text-2xl md:text-4xl font-bold text-primary leading-snug">
-            ระบบนิเวศที่แฟน ๆ เจอกัน
+            ecosystem เดียวกัน แฟน ๆ เจอกันเอง
           </h2>
           <p className="mt-3 text-base md:text-lg text-neutral-500 max-w-2xl">
             ทุกร้านของศิลปินใช้ฐานแฟนเดียวกัน และกระเป๋าแต้มเดียวกัน
@@ -400,7 +399,7 @@ export default function PartnerPage() {
               </h2>
               <p className="mt-3 text-secondary leading-relaxed">
                 ลูกค้าช้อปร้านไหนในค่าย ก็สะสม Note เข้ากระเป๋าใบเดียวกัน เก็บจากร้านนึง
-                ไปใช้อีกร้านได้ เริ่มเปิดใช้จริงแล้วที่ NekoWink และกำลังขยายไปทุกศิลปินในค่าย
+                ไปใช้อีกร้านได้ ตอนนี้ใช้จริงแล้วที่ NekoWink ร้านอื่นกำลังตามมา
               </p>
             </div>
             <Link
@@ -429,7 +428,7 @@ export default function PartnerPage() {
             ร้านจริงที่เปิดอยู่ตอนนี้
           </p>
           <p className="mt-4 text-white/70 max-w-xl leading-relaxed">
-            หน้าร้านดีไซน์เฉพาะ ระบบสมาชิก และ PromptPay / Omise ทำงานจริงทั้งหมด
+            ทุกอย่างในหน้านี้รันอยู่จริง ตั้งแต่ดีไซน์ ระบบ member ยัน PromptPay / Omise
           </p>
 
           {/* Real store screenshots */}
@@ -477,7 +476,7 @@ export default function PartnerPage() {
             มาเปิดร้านด้วยกันไหม?
           </h2>
           <p className="mt-5 text-lg text-neutral-500 max-w-xl mx-auto">
-            เริ่มต้นไม่มีความเสี่ยง คุยก่อนได้ ไม่มีผูกมัด
+            ทักมาคุยก่อนได้ ยังไม่ต้องตัดสินใจอะไรทั้งนั้น
           </p>
           <div className="mt-9 flex flex-wrap justify-center items-center gap-4">
             <a

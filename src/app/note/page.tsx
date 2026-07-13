@@ -30,7 +30,7 @@ const steps = [
   {
     icon: Wallet,
     title: 'จ่ายจริงครบ 50 บาท ได้ 1 Note',
-    desc: 'พอชำระเงินสำเร็จ Note ก็เข้าบัญชีให้เองอัตโนมัติ ไม่ต้องกดสะสม ไม่ต้องสแกนอะไรเลย'
+    desc: 'พอจ่ายเงินสำเร็จ Note ก็เข้าบัญชีให้เอง ไม่ต้องกดสะสม ไม่ต้องสแกนอะไรทั้งนั้น'
   },
   {
     icon: Tag,
@@ -73,8 +73,8 @@ export default function NotePage() {
             แต้มเดียว ใช้ได้ทุกศิลปินในค่าย
           </h1>
           <p className="mt-6 text-lg md:text-2xl text-secondary max-w-2xl">
-            เป็นแฟนหลายศิลปิน แต้มก็มักจะแยกกันคนละร้าน ตรงนี้แหละที่ Note ต่างออกไป
-            ช้อปของศิลปินคนไหนในค่าย ก็เก็บเข้ากระเป๋าใบเดียวกัน
+            เป็นแฟนหลายวง แต้มก็แยกคนละร้านตลอด Note เลยรวมให้เป็นกระเป๋าเดียว
+            ช้อปศิลปินคนไหนในค่ายก็เข้าใบเดียวกันหมด
           </p>
         </div>
       </section>
@@ -83,7 +83,7 @@ export default function NotePage() {
       <section className="max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-24">
         <p className="text-sm tracking-[0.3em] uppercase text-secondary-dark mb-3">How it works</p>
         <h2 className="text-2xl md:text-4xl font-bold text-primary leading-snug">
-          สะสมง่าย ใช้ง่าย ไม่ต้องจำอะไรเยอะ
+          มีแค่ 3 เรื่องที่ต้องรู้
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
@@ -107,7 +107,7 @@ export default function NotePage() {
             ศิลปินพาร์ทเนอร์ที่ใช้ Note ร่วมกัน
           </h2>
           <p className="mt-3 text-base md:text-lg text-neutral-500 max-w-2xl">
-            ยิ่งค่ายโต Note ในมือคุณก็ยิ่งมีที่ใช้ และกำลังเพิ่มขึ้นเรื่อย ๆ
+            ยิ่งค่ายโต แต้มก้อนเดิมก็ยิ่งมีที่ใช้
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-10">
@@ -189,7 +189,7 @@ export default function NotePage() {
               <span className="inline-block">ได้ตั้งแต่ออเดอร์แรก</span>
             </h2>
             <p className="mt-5 text-base md:text-lg text-secondary max-w-md mx-auto">
-              ไว้ใช้กับศิลปินที่คุณรัก ทุกคนในค่าย LiKQ
+              ไว้ใช้กับศิลปินที่ชอบ คนไหนก็ได้ในค่าย LiKQ
             </p>
             <div className="mt-9 flex flex-wrap justify-center items-center gap-3">
               <Link

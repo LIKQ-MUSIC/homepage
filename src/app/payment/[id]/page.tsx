@@ -368,8 +368,12 @@ export default function InvoicePaymentPage() {
                 <h3 className="text-xl font-bold text-slate-900 mb-2">ชำระเงินสำเร็จ</h3>
                 <p className="text-slate-500 text-sm leading-relaxed max-w-sm mx-auto">
                   ขอบคุณครับ/ค่ะ! เราได้รับยอดชำระเงินของท่านเรียบร้อยแล้ว
-                  <br />
-                  ใบเสร็จรับเงินจะถูกจัดส่งไปยังอีเมลของท่าน
+                  {invoice.customer_email && (
+                    <>
+                      <br />
+                      ใบเสร็จรับเงินจะถูกจัดส่งไปยังอีเมลของท่าน
+                    </>
+                  )}
                 </p>
               </div>
 

@@ -244,7 +244,7 @@ export default function InvoicePaymentPage() {
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-3 border-[#153051] border-t-transparent rounded-full animate-spin" />
           <p className="text-[#153051] font-medium">
-            กำลังโหลดข้อมูลใบแจ้งหนี้...
+            กำลังโหลดข้อมูลใบแจ้งชำระเงิน...
           </p>
         </div>
       </div>
@@ -266,7 +266,7 @@ export default function InvoicePaymentPage() {
             เกิดข้อผิดพลาด
           </h2>
           <p className="text-gray-500">
-            ไม่พบใบแจ้งหนี้ หรือ ลิงก์นี้หมดอายุแล้ว
+            ไม่พบใบแจ้งชำระเงิน หรือ ลิงก์นี้หมดอายุแล้ว
           </p>
         </div>
       </div>
@@ -292,7 +292,7 @@ export default function InvoicePaymentPage() {
               />
             </div>
             <h1 className="text-xl sm:text-2xl font-semibold tracking-tight mb-2">
-              ใบแจ้งหนี้{' '}
+              ใบแจ้งชำระเงิน{' '}
               <span className="text-blue-200 font-mono">
                 #{invoice.id.split('-')[0]}
               </span>

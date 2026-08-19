@@ -1,0 +1,267 @@
+/*
+ * A surprise, sized for a phone held close in a dim room.
+ *
+ * Everything here is prefixed `bibi-` and imported by one page, so deleting
+ * `src/app/bibi/` takes the whole thing with it and leaves nothing behind.
+ *
+ * The world is a warm plum night with one lamp in it: a dark ground so the
+ * screen is the light rather than a glare, ivory for the words, and one rose
+ * that only ever touches the last line and the small print. No second accent,
+ * because a love letter that reaches for a palette stops sounding like a
+ * person.
+ */
+
+.bibi-stage {
+  --bibi-ground: #1e0f17;
+  --bibi-ivory: #fff2e7;
+  --bibi-rose: #f0a8bc;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  /* dvh so the iOS toolbar cannot crop the last line; vh first for anything
+     that has never heard of dvh. */
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: calc(2rem + env(safe-area-inset-top)) 1.5rem
+    calc(2rem + env(safe-area-inset-bottom));
+
+  background: var(--bibi-ground);
+  color: var(--bibi-ivory);
+  text-align: center;
+
+  /* It is a letter, not an interface. Nothing here wants a text cursor or a
+     blue flash on tap. */
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bibi-stage:focus-visible {
+  outline: 2px solid var(--bibi-rose);
+  outline-offset: -6px;
+}
+
+/* ── the lamp ─────────────────────────────────────────────────────────────
+   Two very slow blooms. Not particles: a phone in a dark room should feel lit
+   by one warm source, and drifting confetti would turn a letter into a screen
+   saver. They breathe far too slowly to notice directly, which is the point. */
+.bibi-glow {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.bibi-glow-a {
+  top: -18%;
+  left: -12%;
+  width: 78vmin;
+  height: 78vmin;
+  background: radial-gradient(circle, rgba(240, 168, 188, 0.24), transparent 68%);
+  animation: bibi-drift-a 19s ease-in-out infinite;
+}
+
+.bibi-glow-b {
+  right: -20%;
+  bottom: -22%;
+  width: 88vmin;
+  height: 88vmin;
+  background: radial-gradient(circle, rgba(255, 176, 138, 0.18), transparent 70%);
+  animation: bibi-drift-b 23s ease-in-out infinite;
+}
+
+@keyframes bibi-drift-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate3d(4%, 5%, 0) scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes bibi-drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.05);
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(-5%, -4%, 0) scale(1);
+    opacity: 0.8;
+  }
+}
+
+/* ── the letter ───────────────────────────────────────────────────────────── */
+.bibi-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: 30ch; /* short measure: these are spoken lines, not paragraphs */
+}
+
+.bibi-line {
+  margin: 0;
+  font-family: var(--font-bibi-script), var(--font-prompt), sans-serif;
+  font-size: clamp(1.35rem, 5.6vw, 2rem);
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+
+  /* Thai is written without spaces between words, so a browser will break a
+     line wherever it happens to run out of room and leave a two-character tail
+     stranded on its own. Balance shares the words out evenly when a line does
+     have to wrap, which is the difference between a letter and a paragraph
+     that ran out of space. */
+  text-wrap: balance;
+
+  /* The one authored moment on the page: a line arrives, and nothing else
+     moves. Exponential ease-out from slightly below and slightly soft, so it
+     reads as being set down rather than flying in. */
+  animation: bibi-arrive 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Everything but the newest line steps back, so the eye always knows where the
+   letter is up to without anything having to move.
+   0.62 rather than the 0.42 this started at: at 0.42 the earlier lines came out
+   around 3.6:1 on this ground, and by the last beat those lines ARE the letter.
+   Receding has to stop short of unreadable. 0.62 measures about 6.9:1 and still
+   sits clearly behind the line that just arrived. */
+.bibi-line-past {
+  opacity: 0.62;
+  transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bibi-line-final {
+  margin-top: 0.6rem;
+  color: var(--bibi-rose);
+  font-size: clamp(2.75rem, 13.5vw, 5rem);
+  /* Thai stacks a vowel and a tone mark above the same consonant, so display
+     sizes need real leading or the marks touch the line above. */
+  line-height: 1.4;
+  padding-top: 0.1em;
+  text-shadow: 0 0 42px rgba(240, 168, 188, 0.42);
+  animation:
+    bibi-arrive 900ms cubic-bezier(0.16, 1, 0.3, 1) both,
+    bibi-breathe 4.5s ease-in-out 900ms infinite;
+}
+
+@keyframes bibi-arrive {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes bibi-breathe {
+  0%,
+  100% {
+    text-shadow: 0 0 42px rgba(240, 168, 188, 0.42);
+  }
+  50% {
+    text-shadow: 0 0 58px rgba(240, 168, 188, 0.6);
+  }
+}
+
+.bibi-signoff {
+  margin: 1.35rem 0 0;
+  font-family: var(--font-prompt), sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.16em;
+  color: var(--bibi-rose);
+  opacity: 0.85;
+  animation: bibi-arrive 900ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both;
+}
+
+/* ── the two small controls ───────────────────────────────────────────────── */
+.bibi-hint {
+  position: absolute;
+  bottom: calc(2rem + env(safe-area-inset-bottom));
+  margin: 0;
+  font-family: var(--font-prompt), sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em; /* letter-spacing pads the right; put it back */
+  color: var(--bibi-ivory);
+  opacity: 0.4;
+  animation: bibi-pulse 2.6s ease-in-out infinite;
+  transition: opacity 500ms ease;
+}
+
+.bibi-hint-gone {
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes bibi-pulse {
+  0%,
+  100% {
+    opacity: 0.28;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.bibi-replay {
+  position: absolute;
+  bottom: calc(1.6rem + env(safe-area-inset-bottom));
+  /* A real touch target, even though it is the quietest thing on the page. */
+  min-height: 44px;
+  padding: 0 1.25rem;
+  border: 0;
+  background: none;
+  font-family: var(--font-prompt), sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: var(--bibi-ivory);
+  opacity: 0.45;
+  cursor: pointer;
+  transition: opacity 300ms ease;
+  animation: bibi-arrive 700ms cubic-bezier(0.16, 1, 0.3, 1) 1.4s both;
+}
+
+.bibi-replay:hover,
+.bibi-replay:focus-visible {
+  opacity: 0.85;
+}
+
+/* ── for anyone who asked their device to stop moving things ──────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .bibi-glow,
+  .bibi-line,
+  .bibi-line-final,
+  .bibi-signoff,
+  .bibi-hint,
+  .bibi-replay {
+    animation: none !important;
+  }
+  .bibi-line,
+  .bibi-line-final,
+  .bibi-signoff,
+  .bibi-replay {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  .bibi-line-past {
+    opacity: 0.62;
+  }
+}

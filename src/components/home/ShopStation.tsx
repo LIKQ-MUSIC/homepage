@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
 import { Glint, MarkArrow, MarkBag, MarkQuiz } from './marks'
 
 /**
@@ -10,6 +9,9 @@ import { Glint, MarkArrow, MarkBag, MarkQuiz } from './marks'
  * Their copy is the destinations' own — the quiz's real title and question
  * count, the store's real name — so neither panel promises something the page
  * behind it does not say.
+ *
+ * Both are plain <a>: they rewrite to other apps, and <Link> would try an RSC
+ * fetch across the boundary and stall before falling back to a hard load.
  */
 
 const DESTINATIONS = [
@@ -39,7 +41,7 @@ const ShopStation = () => {
 
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
           {DESTINATIONS.map(({ href, Mark, title, body, action, tone }) => (
-            <Link
+            <a
               key={href}
               href={href}
               className={`group relative flex min-h-[16rem] flex-col justify-between overflow-hidden rounded-[2rem] p-8 transition-[transform,box-shadow] duration-500 ease-out hover:-translate-y-1 hover:shadow-[0_24px_60px_-28px_rgba(16,6,159,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-likq-ink motion-reduce:transition-none motion-reduce:hover:translate-y-0 md:p-10 ${
@@ -68,7 +70,7 @@ const ShopStation = () => {
                   <MarkArrow className="h-5 w-5 transition-transform duration-500 ease-out group-hover:translate-x-1.5 motion-reduce:transition-none" />
                 </span>
               </div>
-            </Link>
+            </a>
           ))}
         </div>
       </div>

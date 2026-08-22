@@ -4,6 +4,8 @@ import React from 'react'
 interface NavLink {
   href: string
   label: string
+  /** Rewritten to a different app; must be a plain <a>, never <Link>. */
+  external?: boolean
 }
 
 interface MobileNavLinksProps {
@@ -16,8 +18,8 @@ const links: NavLink[] = [
   { href: '#work', label: 'ผลงาน' },
   { href: '#team', label: 'ทีมงาน' },
   { href: '/artists', label: 'ศิลปิน' },
-  { href: '/merch', label: 'Store' },
-  { href: '/capybara', label: 'ควิซ' },
+  { href: '/merch', label: 'Store', external: true },
+  { href: '/capybara', label: 'ควิซ', external: true },
   { href: '/partner', label: 'ฝากขาย' },
   { href: '/audition', label: 'Audition' }
 ]
@@ -42,6 +44,19 @@ const MobileNavLinks: React.FC<MobileNavLinksProps> = ({ onLinkClick, dark = fal
         const linkClass = dark
           ? `${isRoute ? 'font-bold text-likq-beam6 bg-white/[0.06]' : 'text-white'} hover:bg-white/10`
           : `hover:bg-gray-50 ${isRoute ? 'font-bold text-likq-ink bg-likq-navy/5' : ''}`
+        if (link.external) {
+          return (
+            <a
+              key={link.href}
+              href={link.href}
+              className={`copy-th block px-8 py-3 text-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-current ${linkClass}`}
+              onClick={onLinkClick}
+            >
+              {link.label}
+            </a>
+          )
+        }
+
         return (
           <Link
             key={link.href}

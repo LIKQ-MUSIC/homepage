@@ -1,75 +1,39 @@
-'use client'
-
-import React, { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
+import React from 'react'
 import { Glint, MarkDescend } from './marks'
-
-const VIDEO_URL = 'https://cdn.likqmusic.com/homepage/landing-opt.mp4'
-const POSTER = '/images/about/event-atmosphere.jpg'
+import VinylDisc from './VinylDisc'
 
 /**
  * The source of the beam.
  *
- * The wordmark's Q is not set in type — it is the lens. The label's own
- * footage plays inside the Q's counter, and the aperture opens on load. That
- * is the page's one authored moment; everything below it is the light
- * travelling.
+ * The wordmark's Q is not set in type — it is the counter of the Q, and a
+ * record turns inside it. That is the page's one authored moment: the aperture
+ * opens on load and the disc is already spinning under a fixed sheen.
+ *
+ * This used to hold an autoplaying clip from cdn.likqmusic.com. The record
+ * replaces it, which also takes the last piece of client JavaScript out of the
+ * first viewport — everything here is now server-rendered SVG and CSS, and
+ * prefers-reduced-motion is handled in the stylesheet rather than by a
+ * matchMedia listener in a client component.
  *
  * The lockup stays on one line at every width and scales with the viewport;
  * stacking it splits "Lik" off from its Q and the wordmark stops being one.
  */
 const Ignition = () => {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [reducedMotion, setReducedMotion] = useState(false)
-
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const apply = () => setReducedMotion(mq.matches)
-    apply()
-    mq.addEventListener('change', apply)
-    return () => mq.removeEventListener('change', apply)
-  }, [])
-
-  useEffect(() => {
-    if (reducedMotion) videoRef.current?.pause()
-  }, [reducedMotion])
-
   const lens = (
     <span className="relative block aspect-square w-[0.86em] shrink-0">
-      <span className="q-aperture absolute inset-0 block animate-aperture-open bg-likq-ink/40">
-        {reducedMotion ? (
-          <Image
-            src={POSTER}
-            alt="บรรยากาศงานแสดงของ LIKQ Music"
-            fill
-            priority
-            className="object-cover"
-            sizes="(min-width: 768px) 15vw, 26vw"
-          />
-        ) : (
-          <video
-            ref={videoRef}
-            src={VIDEO_URL}
-            poster={POSTER}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden
-          />
-        )}
+      <span className="q-aperture absolute inset-0 block animate-aperture-open bg-likq-ink">
+        <VinylDisc className="h-full w-full" />
       </span>
-      {/* The Q's tail, drawn rather than set. It starts inside the counter and
-          crosses the rim, the way the wordmark does in the brand deck — a stroke
-          that begins outside the circle reads as a magnifying-glass handle. */}
+      {/* The Q's tail, drawn rather than set. It begins over the outer grooves
+          and crosses the rim: any further in and it lies across the label, any
+          further out and it reads as a magnifying-glass handle. */}
       <svg
         viewBox="0 0 100 100"
         aria-hidden
         className="absolute inset-0 h-full w-full overflow-visible text-white"
       >
         <path
-          d="M64 64 L99 99"
+          d="M76 76 L100 100"
           stroke="currentColor"
           strokeWidth="6"
           strokeLinecap="round"
@@ -91,8 +55,7 @@ const Ignition = () => {
       {/* The clamp lives on the h1 so the lens can size itself in em against
           the same display size the wordmark is set at. items-center is load
           bearing: without it the lens stretches to the line box and stops
-          being a circle. The lockup stays on one line at every width — split
-          across two, "Lik" reads as a broken word rather than the wordmark. */}
+          being a circle. */}
       <h1 className="flex flex-row items-center justify-center gap-1 text-[clamp(3rem,29vw,18rem)] md:gap-3">
         <span className="sr-only">LikQ Music, Igniting the Quality</span>
         <span aria-hidden className="display-lockup animate-ignite">

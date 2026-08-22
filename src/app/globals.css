@@ -521,6 +521,24 @@ body {
     color: theme('colors.likq.obsidian');
   }
 
+  /* The record in the Q. transform-box: view-box pins the origin to the
+     viewBox centre, so the disc cannot wobble if a child's bounding box is
+     asymmetric — which the label text makes it. */
+  .vinyl-spin {
+    transform-box: view-box;
+    transform-origin: 100px 100px;
+    animation: vinylSpin 7s linear infinite;
+  }
+
+  @keyframes vinylSpin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
   /* The Q aperture — the deck's own device. The counter of the Q is a lens;
      whatever the label is pointing light at goes inside it. */
   .q-aperture {
@@ -598,6 +616,10 @@ body {
     .animate-glint {
       animation: none !important;
       opacity: 0.6 !important;
+    }
+    /* The record parks rather than disappearing — it is still a record. */
+    .vinyl-spin {
+      animation: none !important;
     }
   }
 }

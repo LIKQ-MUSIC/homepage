@@ -390,10 +390,24 @@ inherited, not as a pattern.
 
 **The Q as a lens.** `.q-aperture` is the deck's own device: a `border-radius:
 9999px` clip with `overflow: hidden` whose direct `<video>`/`<img>` child is
-forced to `width/height: 100%; object-fit: cover`. It **sets no `position`** —
+forced to `width/height: 100%; object-fit: cover`. In the hero it holds
+`VinylDisc` — a record, not a photo. It **sets no `position`** —
 callers pass `relative` or `absolute` themselves. (This is deliberate; see the
 layer note in Do's and Don'ts. `Ignition` passes `absolute inset-0`, everything
 else passes `relative`.)
+
+**The record.** `VinylDisc` (`src/components/home/VinylDisc.tsx`) is the hero's
+subject, replacing an autoplaying clip from `cdn.likqmusic.com`. It is drawn as
+real geometry — 34 concentric `<circle>` groove strokes over a radial body,
+a `#C075E4` label carrying the wordmark on a `<textPath>` arc, and a spindle —
+about 3KB against the 432KB polyline export it was redrawn from. Two rules
+hold it together: the disc spins (`.vinyl-spin`, 7s linear, `transform-box:
+view-box` so an asymmetric child bbox cannot make it wobble) and **the sheen
+does not** — the highlight is a fixed `<rect>` outside the spinning group,
+clipped to the disc, so the record turns underneath a stationary light. A sheen
+that rotates with the disc reads as a spinning graphic; one that stays put reads
+as a spinning object. Keep the label text: a disc of plain concentric rings
+looks motionless while it spins.
 
 **The Q-Is-For-One-Face Rule.** The lens is for the wordmark and for **single
 portraits** — the trainee grid, staff photos, the small studio shot. It was
@@ -530,9 +544,10 @@ Portalled to `document.body`, so it is **above the grain**. Overlay
   `globals.css` forces `animate-aperture-open`/`animate-ignite` to their
   finished state (including `clip-path: circle(50%)`, because the class starts
   at `opacity: 0` and merely pausing it would ship a blank hero) and pins
-  `animate-glint` at `opacity: 0.6`. Separately, `Ignition` watches
-  `matchMedia('(prefers-reduced-motion: reduce)')` and swaps the `<video>` for
-  the poster `<Image>` entirely. Every hover transform carries
+  `animate-glint` at `opacity: 0.6`, and stops `.vinyl-spin` so the record
+  parks rather than vanishing. `Ignition` is a **server component** — it holds
+  no `matchMedia` listener and ships no client JavaScript. Every hover
+  transform carries
   `motion-reduce:transition-none motion-reduce:hover:translate-y-0`.
   (`--beam-shift` is set to `0%` in that block but is not read anywhere — dead
   leftover, harmless.)

@@ -3,14 +3,19 @@ import Works from '@/components/Works'
 import Team from '@/components/Team'
 import Footer from '@/components/Footer'
 import BlogSection from '@/components/BlogSection'
-import HeroVideo from '@/components/home/HeroVideo'
-import AboutSplit from '@/components/home/AboutSplit'
-import TrackListServices from '@/components/home/TrackListServices'
-import CandidateRail from '@/components/home/CandidateRail'
-import ColorBand from '@/components/home/ColorBand'
-import AuditionBand from '@/components/home/AuditionBand'
+import Ignition from '@/components/home/Ignition'
+import Prism from '@/components/home/Prism'
+import MakeStation from '@/components/home/MakeStation'
+import AboutStation from '@/components/home/AboutStation'
+import ArtistStation from '@/components/home/ArtistStation'
+import ShopStation from '@/components/home/ShopStation'
+import AuditionStation from '@/components/home/AuditionStation'
+import HomeClose from '@/components/home/HomeClose'
 import SeasonalDropSection from '@/components/SeasonalDropSection'
-import type { SeasonalDropTier, SeasonalDropImage } from '@/components/SeasonalDropSection'
+import type {
+  SeasonalDropTier,
+  SeasonalDropImage
+} from '@/components/SeasonalDropSection'
 import { getAboutUsImages } from '@/services/about-us'
 
 import type { Metadata } from 'next'
@@ -78,7 +83,10 @@ async function getSeasonalDropTiers(): Promise<SeasonalDropTier[]> {
     const json = await res.json()
     return (json.data || [])
       .filter((t: SeasonalDropTier) => t.is_active)
-      .sort((a: SeasonalDropTier, b: SeasonalDropTier) => a.display_order - b.display_order)
+      .sort(
+        (a: SeasonalDropTier, b: SeasonalDropTier) =>
+          a.display_order - b.display_order
+      )
   } catch (error) {
     console.error('Failed to fetch seasonal drop tiers:', error)
     return []
@@ -116,37 +124,60 @@ async function getLatestBlogs() {
 }
 
 export default async function Home() {
-  const [worksData, latestPosts, seasonalDropTiers, seasonalDropImages] = await Promise.all([
-    getWorks(),
-    getLatestBlogs(),
-    getSeasonalDropTiers(),
-    getSeasonalDropImages(),
-  ])
+  const [worksData, latestPosts, seasonalDropTiers, seasonalDropImages] =
+    await Promise.all([
+      getWorks(),
+      getLatestBlogs(),
+      getSeasonalDropTiers(),
+      getSeasonalDropImages()
+    ])
 
   return (
-    <main className="min-h-screen bg-ink-deep text-ink-text font-sans overflow-x-hidden">
+    /**
+     * One continuous beam, not a stack of sections. The field is painted in
+     * segments that hand off colour to one another in content order, so it
+     * stays unbroken however long a section grows. The client lane runs dark
+     * from the prism to the colour story; the label lane runs pale from the
+     * trainees to the audition call; they rejoin on paper at the close.
+     */
+    <div className="likq font-seed min-h-screen overflow-x-hidden">
       <Navbar tone="dark" />
-      <HeroVideo />
+      <main>
+        <div className="beam-source">
+          <Ignition />
+          <Prism />
+        </div>
 
-      <AboutSplit />
+        {/* Client lane. Dark field, white text. */}
+        <div className="beam-lane-make">
+          <MakeStation />
+          {worksData.length > 0 && <Works items={worksData} />}
+          <AboutStation />
+        </div>
 
-      <TrackListServices />
+        {/* The beam opens out. Deliberately empty: this is the only stretch of
+          field that crosses the band where neither white nor ink holds AA. */}
+        <div className="beam-turn" aria-hidden />
 
-      <CandidateRail />
+        {/* Label lane. Pale field, ink text. */}
+        <div className="beam-lane-label">
+          <ArtistStation />
+          <ShopStation />
+          <SeasonalDropSection
+            initialTiers={seasonalDropTiers}
+            initialImages={seasonalDropImages}
+          />
+          {latestPosts.length > 0 && <BlogSection posts={latestPosts} />}
+          <AuditionStation />
+        </div>
 
-      {worksData.length > 0 && <Works items={worksData} />}
-
-      <ColorBand />
-
-      <SeasonalDropSection initialTiers={seasonalDropTiers} initialImages={seasonalDropImages} />
-
-      {latestPosts.length > 0 && <BlogSection posts={latestPosts} />}
-
-      <Team />
-
-      <AuditionBand />
-
+        {/* The light lands. */}
+        <div className="beam-landing">
+          <HomeClose />
+          <Team />
+        </div>
+      </main>
       <Footer />
-    </main>
+    </div>
   )
 }

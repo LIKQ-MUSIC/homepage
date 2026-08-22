@@ -39,14 +39,12 @@ const Navbar = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => {
       if (ticking) return
       ticking = true
       requestAnimationFrame(() => {
-        // On the home page, flip to the solid bar once past the services
-        // section. On pages without #services (e.g. /partner), fall back to a
+        // On the home page, flip to the solid bar once the beam has split.
+        // Off it, On pages without #services (e.g. /partner), fall back to a
         // simple scroll threshold so the bar still turns solid — otherwise the
         // white links sit invisibly over white content below the hero.
-        const servicesSection = document.getElementById('services')
-        const threshold = servicesSection
-          ? servicesSection.offsetTop - 100
-          : 80
+        const prismSection = document.getElementById('prism')
+        const threshold = prismSection ? prismSection.offsetTop - 140 : 80
         setIsScrolled(window.scrollY > threshold)
         ticking = false
       })
@@ -72,7 +70,7 @@ const Navbar = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => {
         href="https://soundcloud.com/prod-lightz"
         target="_blank"
         rel="noopener noreferrer"
-        className="w-12 h-12 p-2 transition-all rounded-full flex-all-center bg-white text-primary hover:bg-primary-hover hover:text-white"
+        className="w-12 h-12 p-2 transition-all rounded-full flex-all-center bg-white text-likq-ink hover:bg-likq-ink hover:text-white"
       >
         <SoundCloud />
       </a>
@@ -86,29 +84,21 @@ const Navbar = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => {
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         isScrolled
           ? dark
-            ? 'bg-[#0A1422]/90 backdrop-blur-md border-b border-[rgba(190,173,196,0.16)] py-2'
+            ? 'bg-likq-ink/90 backdrop-blur-md py-2 shadow-[0_10px_30px_-18px_rgba(16,6,159,0.9)]'
             : 'bg-white shadow-md py-2'
           : 'bg-transparent py-4'
       }`}
     >
-      {/* Contrast scrim: darkens behind the bar over light hero images so
-          white nav text stays legible (only in the transparent state). */}
-      {!isScrolled && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 via-black/15 to-transparent"
-        />
-      )}
       <nav className="relative z-10 w-full max-w-7xl px-4 mx-auto lg:px-8">
         <div className="flex flex-nowrap items-center gap-3 px-[18px]">
           {/* Logo stays left; mr-auto pushes the nav cluster to the right. */}
           <a href="#" className="shrink-0 mr-auto hidden lg:block cursor-pointer py-1.5">
-            <Logo className="h-90 w-28" fill={navIconColor} />
+            <Logo className="w-28" fill={navIconColor} />
           </a>
 
           <a href="#" className="shrink-0 mr-auto lg:hidden cursor-pointer py-1.5">
             {/* Mobile Logo */}
-            <Logo className="h-90 w-28" fill={navIconColor} />
+            <Logo className="w-28" fill={navIconColor} />
           </a>
 
           {/* Right cluster: nav links · divider · socials, grouped with an
@@ -143,7 +133,7 @@ const Navbar = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => {
             <div
               className={`absolute rounded-xl top-16 right-0 w-64 z-50 overflow-hidden lg:hidden ${
                 dark
-                  ? 'bg-ink-raise/95 backdrop-blur-md border border-ink-line shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)]'
+                  ? 'bg-likq-ink/95 backdrop-blur-md shadow-[0_24px_60px_-20px_rgba(16,6,159,0.85)]'
                   : 'bg-white shadow-lg'
               }`}
             >
@@ -152,7 +142,7 @@ const Navbar = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => {
 
                 <div
                   className={`flex-all-center gap-8 mx-8 mt-2 pt-4 border-t ${
-                    dark ? 'border-ink-line' : 'border-gray-100'
+                    dark ? 'border-white/15' : 'border-gray-100'
                   }`}
                 >
                   {outerNavLinks}

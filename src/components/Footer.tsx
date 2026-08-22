@@ -33,7 +33,7 @@ const Footer = () => {
     })
   }
   return (
-    <footer id="contact" className="bg-[#153051] text-white py-12 md:py-16">
+    <footer id="contact" className="panel-ink font-seed py-14 md:py-20">
       <div className="container mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
           {/* Contact Info & Socials */}
@@ -69,7 +69,7 @@ const Footer = () => {
                   href="https://soundcloud.com/prod-lightz"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-12 h-12 p-2 transition-all rounded-full flex items-center justify-center bg-white text-primary hover:bg-primary-hover hover:text-white"
+                  className="w-12 h-12 p-2 transition-all rounded-full flex items-center justify-center bg-white text-likq-ink hover:bg-likq-ink hover:text-white"
                 >
                   <SoundCloud />
                 </a>
@@ -83,13 +83,16 @@ const Footer = () => {
 
           {/* Contact Form */}
           <div className="footer-form bg-white/5 p-6 md:p-8 rounded-2xl backdrop-blur-sm relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-16 -mt-16 transition-all duration-700 group-hover:bg-primary/20 pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -ml-16 -mb-16 transition-all duration-700 group-hover:bg-blue-500/20 pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-likq-lavender/15 rounded-full blur-3xl -mr-16 -mt-16 transition-all duration-700 group-hover:bg-likq-lavender/25 pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-likq-navy/25 rounded-full blur-3xl -ml-16 -mb-16 transition-all duration-700 group-hover:bg-blue-500/20 pointer-events-none"></div>
 
             <Title level={4} className="text-white mb-6 text-xl relative z-10">
               กรอกข้อมูลให้เราติดต่อกลับ
             </Title>
             <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
+              <label htmlFor="name" className="sr-only">
+                ชื่อ-นามสกุล
+              </label>
               <input
                 type="text"
                 name="name"
@@ -98,8 +101,11 @@ const Footer = () => {
                 required
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-white/50 transition-colors"
+                className="w-full bg-white/10 border border-white/55 rounded-lg px-4 py-3 text-white placeholder-white/75 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-white focus:border-white/60 transition-colors"
               />
+              <label htmlFor="phone" className="sr-only">
+                เบอร์โทรศัพท์
+              </label>
               <input
                 type="tel"
                 name="phone"
@@ -108,8 +114,11 @@ const Footer = () => {
                 required
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-white/50 transition-colors"
+                className="w-full bg-white/10 border border-white/55 rounded-lg px-4 py-3 text-white placeholder-white/75 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-white focus:border-white/60 transition-colors"
               />
+              <label htmlFor="email" className="sr-only">
+                อีเมล
+              </label>
               <input
                 type="email"
                 name="email"
@@ -118,8 +127,11 @@ const Footer = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-white/50 transition-colors"
+                className="w-full bg-white/10 border border-white/55 rounded-lg px-4 py-3 text-white placeholder-white/75 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-white focus:border-white/60 transition-colors"
               />
+              <label htmlFor="message" className="sr-only">
+                ข้อความ
+              </label>
               <textarea
                 name="message"
                 id="message"
@@ -128,7 +140,7 @@ const Footer = () => {
                 required
                 value={formData.message}
                 onChange={handleChange}
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-white/50 transition-colors resize-none"
+                className="w-full bg-white/10 border border-white/55 rounded-lg px-4 py-3 text-white placeholder-white/75 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-white focus:border-white/60 transition-colors resize-none"
               ></textarea>
 
               {isSuccess && (
@@ -150,7 +162,7 @@ const Footer = () => {
               >
                 {isPending ? (
                   <>
-                    <span className="w-5 h-5 border-2 border-[#153051]/30 border-t-[#153051] rounded-full animate-spin mr-2"></span>
+                    <span className="w-5 h-5 border-2 border-likq-ink/30 border-t-likq-ink rounded-full animate-spin mr-2"></span>
                     กำลังส่ง...
                   </>
                 ) : (
@@ -162,7 +174,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-16 pt-8 border-t border-white/10 text-center">
-          <p id="copyright" className="text-white/60 text-sm">
+          <p id="copyright" className="text-white/80 text-sm">
             &copy; {dayjs().format('YYYY')} LiKQ Music Production.
             สงวนลิขสิทธิ์.
           </p>

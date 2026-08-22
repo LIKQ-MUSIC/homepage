@@ -142,11 +142,11 @@ body {
 }
 
 .youtube-icon:hover circle {
-  fill: #153051;
+  fill: #10069f;
 }
 
 .youtube-icon .youtube-body {
-  fill: #153051;
+  fill: #10069f;
   transition: fill 0.3s ease;
 }
 
@@ -160,7 +160,7 @@ body {
 }
 
 .youtube-icon:hover .youtube-play {
-  fill: #153051;
+  fill: #10069f;
 }
 
 .mailbox-icon:hover .mailbox-body {
@@ -168,7 +168,7 @@ body {
 }
 
 .mailbox-icon:hover .mailbox-bg {
-  fill: #153051;
+  fill: #10069f;
 }
 
 .flex-all-center {
@@ -385,5 +385,219 @@ body {
   .theme-y2k .animate-y2k-bob,
   .theme-y2k .animate-y2k-marquee {
     animation: none !important;
+  }
+}
+
+@layer components {
+  /* ============================================================
+     LIKQ 2026 — the beam
+     The public brand world from LIKQ_AD-1.pdf. The page is not a stack of
+     sections; it is one continuous field of light travelling from its source
+     (Pantone Blue 072 C, the Foundation) through the full bloom and out into
+     white paper where the light has landed. Stations sit IN the beam; the
+     field shows through the gaps between them.
+     ============================================================ */
+
+  .likq {
+    position: relative;
+    isolation: isolate;
+    background-color: #ffffff;
+    color: theme('colors.likq.obsidian');
+  }
+
+  /* Film grain over the whole surface. Static by design — moving grain reads as
+     video noise and repaints every frame. Fixed and blended so it grips the
+     saturated top without fogging the white close. */
+  .likq::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.22;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+    background-size: 220px 220px;
+  }
+
+  /* The beam, in segments that follow content order rather than a percentage of
+     page height. Each segment begins on the colour the previous one ended, so
+     the field stays continuous however long a section grows — and, critically,
+     every station's ground is guaranteed to match its text regime instead of
+     depending on where it happens to land. */
+  .beam-source {
+    position: relative;
+    background: linear-gradient(180deg, #10069f 0%, #2338cc 100%);
+  }
+
+  /* A bloom riding the source so the first viewport is a lit navy field rather
+     than a flat one. Held back from full strength: the Foundation has to read
+     navy, not violet. */
+  .beam-source::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        80% 38% at 74% 12%,
+        rgba(192, 117, 228, 0.38) 0%,
+        rgba(192, 117, 228, 0) 62%
+      ),
+      radial-gradient(
+        70% 30% at 12% 30%,
+        rgba(93, 149, 221, 0.34) 0%,
+        rgba(93, 149, 221, 0) 66%
+      );
+  }
+
+  .beam-lane-make {
+    background: linear-gradient(180deg, #2338cc 0%, #3646d6 62%, #4453d9 100%);
+  }
+
+  /* The turn. No text lives here — this is the beam opening out, and the only
+     place the field crosses the band where neither white nor ink holds 4.5:1. */
+  .beam-turn {
+    background: linear-gradient(
+      180deg,
+      #4453d9 0%,
+      #9b6be8 42%,
+      #c075e4 66%,
+      #efe3fa 100%
+    );
+    min-height: 26vh;
+  }
+
+  .beam-lane-label {
+    background: linear-gradient(180deg, #efe3fa 0%, #f6f0fd 100%);
+  }
+
+  .beam-landing {
+    background: linear-gradient(180deg, #f6f0fd 0%, #ffffff 100%);
+  }
+
+  /* A station is a position in the beam, not a box. No borders, no rules,
+     no header chrome — separation comes from space and from what the field
+     is doing behind it. */
+  .station {
+    position: relative;
+    z-index: 1;
+    padding-inline: 1.25rem;
+    padding-block: clamp(4.5rem, 11vw, 9rem);
+    /* Clearance for the solid nav bar when an anchor is jumped to. */
+    scroll-margin-top: 7rem;
+  }
+
+  @media (min-width: 768px) {
+    .station {
+      padding-inline: 3rem;
+    }
+  }
+
+  .station-inner {
+    margin-inline: auto;
+    max-width: 72rem;
+  }
+
+  /* Panels: where text sits on the beam it needs a ground that holds AA.
+     Navy panel takes white text (7.3:1). Lavender panel takes ink (4.5:1). */
+  .panel-navy {
+    background: linear-gradient(155deg, #2242da 0%, #1a34b4 100%);
+    color: #ffffff;
+  }
+
+  .panel-ink {
+    background: linear-gradient(155deg, #10069f 0%, #1a34b4 100%);
+    color: #ffffff;
+  }
+
+  .panel-lavender {
+    background: linear-gradient(155deg, #e7d4f7 0%, #d3b2ee 100%);
+    color: #10069f;
+  }
+
+  .panel-paper {
+    background: #ffffff;
+    color: theme('colors.likq.obsidian');
+  }
+
+  /* The Q aperture — the deck's own device. The counter of the Q is a lens;
+     whatever the label is pointing light at goes inside it. */
+  .q-aperture {
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .q-aperture > video,
+  .q-aperture > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Type. Latin display in Nunito, Thai in LINE Seed. Nunito 200 is reserved
+     for Latin-only lockups; anything with Thai on the line sits at 300 so the
+     two faces carry the same weight. */
+  .display-lockup {
+    font-family: var(--font-nunito), var(--font-line-seed), system-ui, sans-serif;
+    font-weight: 200;
+    letter-spacing: -0.02em;
+    line-height: 0.94;
+  }
+
+  .display-mixed {
+    font-family: var(--font-nunito), var(--font-line-seed), system-ui, sans-serif;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 1.14;
+  }
+
+  .copy-th {
+    font-family: var(--font-line-seed), 'Noto Sans Thai', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.85;
+  }
+
+  /* Station headings. Light and large — the brand's voice is airy, so weight is
+     never the tool for emphasis here; scale is. No eyebrow above them, ever. */
+  .station-title {
+    font-family: var(--font-line-seed), 'Noto Sans Thai', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: clamp(2rem, 5.2vw, 3.75rem);
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .station-lede {
+    font-family: var(--font-line-seed), 'Noto Sans Thai', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.85;
+    max-width: 34rem;
+    font-size: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .station-lede {
+      font-size: 1.125rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .likq {
+      --beam-shift: 0% !important;
+    }
+    .animate-aperture-open,
+    .animate-ignite {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+      clip-path: circle(50% at 50% 50%) !important;
+    }
+    .animate-glint {
+      animation: none !important;
+      opacity: 0.6 !important;
+    }
   }
 }

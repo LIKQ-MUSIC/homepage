@@ -63,6 +63,35 @@ export default {
           muted: '#ABB6C6',
           line: 'rgba(190, 173, 196, 0.16)'
         },
+        // LIKQ 2026 brand world (LIKQ_AD-1.pdf). Navy = The Foundation,
+        // Lavender = The Glow of Light. Contrast, measured against white:
+        // navy 7.3:1 (body-safe) · lavender 3.0:1 (large display + fields only)
+        // · ink 13.6:1 · obsidian 11.9:1. Ink is the text colour on lavender
+        // fields (4.5:1); navy on lavender is 2.4:1 and fails everywhere.
+        likq: {
+          navy: '#2242DA',
+          'navy-deep': '#1A34B4',
+          lavender: '#C075E4',
+          'lavender-pale': '#F2E9FB',
+          ink: '#10069F',
+          obsidian: '#3B353C',
+          paper: '#FAF8FF',
+          // beam stops, source to landing
+          beam1: '#10069F',
+          beam2: '#2242DA',
+          beam3: '#5766E0',
+          beam4: '#9B6BE8',
+          beam5: '#C075E4',
+          beam6: '#E0C4F2'
+        },
+        // Genre & mood mapping — the label's own taxonomy, used to colour
+        // work and artists by what the music is, never as decoration.
+        genre: {
+          gold: '#F7C46B',
+          mint: '#D9EBE7',
+          rose: '#F8CACA',
+          obsidian: '#3B353C'
+        },
         y2k: {
           cobalt: '#3B1EFF',
           pink: '#FF3AA5',
@@ -84,8 +113,15 @@ export default {
       },
       fontFamily: {
         sans: ['var(--font-noto-sans-thai)', 'var(--font-inter)', 'sans-serif'],
+        // Brand world: Thai in LINE Seed, Latin display in Nunito.
+        seed: ['var(--font-line-seed)', 'Noto Sans Thai', 'sans-serif'],
+        nunito: [
+          'var(--font-nunito)',
+          'var(--font-line-seed)',
+          'system-ui',
+          'sans-serif'
+        ],
         prompt: ['var(--font-prompt)'],
-        archivo: ['var(--font-archivo)', 'sans-serif'],
         pixel: ['"Press Start 2P"', 'ui-monospace', 'monospace'],
         'pixel-mono': ['"VT323"', 'ui-monospace', 'monospace']
       },
@@ -113,9 +149,25 @@ export default {
         riseIn: {
           '0%': { transform: 'translateY(28px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' }
+        },
+        // The one authored moment: the beam ignites and the Q opens.
+        apertureOpen: {
+          '0%': { clipPath: 'circle(0% at 50% 50%)', opacity: '0' },
+          '100%': { clipPath: 'circle(50% at 50% 50%)', opacity: '1' }
+        },
+        ignite: {
+          '0%': { opacity: '0', transform: 'scale(1.35)', filter: 'blur(28px)' },
+          '100%': { opacity: '1', transform: 'scale(1)', filter: 'blur(0px)' }
+        },
+        glint: {
+          '0%, 100%': { opacity: '0.15', transform: 'scale(0.7)' },
+          '50%': { opacity: '0.9', transform: 'scale(1)' }
         }
       },
       animation: {
+        'aperture-open': 'apertureOpen 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        ignite: 'ignite 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        glint: 'glint 4s ease-in-out infinite',
         'fade-in': 'fadeIn 0.5s ease-out forwards',
         'scale-in': 'scaleIn 0.3s ease-out forwards',
         'rise-in': 'riseIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards',

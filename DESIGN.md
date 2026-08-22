@@ -570,6 +570,14 @@ Portalled to `document.body`, so it is **above the grain**. Overlay
   to its finished state under `prefers-reduced-motion`, never merely pause it.
 
 ### Don't:
+- **Don't** link to `/merch`, `/nekowink` or `/capybara` with `<Link>`. Those
+  are `next.config` rewrites into other apps (a separate Next build and a
+  Cloudflare Worker). Next's router treats them as internal routes, fetches
+  `?_rsc=`, receives a 307 into the storefront's locale prefix followed by an
+  RSC payload from a foreign build, and stalls ~9s before falling back to a
+  hard navigation — plus it wastes a prefetch on every page load. Use a plain
+  `<a href>`; see the `external` flag in `NavbarLinks`/`MobileNavLinks` and
+  `ShopStation`.
 - **Don't** put text — or anything readable — inside `.beam-turn`. It is
   `aria-hidden` and text-free because it is the only stretch where neither
   white nor ink clears 4.5:1.

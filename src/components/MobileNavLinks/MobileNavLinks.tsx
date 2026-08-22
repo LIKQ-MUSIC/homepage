@@ -12,10 +12,12 @@ interface MobileNavLinksProps {
 }
 
 const links: NavLink[] = [
-  { href: '#services', label: 'Our Services' },
-  { href: '#work', label: 'Our Work' },
-  { href: '#team', label: 'Our Team' },
+  { href: '#make', label: 'บริการ' },
+  { href: '#work', label: 'ผลงาน' },
+  { href: '#team', label: 'ทีมงาน' },
   { href: '/artists', label: 'ศิลปิน' },
+  { href: '/merch', label: 'Store' },
+  { href: '/capybara', label: 'ควิซ' },
   { href: '/partner', label: 'ฝากขาย' },
   { href: '/audition', label: 'Audition' }
 ]
@@ -38,13 +40,13 @@ const MobileNavLinks: React.FC<MobileNavLinksProps> = ({ onLinkClick, dark = fal
       {links.map(link => {
         const isRoute = link.href.startsWith('/')
         const linkClass = dark
-          ? `${isRoute ? 'font-bold text-secondary bg-secondary/[0.08]' : 'text-ink-text'} hover:bg-white/5`
-          : `hover:bg-gray-50 ${isRoute ? 'font-bold text-primary bg-primary/5' : ''}`
+          ? `${isRoute ? 'font-bold text-likq-beam6 bg-white/[0.06]' : 'text-white'} hover:bg-white/10`
+          : `hover:bg-gray-50 ${isRoute ? 'font-bold text-likq-ink bg-likq-navy/5' : ''}`
         return (
           <Link
             key={link.href}
             href={link.href}
-            className={`px-8 py-3 text-center block transition-colors ${linkClass}`}
+            className={`copy-th block px-8 py-3 text-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-current ${linkClass}`}
             onClick={
               isRoute
                 ? () => onLinkClick()

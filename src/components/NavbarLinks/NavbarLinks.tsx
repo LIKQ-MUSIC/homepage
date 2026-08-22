@@ -6,11 +6,20 @@ import { usePathname } from 'next/navigation'
 
 type Kind = 'text' | 'secondary' | 'primary'
 
+/**
+ * The bar mirrors the page's fork: the making side first, then the label side
+ * (artists, store, quiz), then the two standing calls to action.
+ *
+ * /merch and /capybara are proxied routes (see next.config rewrites) and both
+ * serve on production; before this they had no entry point anywhere on the
+ * site.
+ */
 const links: { href: string; label: string; kind: Kind; isRoute?: boolean }[] = [
-  { href: '#services', label: 'Our Services', kind: 'text' },
-  { href: '#work', label: 'Our Work', kind: 'text' },
-  { href: '#team', label: 'Our Team', kind: 'text' },
+  { href: '#make', label: 'บริการ', kind: 'text' },
+  { href: '#work', label: 'ผลงาน', kind: 'text' },
   { href: '/artists', label: 'ศิลปิน', kind: 'text', isRoute: true },
+  { href: '/merch', label: 'Store', kind: 'text', isRoute: true },
+  { href: '/capybara', label: 'ควิซ', kind: 'text', isRoute: true },
   { href: '/partner', label: 'ฝากขาย', kind: 'secondary', isRoute: true },
   { href: '/audition', label: 'Audition', kind: 'primary', isRoute: true }
 ]
@@ -34,31 +43,27 @@ const NavbarLinks = ({ isScrolled }: { isScrolled?: boolean }) => {
   const styleFor = (kind: Kind, isActive: boolean): string => {
     if (kind === 'text') {
       return isScrolled
-        ? 'px-3 py-2 text-primary/80 hover:text-primary'
-        : 'px-3 py-2 text-white/90 hover:text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.35)]'
+        ? 'px-3 py-2 text-likq-ink/80 hover:text-likq-ink'
+        : 'px-3 py-2 text-white/85 hover:text-white'
     }
-    // Primary CTA: always filled.
     if (kind === 'primary') {
       return isScrolled
-        ? 'px-5 py-2 rounded-full bg-primary text-white hover:bg-primary-hover'
-        : 'px-5 py-2 rounded-full bg-white text-primary hover:bg-white/90'
+        ? 'px-5 py-2 rounded-full bg-likq-navy text-white hover:bg-likq-ink'
+        : 'px-5 py-2 rounded-full bg-white text-likq-ink hover:bg-likq-lavender-pale'
     }
-    // Secondary CTA: outline pill. When it is the current page, use a subtle
-    // tint (not a full fill) so it reads as "active" without competing with
-    // the solid primary CTA next to it.
     if (isActive) {
       return isScrolled
-        ? 'px-5 py-2 rounded-full border border-primary bg-primary/10 text-primary'
+        ? 'px-5 py-2 rounded-full border border-likq-navy bg-likq-navy/10 text-likq-ink'
         : 'px-5 py-2 rounded-full border border-white bg-white/20 text-white'
     }
     return isScrolled
-      ? 'px-5 py-2 rounded-full border border-primary/40 text-primary hover:bg-primary hover:text-white'
+      ? 'px-5 py-2 rounded-full border border-likq-navy/40 text-likq-ink hover:bg-likq-navy hover:text-white'
       : 'px-5 py-2 rounded-full border border-white/50 text-white hover:bg-white/15'
   }
 
   return (
     <div className="hidden lg:block">
-      <ul className="flex items-center gap-1.5">
+      <ul className="flex items-center gap-1">
         {links.map(({ href, label, kind, isRoute }) => {
           const isActive = !!isRoute && pathname === href
           const resolvedHref = isRoute ? href : `/${href}`
@@ -69,7 +74,7 @@ const NavbarLinks = ({ isScrolled }: { isScrolled?: boolean }) => {
                 href={resolvedHref}
                 aria-current={isActive ? 'page' : undefined}
                 onClick={isRoute ? undefined : e => handleClick(e, href)}
-                className={`block whitespace-nowrap text-[15px] font-semibold tracking-tight transition-colors duration-300 ${styleFor(
+                className={`copy-th block whitespace-nowrap text-[15px] transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current ${styleFor(
                   kind,
                   isActive
                 )}`}

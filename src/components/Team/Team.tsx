@@ -1,6 +1,5 @@
 import React from 'react'
 import StaffCard from '@/components/Team/_components/StaffCard'
-import SectionHead from '@/components/home/SectionHead'
 
 interface StaffMember {
   imageUrl: string
@@ -37,18 +36,20 @@ const Team = async () => {
   if (staffMembers.length === 0) return null
 
   return (
-    <section id="team" className="bg-ink-deep px-5 py-20 md:px-12 md:py-28">
-      <div className="mx-auto max-w-6xl">
-      <SectionHead th="ทีมงานของเรา" en="Team" />
-      {/* Centred wrap keeps the last row balanced for any head-count
-          (e.g. 4 members read as 3 + 1 centred, not 3 + 1 stranded left). */}
-      <div className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-12">
-        {staffMembers.map((staffMember: StaffMember) => (
-          <div key={staffMember.name} className="w-full sm:w-64">
-            <StaffCard {...staffMember} />
-          </div>
-        ))}
-      </div>
+    <section id="team" className="station">
+      <div className="station-inner">
+        <h2 className="station-title text-center text-likq-ink">
+          ทีมงานของเรา
+        </h2>
+        {/* Centred wrap keeps the last row balanced for any head-count
+            (e.g. 4 members read as 3 + 1 centred, not 3 + 1 stranded left). */}
+        <div className="mt-14 flex flex-wrap justify-center gap-x-8 gap-y-14">
+          {staffMembers.map((staffMember: StaffMember) => (
+            <div key={staffMember.name} className="w-full sm:w-64">
+              <StaffCard {...staffMember} />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )

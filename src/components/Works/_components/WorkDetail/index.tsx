@@ -1,6 +1,6 @@
 'use client'
 
-import { Eye, Loader2, PlayCircle } from 'lucide-react'
+import { Loader2, PlayCircle } from 'lucide-react'
 import { Paragraph, Title } from '@/ui/Typography'
 import { useVideoDetails } from '@/hooks/api/youtube'
 import CategoriesBadge from '@/components/Works/_components/CategoriesBadge'
@@ -27,7 +27,33 @@ const WorkDetail = ({ item }: { item: IWorkItem }) => {
 
   const { ref, loaded } = useImageLoaded(imageSrc || '')
 
-  if (!imageSrc) return null
+  // A work with no cover art (or a YouTube lookup that failed) used to render
+  // nothing at all, so the modal opened as an empty white box with a lone close
+  // button and the scroll locked. Show the work's own text instead.
+  if (!imageSrc) {
+    return (
+      <div className="p-8 md:p-12">
+        <h3 className="copy-th text-2xl font-bold text-likq-ink md:text-3xl">
+          {item.title}
+        </h3>
+        {item.description && (
+          <p className="copy-th mt-4 max-w-2xl text-base text-likq-obsidian">
+            {item.description}
+          </p>
+        )}
+        {item.category !== 'video' && item.url && (
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="copy-th mt-6 inline-block text-base font-bold text-likq-navy underline-offset-4 hover:underline"
+          >
+            เปิดลิงก์ผลงาน
+          </a>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className="video-card">

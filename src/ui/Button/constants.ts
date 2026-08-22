@@ -15,7 +15,7 @@ export const variantClasses: Record<ButtonVariant, string> = {
   outline:
     'border border-primary text-primary hover:bg-primary-light dark:border-[#334155] dark:text-neutral-300 dark:hover:bg-white/10',
   onDark:
-    'bg-white text-primary hover:bg-primary-light focus-visible:ring-white/70',
+    'bg-white text-likq-ink hover:bg-likq-lavender-pale focus-visible:ring-white/70',
   onDarkOutline:
     'bg-transparent text-white border border-white/40 hover:bg-white hover:text-primary focus-visible:ring-white/70'
 }

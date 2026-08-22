@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState } from 'react'
-import SectionHead from '@/components/home/SectionHead'
 import WorkDetail from './_components/WorkDetail'
 import { IWorkItem } from '@/components/Works/types'
 import WorkItem from './_components/WorkItem'
@@ -60,48 +59,58 @@ const Works = ({ items = [] }: WorksProps) => {
   ]
 
   return (
-    <section id="work" className="bg-ink-deep px-5 py-20 md:px-12 md:py-28">
-      <div className="mx-auto max-w-6xl">
-      <SectionHead th="ผลงานของเรา" en="Works" />
-      <p className="mt-6 max-w-2xl text-base md:text-lg text-ink-muted">
-        ตัวอย่างผลงานของ LiKQ Music
-      </p>
+    <section id="work" className="station">
+      <div className="station-inner">
+        <h2 className="station-title text-white">ผลงานของเรา</h2>
+        <p className="station-lede mt-6 text-white/80">
+          ตัวอย่างผลงานของ LiKQ Music
+        </p>
 
-      <div className="flex gap-2 md:gap-3 mt-10 flex-wrap">
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`
-              px-6 py-2 rounded-full transition-all duration-300 border
-              ${
+        <div
+          className="mt-10 flex flex-wrap gap-2 md:gap-3"
+          role="group"
+          aria-label="กรองผลงานตามประเภท"
+        >
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id)}
+              aria-pressed={activeTab === tab.id}
+              className={`copy-th rounded-full px-6 py-2 text-sm transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white md:text-base ${
                 activeTab === tab.id
-                  ? 'bg-secondary text-primary border-secondary font-bold'
-                  : 'bg-transparent text-ink-muted border-ink-line hover:border-secondary hover:text-secondary'
-              }
-            `}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+                  ? 'bg-white font-bold text-likq-ink'
+                  : 'bg-white/15 text-white/90 hover:bg-white/25 hover:text-white'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 items-start w-full">
-        {filteredItems.map((item, index) => (
-          <WorkItem
-            key={`${item.title}-${index}`}
-            imageUrl={item.image || ''}
-            name={item.title}
-            category={item.category}
-            onClick={() => handleItemClick(item)}
-            className="animate-scale-in"
-          />
-        ))}
-      </div>
+        {/* The first work runs wide: density varies inside the lane rather
+            than every item sitting in an identical cell. */}
+        <div className="mt-10 grid w-full grid-cols-1 items-start gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {filteredItems.map((item, index) => (
+            <WorkItem
+              key={`${item.title}-${index}`}
+              imageUrl={item.image || ''}
+              name={item.title}
+              category={item.category}
+              onClick={() => handleItemClick(item)}
+              className={index === 0 ? 'md:col-span-2' : undefined}
+              wide={index === 0}
+            />
+          ))}
+        </div>
 
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        {selectedItem && <WorkDetail item={selectedItem} />}
-      </Modal>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          label={selectedItem?.title}
+        >
+          {selectedItem && <WorkDetail item={selectedItem} />}
+        </Modal>
       </div>
     </section>
   )

@@ -30,7 +30,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const sharedClasses = cn([
       `group relative isolate overflow-hidden font-medium flex items-center justify-center whitespace-nowrap
        transition-[transform,box-shadow,background-color,border-color,color] duration-300 ease-out
-       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-0`,
+       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-likq-beam6 focus-visible:ring-offset-0`,
       buttonSizesClass[size],
       variantClasses[variant],
       // Lift, glow and press feedback only when interactive.

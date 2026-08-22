@@ -14,10 +14,20 @@ const CategoriesBadge = ({ category, className }: ICategoriesBadgeProps) => {
     link: <Link size={16} />
   }
 
+  // The brand's mood palette (LIKQ_AD-1.pdf) used as a categorical scale.
+  // Each is a light ground carrying obsidian text, so the badge stays legible
+  // over any artwork without needing a scrim.
+  const tone: Record<ICategoriesBadgeProps['category'], string> = {
+    video: 'bg-genre-rose',
+    event: 'bg-genre-gold',
+    link: 'bg-genre-mint'
+  }
+
   return (
     <span
       className={cn([
-        'inline-flex self-start items-center gap-1 rounded-full bg-secondary-light px-2.5 py-1 text-sm font-medium text-primary dark:bg-white/10 dark:text-neutral-50',
+        'copy-th inline-flex self-start items-center gap-1.5 rounded-full px-3 py-1 text-xs text-likq-obsidian',
+        tone[category],
         className
       ])}
     >

@@ -1,9 +1,14 @@
-import { Archivo, Inter, Noto_Sans_Thai, Prompt } from 'next/font/google'
+import { Inter, Noto_Sans_Thai, Nunito, Prompt } from 'next/font/google'
 
-export const archivo = Archivo({
+/**
+ * Nunito — the Latin display voice of the LIKQ brand world (LIKQ_AD-1.pdf).
+ * Variable 200-1000: 200 for Latin-only lockups, 300 upward everywhere Thai
+ * sits on the same line as Latin. Pairs with LINE Seed Sans TH.
+ */
+export const nunito = Nunito({
   weight: 'variable',
   subsets: ['latin'],
-  variable: '--font-archivo',
+  variable: '--font-nunito',
   display: 'swap'
 })
 

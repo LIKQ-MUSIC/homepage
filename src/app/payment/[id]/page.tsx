@@ -8,10 +8,18 @@ import Cards from 'react-credit-cards-2'
 import 'react-credit-cards-2/dist/es/styles-compiled.css'
 import Button from '@/ui/Button'
 import {
+  devMarkInvoicePaid,
   getInvoice,
   getInvoiceStatus,
   payInvoice
 } from '@/services/invoice-service'
+
+// A pkey_test_ publishable key means this deploy talks to an Omise test account
+// — the same condition under which Omise accepts mark_as_paid. Checking the key
+// rather than an env name keeps the button and the API's own answer in step.
+const IS_OMISE_TEST_MODE = (
+  process.env.NEXT_PUBLIC_OMISE_PUBLIC_KEY ?? ''
+).startsWith('pkey_test_')
 
 declare global {
   interface Window {
@@ -117,6 +125,28 @@ export default function InvoicePaymentPage() {
   const [cardCvc, setCardCvc] = useState('')
   const [cardFocused, setCardFocused] = useState<any>('')
   const [acceptedTerms, setAcceptedTerms] = useState(false)
+
+  // Test-mode simulate-payment control. Sends the charge to Omise and then gets
+  // out of the way: the poll above is what notices the invoice turned PAID, so
+  // a broken webhook still reads as broken here.
+  const [devMarking, setDevMarking] = useState(false)
+  const [devMarked, setDevMarked] = useState(false)
+  const [devMarkError, setDevMarkError] = useState('')
+
+  const handleDevMarkPaid = async () => {
+    setDevMarking(true)
+    setDevMarkError('')
+    try {
+      await devMarkInvoicePaid(invoiceId)
+      setDevMarked(true)
+    } catch (err: any) {
+      setDevMarkError(
+        err?.response?.data?.error ?? err?.message ?? 'mark as paid ไม่สำเร็จ'
+      )
+    } finally {
+      setDevMarking(false)
+    }
+  }
 
   const handleCardNumberChange = (value: string) => {
     setCardNumber(formatCardNumber(value))
@@ -408,6 +438,33 @@ export default function InvoicePaymentPage() {
                         ด้วยแอปพลิเคชันธนาคารของท่าน
                       </p>
                     </div>
+
+                    {IS_OMISE_TEST_MODE && (
+                      <div className="max-w-[300px] mx-auto rounded-xl border border-dashed border-amber-400/60 bg-amber-50/60 p-4">
+                        <div className="text-xs font-mono uppercase tracking-wide text-amber-700 mb-2">
+                          test mode only
+                        </div>
+                        {devMarked ? (
+                          <p className="text-sm text-amber-800">
+                            ส่ง mark as paid ไปที่ Omise แล้ว รอ webhook อีกสักครู่
+                          </p>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={handleDevMarkPaid}
+                            disabled={devMarking}
+                            className="px-4 py-2 rounded-lg border border-amber-500/50 text-sm font-medium text-amber-800 hover:bg-amber-100/70 disabled:opacity-60 transition-colors"
+                          >
+                            {devMarking ? 'กำลังส่ง...' : 'จ่ายเงินแล้ว (จำลอง)'}
+                          </button>
+                        )}
+                        {devMarkError && (
+                          <p className="mt-2 text-xs text-red-600" role="alert">
+                            {devMarkError}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
 

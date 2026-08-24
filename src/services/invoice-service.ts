@@ -69,6 +69,16 @@ export async function payInvoice(
   return response.data
 }
 
+// Test environments only: asks the gateway to force-complete this invoice's
+// pending Omise charge. Omise then fires charge.complete, payment-service calls
+// the gateway back, and the invoice flips to PAID — so the page's existing poll
+// is what reports success, exactly as it would after a real scan. Answers 403
+// anywhere the account is on live Omise keys.
+export async function devMarkInvoicePaid(id: string) {
+  const response = await apiClient.post(`/invoices/${id}/dev-mark-paid`)
+  return response.data
+}
+
 export async function deleteInvoice(id: string) {
   const response = await apiClient.delete<{ success: boolean }>(
     `/invoices/${id}`

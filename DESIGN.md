@@ -396,6 +396,18 @@ callers pass `relative` or `absolute` themselves. (This is deliberate; see the
 layer note in Do's and Don'ts. `Ignition` passes `absolute inset-0`, everything
 else passes `relative`.)
 
+**The prism reads by colour, not by shape.** The fork graphic in `Prism` is
+white light in and two beams out, and the only thing that makes it legible as a
+prism is dispersion: the left beam is blue (`#5766E0 → #2242DA`) and feeds the
+navy panel, the right is lavender (`#D9A6F0 → #C075E4`) and feeds the lavender
+one. An earlier pass drew both exit beams the same pale white-blue with hard
+edges and it read as a tent. Both beams fade to zero opacity along their length
+(`gradientUnits="userSpaceOnUse"`, so the falloff runs down the beam rather than
+across its bounding box), the shaft is feathered across its width, and the
+scatter sits at the base where the light separates — not above the glass, where
+it looks like fog. If either beam ever goes back to a neutral tint, the graphic
+stops being readable.
+
 **The record.** `VinylDisc` (`src/components/home/VinylDisc.tsx`) is the hero's
 subject, replacing an autoplaying clip from `cdn.likqmusic.com`. It is drawn as
 real geometry — 34 concentric `<circle>` groove strokes over a radial body,

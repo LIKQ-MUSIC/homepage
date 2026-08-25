@@ -8,6 +8,16 @@ const NEKOWINK_STOREFRONT_URL =
   process.env.NEKOWINK_STOREFRONT_URL ??
   'https://nekowink-storefront.vercel.app'
 
+// Fleur Vive has no production deployment yet, so production deliberately gets
+// no default: without FLEURVIVE_STOREFRONT_URL set there, www.likqmusic.com
+// /fleurvive stays a 404 rather than quietly rewriting a public path to a dev
+// storefront. Set the variable in production once there is one to point at.
+const FLEURVIVE_STOREFRONT_URL =
+  process.env.FLEURVIVE_STOREFRONT_URL ??
+  (process.env.VERCEL_ENV === 'production'
+    ? null
+    : 'https://fleurvive-storefront-git-develop-realkyrs-projects.vercel.app')
+
 const CAPYBARA_URL =
   process.env.CAPYBARA_URL ??
   (process.env.VERCEL_ENV === 'production'
@@ -69,6 +79,20 @@ const nextConfig: NextConfig = {
         destination: `${CAPYBARA_URL}/capybara/:path*`
       }
     ]
+
+    if (FLEURVIVE_STOREFRONT_URL) {
+      rewrites.push(
+        {
+          source: '/fleurvive',
+          destination: `${FLEURVIVE_STOREFRONT_URL}/fleurvive`
+        },
+        {
+          source: '/fleurvive/:path*',
+          destination: `${FLEURVIVE_STOREFRONT_URL}/fleurvive/:path*`
+        }
+      )
+    }
+
     return rewrites
   }
 }

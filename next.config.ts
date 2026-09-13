@@ -41,6 +41,13 @@ const nextConfig: NextConfig = {
     ]
   },
   trailingSlash: false,
+  async headers() {
+    // Stamp the actual homepage response so CI can verify the public domain,
+    // not merely a successful build or a deployment URL in Vercel.
+    const commit = process.env.VERCEL_GIT_COMMIT_SHA
+    if (!commit) return []
+    return [{ source: '/', headers: [{ key: 'X-LIKQ-Commit', value: commit }] }]
+  },
   async rewrites() {
     const backofficeUrl = (
       process.env.BACKOFFICE_URL || 'http://localhost:3001'

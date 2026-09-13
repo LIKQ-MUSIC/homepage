@@ -1,0 +1,30 @@
+name: Verify dev deployment
+
+on:
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: homepage-dev-deployment
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify dev.likqmusic.com
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test deployment verification
+        run: node --test scripts/verify-dev-deployment.test.mjs
+      - name: Wait for Vercel and verify the public dev domain
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/verify-dev-deployment.mjs

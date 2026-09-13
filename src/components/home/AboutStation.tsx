@@ -3,15 +3,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { MarkArrow } from './marks'
 
-/**
- * Where the client lane closes and the beam changes colour.
- *
- * The colour story used to be its own section that explained the palette to
- * visitors who never asked. It is relocated here, word for word, and placed at
- * the exact point on the page where the field turns from navy into lavender —
- * so it reads as the page accounting for what you can already see happening,
- * not as a brand lecture.
- */
 const AboutStation = () => {
   return (
     <section id="about-us" className="station">
@@ -25,15 +16,14 @@ const AboutStation = () => {
               เราเชี่ยวชาญในงาน{' '}
               {/* Not a tint: every lavender on this field lands under 4.5:1
                   at body size, so weight carries the emphasis instead. */}
-              <strong className="font-bold">
-                Music Production
-              </strong>{' '}
-              ทุกขั้นตอน ตั้งแต่การเขียนเนื้อร้อง แต่งทำนอง เรียบเรียงดนตรี
+              <strong className="font-bold">Music Production</strong> ทุกขั้นตอน
+              ตั้งแต่การเขียนเนื้อร้อง แต่งทำนอง เรียบเรียงดนตรี
               ไปจนถึงการมิกซ์และมาสเตอร์ริ่ง
             </p>
             <p className="copy-th mt-6 max-w-xl text-base text-white/85 md:text-lg">
               ไม่ว่าจะเป็นเพลง Original สำหรับศิลปิน, เพลงประกอบโฆษณา, แฟนซอง
-              หรือโปรเจกต์พิเศษต่าง ๆ เราพร้อมดูแลและให้คำปรึกษาด้วยทีมงานมืออาชีพ
+              หรือโปรเจกต์พิเศษต่าง ๆ
+              เราพร้อมดูแลและให้คำปรึกษาด้วยทีมงานมืออาชีพ
               เพื่อให้ได้ผลงานที่ตรงตามวิสัยทัศน์ของคุณมากที่สุด
             </p>
             <Link
@@ -71,38 +61,40 @@ const AboutStation = () => {
           </div>
         </div>
 
-        {/* The colour story, verbatim, at the beam's own turning point. */}
-        <h3 className="station-title mt-20 text-white md:mt-28">
-          เรื่องเล่าผ่านสีของเรา
-        </h3>
-        <div className="mt-8 grid grid-cols-1 overflow-hidden rounded-[2rem] md:mt-28 md:grid-cols-2">
-          <div className="panel-ink p-8 md:p-14">
-            <p className="display-lockup text-[clamp(1.75rem,3.4vw,2.5rem)]">
-              Navy
-            </p>
-            <p className="copy-th mt-5 text-base text-white/85 md:text-lg">
-              สีกรมท่า คือความลึกซึ้งและมั่นคง เหมือนทะเลลึกที่ไม่เคยหยุดนิ่ง
-              สะท้อนถึงความตั้งใจ ความเป็นมืออาชีพ และรากฐานที่แข็งแกร่งของพวกเรา
-            </p>
+        <details className="group mt-10 rounded-2xl bg-white/[0.06] px-6 py-2 md:px-8">
+          <summary className="copy-th cursor-pointer py-4 text-base text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+            เรื่องเล่าผ่านสีของเรา
+          </summary>
+          <div className="grid gap-6 pb-4 pt-2 md:grid-cols-2">
+            <div className="text-white">
+              <p className="display-lockup text-[clamp(1.75rem,3.4vw,2.5rem)]">
+                Navy
+              </p>
+              <p className="copy-th mt-3 text-sm text-white/85">
+                สีกรมท่า คือความลึกซึ้งและมั่นคง เหมือนทะเลลึกที่ไม่เคยหยุดนิ่ง
+                สะท้อนถึงความตั้งใจ ความเป็นมืออาชีพ
+                และรากฐานที่แข็งแกร่งของพวกเรา
+              </p>
+            </div>
+            <div className="text-white">
+              <p className="display-lockup text-[clamp(1.75rem,3.4vw,2.5rem)]">
+                Lavender
+              </p>
+              <p className="copy-th mt-3 text-sm text-white/85">
+                สีลาเวนเดอร์ คือจินตนาการและความคิดสร้างสรรค์
+                เหมือนกลิ่นหอมที่ปลุกแรงบันดาลใจ สะท้อนถึงความฝัน ความอ่อนโยน
+                และเอกลักษณ์ที่ไม่เหมือนใคร
+              </p>
+            </div>
           </div>
-          <div className="panel-lavender p-8 md:p-14">
-            <p className="display-lockup text-[clamp(1.75rem,3.4vw,2.5rem)]">
-              Lavender
-            </p>
-            <p className="copy-th mt-5 text-base text-likq-ink/85 md:text-lg">
-              สีลาเวนเดอร์ คือจินตนาการและความคิดสร้างสรรค์
-              เหมือนกลิ่นหอมที่ปลุกแรงบันดาลใจ สะท้อนถึงความฝัน ความอ่อนโยน
-              และเอกลักษณ์ที่ไม่เหมือนใคร
-            </p>
-          </div>
-        </div>
 
-        <p className="copy-th mx-auto mt-12 max-w-2xl text-center text-base text-white/85 md:text-lg">
-          เมื่อสองสีนี้มาบรรจบกัน มันคือตัวตนของ LIKQ
-          ความสมดุลระหว่างความมั่นคงกับจินตนาการ
-          ระหว่างความเป็นมืออาชีพกับความกล้าที่จะแตกต่าง
-          เราเชื่อว่าทุกเสียงเพลงเกิดจากเรื่องราว และนี่คือเรื่องราวของเรา
-        </p>
+          <p className="copy-th mb-5 mt-3 max-w-3xl text-sm text-white/85">
+            เมื่อสองสีนี้มาบรรจบกัน มันคือตัวตนของ LIKQ
+            ความสมดุลระหว่างความมั่นคงกับจินตนาการ
+            ระหว่างความเป็นมืออาชีพกับความกล้าที่จะแตกต่าง
+            เราเชื่อว่าทุกเสียงเพลงเกิดจากเรื่องราว และนี่คือเรื่องราวของเรา
+          </p>
+        </details>
       </div>
     </section>
   )

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Glint, MarkArrow, MarkBag, MarkQuiz } from './marks'
+import { MarkArrow, MarkBag, MarkQuiz } from './marks'
 
 /**
  * The two places the label lets you in that were previously unreachable from
@@ -44,19 +44,14 @@ const ShopStation = () => {
             <a
               key={href}
               href={href}
-              className={`group relative flex min-h-[16rem] flex-col justify-between overflow-hidden rounded-[2rem] p-8 transition-[transform,box-shadow] duration-500 ease-out hover:-translate-y-1 hover:shadow-[0_24px_60px_-28px_rgba(16,6,159,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-likq-ink motion-reduce:transition-none motion-reduce:hover:translate-y-0 md:p-10 ${
+              className={`group relative flex min-h-[14rem] flex-col justify-between overflow-hidden rounded-[1.5rem] p-8 transition-[transform,box-shadow] duration-500 ease-out hover:-translate-y-1 hover:shadow-[0_24px_60px_-28px_rgba(16,6,159,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-likq-ink motion-reduce:transition-none motion-reduce:hover:translate-y-0 md:p-10 ${
                 tone === 'ink'
                   ? 'panel-ink'
                   : 'bg-genre-rose text-likq-obsidian'
               }`}
             >
-              <Glint
-                className={`absolute right-7 top-7 h-5 w-5 ${
-                  tone === 'ink' ? 'text-likq-lavender' : 'text-likq-navy'
-                }`}
-              />
               <Mark className="h-8 w-8" />
-              <div className="mt-10">
+              <div className="mt-6">
                 <p className="copy-th text-xl font-bold md:text-2xl">{title}</p>
                 <p
                   className={`copy-th mt-3 max-w-sm text-sm md:text-base ${
@@ -67,7 +62,7 @@ const ShopStation = () => {
                 </p>
                 <span className="copy-th mt-7 inline-flex items-center gap-3 text-sm font-bold md:text-base">
                   {action}
-                  <MarkArrow className="h-5 w-5 transition-transform duration-500 ease-out group-hover:translate-x-1.5 motion-reduce:transition-none" />
+                  <MarkArrow className="h-5 w-5 transition-transform duration-500 ease-out group-hover:translate-x-1.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" />
                 </span>
               </div>
             </a>

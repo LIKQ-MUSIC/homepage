@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import WorkDetail from './_components/WorkDetail'
 import { IWorkItem } from '@/components/Works/types'
 import WorkItem from './_components/WorkItem'
@@ -15,6 +15,13 @@ const Works = ({ items = [] }: WorksProps) => {
   const [selectedItem, setSelectedItem] = useState<IWorkItem | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('all')
+  const [showAll, setShowAll] = useState(false)
+  const gridRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (showAll)
+      gridRef.current?.querySelectorAll<HTMLButtonElement>('button')[6]?.focus()
+  }, [showAll])
 
   const videoIds = items
     .filter(item => item.category === 'video')
@@ -22,17 +29,21 @@ const Works = ({ items = [] }: WorksProps) => {
 
   const { data: videoData } = useVideosListDetails(videoIds)
 
-  const displayItems = items.map(item => {
-    if (item.category === 'video' && videoData) {
-      const details = videoData.find(v => v.videoId === item.youtubeId)
-      return {
-        ...item,
-        image: details?.thumbnailUrl || item.image,
-        title: details?.title || item.title
+  const displayItems = [...items]
+    .sort(
+      (a, b) => Number(b.category === 'video') - Number(a.category === 'video')
+    )
+    .map(item => {
+      if (item.category === 'video' && videoData) {
+        const details = videoData.find(v => v.videoId === item.youtubeId)
+        return {
+          ...item,
+          image: details?.thumbnailUrl || item.image,
+          title: details?.title || item.title
+        }
       }
-    }
-    return item
-  })
+      return item
+    })
 
   const filteredItems = displayItems.filter(item => {
     if (activeTab === 'all') return true
@@ -62,9 +73,6 @@ const Works = ({ items = [] }: WorksProps) => {
     <section id="work" className="station">
       <div className="station-inner">
         <h2 className="station-title text-white">ผลงานของเรา</h2>
-        <p className="station-lede mt-6 text-white/80">
-          ตัวอย่างผลงานของ LiKQ Music
-        </p>
 
         <div
           className="mt-10 flex flex-wrap gap-2 md:gap-3"
@@ -75,9 +83,12 @@ const Works = ({ items = [] }: WorksProps) => {
             <button
               key={tab.id}
               type="button"
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                setActiveTab(tab.id)
+                setShowAll(false)
+              }}
               aria-pressed={activeTab === tab.id}
-              className={`copy-th rounded-full px-6 py-2 text-sm transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white md:text-base ${
+              className={`copy-th rounded-full px-4 py-2 text-sm transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white md:text-base ${
                 activeTab === tab.id
                   ? 'bg-white font-bold text-likq-ink'
                   : 'bg-white/15 text-white/90 hover:bg-white/25 hover:text-white'
@@ -88,21 +99,37 @@ const Works = ({ items = [] }: WorksProps) => {
           ))}
         </div>
 
-        {/* The first work runs wide: density varies inside the lane rather
-            than every item sitting in an identical cell. */}
-        <div className="mt-10 grid w-full grid-cols-1 items-start gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredItems.map((item, index) => (
-            <WorkItem
-              key={`${item.title}-${index}`}
-              imageUrl={item.image || ''}
-              name={item.title}
-              category={item.category}
-              onClick={() => handleItemClick(item)}
-              className={index === 0 ? 'md:col-span-2' : undefined}
-              wide={index === 0}
-            />
-          ))}
+        <div
+          ref={gridRef}
+          className="mt-10 grid w-full grid-cols-1 items-start gap-6 md:grid-cols-2 lg:grid-cols-3"
+        >
+          {(showAll ? filteredItems : filteredItems.slice(0, 6)).map(
+            (item, index) => (
+              <WorkItem
+                key={`${item.title}-${index}`}
+                imageUrl={item.image || ''}
+                name={item.title}
+                category={item.category}
+                onClick={() => handleItemClick(item)}
+              />
+            )
+          )}
         </div>
+
+        {filteredItems.length === 0 && (
+          <p className="copy-th py-10 text-white/80" role="status">
+            ยังไม่มีผลงานในหมวดนี้
+          </p>
+        )}
+        {filteredItems.length > 6 && !showAll && (
+          <button
+            type="button"
+            onClick={() => setShowAll(true)}
+            className="copy-th mt-8 min-h-12 rounded-full border border-white/50 px-6 py-3 text-sm text-white transition-colors hover:bg-white hover:text-likq-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+          >
+            ดูผลงานทั้งหมด ({filteredItems.length})
+          </button>
+        )}
 
         <Modal
           isOpen={isModalOpen}

@@ -34,7 +34,9 @@ const ArtistStation = () => {
           ทำความรู้จักน้องๆ ที่กำลังฝึกกับเราก่อนใคร
         </p>
 
-        <div className="mt-14 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div
+          className={`mt-10 grid grid-cols-2 gap-x-5 gap-y-10 md:gap-x-10 md:gap-y-12 ${candidates.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'}`}
+        >
           {candidates.map(c => {
             const accent = THEME_ACCENT[c.theme] ?? '#C075E4'
             const src = c.images?.[0] ?? c.image!
@@ -44,7 +46,7 @@ const ArtistStation = () => {
             return (
               <article key={c.slug} className="group flex h-full flex-col">
                 <div
-                  className="q-aperture relative aspect-square w-full bg-white/60 transition-transform duration-700 ease-out group-hover:scale-[1.02] motion-reduce:transition-none"
+                  className="q-aperture relative aspect-square w-full bg-white/60 transition-transform duration-700 ease-out group-hover:scale-[1.02] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                   style={{ boxShadow: `0 0 0 2px ${accent}` }}
                 >
                   <Image
@@ -52,7 +54,11 @@ const ArtistStation = () => {
                     alt={`ภาพถ่ายของ ${c.nickname}`}
                     fill
                     className="object-cover object-top"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    sizes={
+                      candidates.length === 4
+                        ? '(max-width: 1023px) 50vw, 25vw'
+                        : '(max-width: 1023px) 50vw, 33vw'
+                    }
                   />
                 </div>
 
@@ -63,20 +69,15 @@ const ArtistStation = () => {
                   {c.tagline}
                 </p>
 
-                <ul className="mt-2 flex flex-wrap content-start sm:min-h-[3.5rem] gap-1.5">
-                  {c.traits.slice(0, 3).map(trait => (
-                    <li
-                      key={trait}
-                      className="copy-th rounded-full bg-likq-ink/[0.09] px-2.5 py-0.5 text-[11px] text-likq-ink"
-                    >
-                      {trait}
-                    </li>
-                  ))}
-                </ul>
-
-                <p className="copy-th mt-4 line-clamp-3 text-sm leading-snug text-likq-obsidian">
-                  {c.highlight.answer}
-                </p>
+                <details className="copy-th mt-3 text-sm text-likq-obsidian">
+                  <summary className="min-h-11 cursor-pointer py-2 text-likq-ink underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-likq-ink">
+                    รู้จัก {c.nickname} เพิ่มเติม
+                  </summary>
+                  <p className="mt-1 text-xs text-likq-ink/80">
+                    {c.traits.join(' · ')}
+                  </p>
+                  <p className="mt-3">{c.highlight.answer}</p>
+                </details>
 
                 {hasSocials && (
                   <div className="mt-auto flex items-center gap-2 pt-5">
@@ -86,7 +87,7 @@ const ArtistStation = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`Instagram ของ ${c.nickname}`}
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-likq-ink/[0.09] text-likq-ink transition-colors hover:bg-likq-ink hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-likq-ink"
+                        className="flex h-11 w-11 items-center justify-center rounded-full bg-likq-ink/[0.09] text-likq-ink transition-colors hover:bg-likq-ink hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-likq-ink"
                       >
                         <SiInstagram className="h-3.5 w-3.5" />
                       </a>
@@ -97,7 +98,7 @@ const ArtistStation = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`TikTok ของ ${c.nickname}`}
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-likq-ink/[0.09] text-likq-ink transition-colors hover:bg-likq-ink hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-likq-ink"
+                        className="flex h-11 w-11 items-center justify-center rounded-full bg-likq-ink/[0.09] text-likq-ink transition-colors hover:bg-likq-ink hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-likq-ink"
                       >
                         <SiTiktok className="h-3.5 w-3.5" />
                       </a>

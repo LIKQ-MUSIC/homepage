@@ -27,7 +27,7 @@ const Navbar = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => {
 
     // Initial check
     handleResize()
-    
+
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
@@ -39,12 +39,11 @@ const Navbar = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => {
       if (ticking) return
       ticking = true
       requestAnimationFrame(() => {
-        // On the home page, flip to the solid bar once the beam has split.
-        // Off it, On pages without #services (e.g. /partner), fall back to a
-        // simple scroll threshold so the bar still turns solid — otherwise the
-        // white links sit invisibly over white content below the hero.
-        const prismSection = document.getElementById('prism')
-        const threshold = prismSection ? prismSection.offsetTop - 140 : 80
+        // Switch before the hero leaves, independent of optional sections.
+        const intro = document.getElementById('home-intro')
+        const threshold = intro
+          ? intro.offsetTop + intro.offsetHeight - 140
+          : 80
         setIsScrolled(window.scrollY > threshold)
         ticking = false
       })
@@ -92,11 +91,17 @@ const Navbar = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => {
       <nav className="relative z-10 w-full max-w-7xl px-4 mx-auto lg:px-8">
         <div className="flex flex-nowrap items-center gap-3 px-[18px]">
           {/* Logo stays left; mr-auto pushes the nav cluster to the right. */}
-          <a href="#" className="shrink-0 mr-auto hidden lg:block cursor-pointer py-1.5">
+          <a
+            href="#"
+            className="shrink-0 mr-auto hidden lg:block cursor-pointer py-1.5"
+          >
             <Logo className="w-28" fill={navIconColor} />
           </a>
 
-          <a href="#" className="shrink-0 mr-auto lg:hidden cursor-pointer py-1.5">
+          <a
+            href="#"
+            className="shrink-0 mr-auto lg:hidden cursor-pointer py-1.5"
+          >
             {/* Mobile Logo */}
             <Logo className="w-28" fill={navIconColor} />
           </a>
@@ -124,7 +129,11 @@ const Navbar = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => {
             aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           >
             <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-              {isMenuOpen ? <Close fill={navIconColor} /> : <Hamburger fill={navIconColor} />}
+              {isMenuOpen ? (
+                <Close fill={navIconColor} />
+              ) : (
+                <Hamburger fill={navIconColor} />
+              )}
             </span>
           </button>
 
@@ -138,7 +147,10 @@ const Navbar = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => {
               }`}
             >
               <nav className="flex flex-col py-4">
-                <MobileNavLinks onLinkClick={() => setIsMenuOpen(false)} dark={dark} />
+                <MobileNavLinks
+                  onLinkClick={() => setIsMenuOpen(false)}
+                  dark={dark}
+                />
 
                 <div
                   className={`flex-all-center gap-8 mx-8 mt-2 pt-4 border-t ${

@@ -414,7 +414,7 @@ body {
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    opacity: 0.22;
+    opacity: 0.1;
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
     background-size: 220px 220px;
@@ -465,7 +465,7 @@ body {
       #c075e4 66%,
       #efe3fa 100%
     );
-    min-height: 26vh;
+    min-height: clamp(4rem, 8vw, 7rem);
   }
 
   .beam-lane-label {
@@ -483,7 +483,7 @@ body {
     position: relative;
     z-index: 1;
     padding-inline: 1.25rem;
-    padding-block: clamp(4.5rem, 11vw, 9rem);
+    padding-block: clamp(3rem, 6vw, 5.5rem);
     /* Clearance for the solid nav bar when an anchor is jumped to. */
     scroll-margin-top: 7rem;
   }

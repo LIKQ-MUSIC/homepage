@@ -1,6 +1,6 @@
 ---
 name: LIKQ Music Homepage
-description: One continuous beam of light that splits at a prism into two audience lanes.
+description: A blue-to-lavender music label homepage led by the Q record, real work, and people.
 colors:
   ink: "#10069F"
   navy: "#2242DA"
@@ -54,7 +54,7 @@ rounded:
   panel-sm: "1.75rem"
   card: "1.5rem"
 spacing:
-  station-block: "clamp(4.5rem, 11vw, 9rem)"
+  station-block: "clamp(3rem, 6vw, 5.5rem)"
   station-inline: "1.25rem"
   station-inline-md: "3rem"
   station-max: "72rem"
@@ -112,6 +112,32 @@ components:
 > see "Scope and the token split".
 
 ## Overview
+
+## Homepage refinement — 14 September 2026
+
+The existing blue–lavender palette, LINE Seed/Nunito type and Q/vinyl mark
+remain authoritative. This refinement supersedes the prism and large-spacing
+composition described below; it does not introduce a replacement brand world.
+
+- The prism illustration and fork cards are removed. `#home-intro` contains
+  the record wordmark alongside the existing Thai proposition, with direct
+  actions to work and trainees. At smaller widths these stack naturally.
+- Work appears immediately after the hero, music first. Up to six items are
+  visible initially; filters and “ดูผลงานทั้งหมด” keep the entire catalog
+  accessible. Video thumbnails have a server-rendered YouTube fallback.
+- All six services remain in compact icon/text rows, two columns on desktop,
+  with one contact action. The decorative timeline and applied-service panels
+  are removed.
+- About retains the photographs and original copy. The color story is a native
+  disclosure, not another full section. Trainee detail is also disclosed inline;
+  names, taglines, photographs and social links remain visible.
+- Portraits are two-up on mobile; four-up on desktop for the current four
+  photographed trainees, three-up for other roster counts.
+- Section padding is `clamp(3rem, 6vw, 5.5rem)` per side; the text-free color
+  transition is `clamp(4rem, 8vw, 7rem)`. Repeated glints are removed from the
+  hero, destination panels and closing statement; the record remains in motion.
+- The ending is team → creative partner statement → contact. Navigation uses
+  the hero boundary rather than the removed `#prism` to switch its scroll state.
 
 **Creative North Star: "The Beam"**
 

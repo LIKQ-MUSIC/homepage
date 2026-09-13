@@ -4,7 +4,6 @@ import Team from '@/components/Team'
 import Footer from '@/components/Footer'
 import BlogSection from '@/components/BlogSection'
 import Ignition from '@/components/home/Ignition'
-import Prism from '@/components/home/Prism'
 import MakeStation from '@/components/home/MakeStation'
 import AboutStation from '@/components/home/AboutStation'
 import ArtistStation from '@/components/home/ArtistStation'
@@ -54,7 +53,11 @@ async function getWorks(): Promise<IWorkItem[]> {
       title: item.title,
       category: item.category,
       description: item.description,
-      image: item.image_url || '',
+      image:
+        item.image_url ||
+        (item.youtube_id
+          ? `https://i.ytimg.com/vi/${item.youtube_id}/hqdefault.jpg`
+          : ''),
       youtubeId: item.youtube_id,
       url: item.external_url,
       start: item.start_date || undefined,
@@ -89,25 +92,17 @@ export default async function Home() {
   ])
 
   return (
-    /**
-     * One continuous beam, not a stack of sections. The field is painted in
-     * segments that hand off colour to one another in content order, so it
-     * stays unbroken however long a section grows. The client lane runs dark
-     * from the prism to the colour story; the label lane runs pale from the
-     * trainees through the label updates; they rejoin on paper at the close.
-     */
     <div className="likq font-seed min-h-screen overflow-x-hidden">
       <Navbar tone="dark" />
       <main>
         <div className="beam-source">
-          <Ignition />
-          <Prism />
+          <Ignition hasWorks={worksData.length > 0} />
         </div>
 
         {/* Client lane. Dark field, white text. */}
         <div className="beam-lane-make">
-          <MakeStation />
           {worksData.length > 0 && <Works items={worksData} />}
+          <MakeStation />
           <AboutStation />
         </div>
 
@@ -124,8 +119,8 @@ export default async function Home() {
 
         {/* The light lands. */}
         <div className="beam-landing">
-          <HomeClose />
           <Team />
+          <HomeClose />
         </div>
       </main>
       <Footer />

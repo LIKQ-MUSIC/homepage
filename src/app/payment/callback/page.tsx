@@ -54,7 +54,7 @@ function PaymentCallbackContent() {
   }, [searchParams])
 
   const handleBackToHome = () => {
-    router.push('/#seasonal-drop')
+    router.push('/')
   }
 
   return (
@@ -134,7 +134,7 @@ function PaymentCallbackContent() {
               className="w-full dark:bg-primary dark:hover:bg-primary-hover"
               onClick={handleBackToHome}
             >
-              ลองใหม่อีกครั้ง
+              กลับสู่หน้าหลัก
             </Button>
           </>
         )}

@@ -30,7 +30,6 @@ const links: {
   { href: '/merch', label: 'Store', kind: 'text', isRoute: true, external: true },
   { href: '/capybara', label: 'ควิซ', kind: 'text', isRoute: true, external: true },
   { href: '/partner', label: 'ฝากขาย', kind: 'secondary', isRoute: true },
-  { href: '/audition', label: 'Audition', kind: 'primary', isRoute: true }
 ]
 
 const NavbarLinks = ({ isScrolled }: { isScrolled?: boolean }) => {

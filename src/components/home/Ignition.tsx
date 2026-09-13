@@ -73,7 +73,7 @@ const Ignition = () => {
       {/* The slogan alone never says what LIKQ is. This line does, in the
           plainest terms available, and it names both audiences at once. */}
       <p className="copy-th mt-4 text-center text-sm text-white/85 md:text-base">
-        ทีมผลิตดนตรีครบวงจร · ค่ายเพลง · ออดิชั่นไอดอล
+        ทีมผลิตดนตรีครบวงจร · ค่ายเพลง
       </p>
 
       <a

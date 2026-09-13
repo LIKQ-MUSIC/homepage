@@ -9,13 +9,7 @@ import MakeStation from '@/components/home/MakeStation'
 import AboutStation from '@/components/home/AboutStation'
 import ArtistStation from '@/components/home/ArtistStation'
 import ShopStation from '@/components/home/ShopStation'
-import AuditionStation from '@/components/home/AuditionStation'
 import HomeClose from '@/components/home/HomeClose'
-import SeasonalDropSection from '@/components/SeasonalDropSection'
-import type {
-  SeasonalDropTier,
-  SeasonalDropImage
-} from '@/components/SeasonalDropSection'
 import { getAboutUsImages } from '@/services/about-us'
 
 import type { Metadata } from 'next'
@@ -73,41 +67,6 @@ async function getWorks(): Promise<IWorkItem[]> {
   }
 }
 
-async function getSeasonalDropTiers(): Promise<SeasonalDropTier[]> {
-  const url = process.env.NEXT_PUBLIC_GATEWAY_API_URL || 'http://localhost:3002'
-  try {
-    const res = await fetch(`${url}/seasonal-drops/tiers`, {
-      next: { tags: ['seasonal-drop-tiers'] }
-    })
-    if (!res.ok) return []
-    const json = await res.json()
-    return (json.data || [])
-      .filter((t: SeasonalDropTier) => t.is_active)
-      .sort(
-        (a: SeasonalDropTier, b: SeasonalDropTier) =>
-          a.display_order - b.display_order
-      )
-  } catch (error) {
-    console.error('Failed to fetch seasonal drop tiers:', error)
-    return []
-  }
-}
-
-async function getSeasonalDropImages(): Promise<SeasonalDropImage[]> {
-  const url = process.env.NEXT_PUBLIC_GATEWAY_API_URL || 'http://localhost:3002'
-  try {
-    const res = await fetch(`${url}/seasonal-drops/images`, {
-      next: { tags: ['seasonal-drop-images'] }
-    })
-    if (!res.ok) return []
-    const json = await res.json()
-    return json.data || []
-  } catch (error) {
-    console.error('Failed to fetch seasonal drop images:', error)
-    return []
-  }
-}
-
 async function getLatestBlogs() {
   const url = process.env.NEXT_PUBLIC_GATEWAY_API_URL || 'http://localhost:3002'
   try {
@@ -124,13 +83,10 @@ async function getLatestBlogs() {
 }
 
 export default async function Home() {
-  const [worksData, latestPosts, seasonalDropTiers, seasonalDropImages] =
-    await Promise.all([
-      getWorks(),
-      getLatestBlogs(),
-      getSeasonalDropTiers(),
-      getSeasonalDropImages()
-    ])
+  const [worksData, latestPosts] = await Promise.all([
+    getWorks(),
+    getLatestBlogs()
+  ])
 
   return (
     /**
@@ -138,7 +94,7 @@ export default async function Home() {
      * segments that hand off colour to one another in content order, so it
      * stays unbroken however long a section grows. The client lane runs dark
      * from the prism to the colour story; the label lane runs pale from the
-     * trainees to the audition call; they rejoin on paper at the close.
+     * trainees through the label updates; they rejoin on paper at the close.
      */
     <div className="likq font-seed min-h-screen overflow-x-hidden">
       <Navbar tone="dark" />
@@ -163,12 +119,7 @@ export default async function Home() {
         <div className="beam-lane-label">
           <ArtistStation />
           <ShopStation />
-          <SeasonalDropSection
-            initialTiers={seasonalDropTiers}
-            initialImages={seasonalDropImages}
-          />
           {latestPosts.length > 0 && <BlogSection posts={latestPosts} />}
-          <AuditionStation />
         </div>
 
         {/* The light lands. */}

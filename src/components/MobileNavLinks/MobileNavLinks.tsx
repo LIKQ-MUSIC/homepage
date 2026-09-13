@@ -21,7 +21,6 @@ const links: NavLink[] = [
   { href: '/merch', label: 'Store', external: true },
   { href: '/capybara', label: 'ควิซ', external: true },
   { href: '/partner', label: 'ฝากขาย' },
-  { href: '/audition', label: 'Audition' }
 ]
 
 const MobileNavLinks: React.FC<MobileNavLinksProps> = ({ onLinkClick, dark = false }) => {

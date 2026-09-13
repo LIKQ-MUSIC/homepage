@@ -166,7 +166,7 @@ export const CANDIDATES: Candidate[] = [
   },
   {
     slug: 'caila',
-    nickname: 'CaiLa',
+    nickname: 'Chicha',
     fullName: 'ชิดชนก ยอดน้ำคำ',
     referenceNumber: 'LIKQ-1C07A085',
     theme: 'yellow',

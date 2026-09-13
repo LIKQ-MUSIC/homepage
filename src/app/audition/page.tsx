@@ -1,9 +1,5 @@
-import AuditionFormY2K from '@/components/Audition/AuditionFormY2K'
+import { redirect } from 'next/navigation'
 
 export default function AuditionPage() {
-  return (
-    <AuditionFormY2K
-      heroImageSrc="/images/audition/like-you.PNG"
-    />
-  )
+  redirect('/#label')
 }

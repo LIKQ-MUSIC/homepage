@@ -24,7 +24,7 @@ const paths = [
     lane: 'lavender' as const,
     en: 'Defining Your Sound',
     th: 'อยากรู้จักศิลปินของเรา',
-    body: 'ศิลปินฝึกหัด ผลงานเพลง เสื้อผ้าและของสะสม รวมถึงออดิชั่นสำหรับคนที่อยากขึ้นเวทีกับเรา',
+    body: 'ศิลปินฝึกหัด ผลงานเพลง เสื้อผ้าและของสะสมจากค่ายของเรา',
     action: 'เข้าไปดูค่าย'
   }
 ]
@@ -33,101 +33,93 @@ const Prism = () => {
   return (
     <section id="prism" className="station">
       <div className="station-inner">
-        {/* The split, drawn.
-
-            What makes a prism legible is dispersion: white light in, DIFFERENT
-            colours out. An earlier pass drew both exit beams the same pale
-            white-blue with hard edges, and it read as a tent rather than a
-            prism. Each beam now carries the colour of the lane it feeds — blue
-            into the navy panel, lavender into the lavender one — and both fade
-            as they travel, so they read as light rather than as flat shapes. */}
-        <div className="relative mx-auto h-48 w-full md:h-64">
+        {/* One coordinate system keeps the light joined to the prism at every width. */}
+        <div className="mx-auto w-full max-w-3xl" aria-hidden="true">
           <svg
-            viewBox="0 0 400 200"
-            preserveAspectRatio="none"
-            aria-hidden
-            className="absolute inset-0 h-full w-full"
+            viewBox="0 0 720 240"
+            fill="none"
+            className="block h-auto w-full"
           >
             <defs>
-              {/* Soft-edged incoming shaft: feathered across, fading in. */}
-              <linearGradient id="prism-in" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
-                <stop offset="40%" stopColor="#ffffff" stopOpacity="0.85" />
-                <stop offset="60%" stopColor="#ffffff" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-              </linearGradient>
-              <radialGradient id="prism-glow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.42" />
-                <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-              </radialGradient>
-              {/* Exit beams: coloured at the prism, spent by the time they
-                  reach their panel. userSpaceOnUse so the falloff runs along
-                  the beam, not across the bounding box. */}
               <linearGradient
-                id="beam-left"
-                gradientUnits="userSpaceOnUse"
-                x1="196"
-                y1="140"
-                x2="40"
-                y2="200"
-              >
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.7" />
-                <stop offset="22%" stopColor="#5766E0" stopOpacity="0.6" />
-                <stop offset="100%" stopColor="#2242DA" stopOpacity="0" />
-              </linearGradient>
-              <linearGradient
-                id="beam-right"
-                gradientUnits="userSpaceOnUse"
-                x1="204"
-                y1="140"
+                id="prism-in"
+                x1="360"
+                y1="0"
                 x2="360"
-                y2="200"
+                y2="100"
+                gradientUnits="userSpaceOnUse"
               >
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.7" />
-                <stop offset="22%" stopColor="#D9A6F0" stopOpacity="0.62" />
-                <stop offset="100%" stopColor="#C075E4" stopOpacity="0" />
+                <stop stopColor="white" stopOpacity="0" />
+                <stop offset="1" stopColor="white" stopOpacity="0.9" />
+              </linearGradient>
+              <linearGradient
+                id="prism-left"
+                x1="342"
+                y1="142"
+                x2="120"
+                y2="240"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="white" stopOpacity="0.65" />
+                <stop offset="0.3" stopColor="currentColor" stopOpacity="0.5" />
+                <stop offset="1" stopColor="currentColor" stopOpacity="0" />
+              </linearGradient>
+              <linearGradient
+                id="prism-right"
+                x1="378"
+                y1="142"
+                x2="600"
+                y2="240"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="white" stopOpacity="0.65" />
+                <stop offset="0.3" stopColor="currentColor" stopOpacity="0.5" />
+                <stop offset="1" stopColor="currentColor" stopOpacity="0" />
+              </linearGradient>
+              <linearGradient
+                id="prism-body"
+                x1="324"
+                y1="102"
+                x2="396"
+                y2="162"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="white" stopOpacity="0.2" />
+                <stop offset="1" stopColor="white" stopOpacity="0.04" />
               </linearGradient>
             </defs>
-
-            {/* incoming */}
-            <rect x="190" y="0" width="20" height="92" fill="url(#prism-in)" />
-
-            {/* Scatter at the split, where the light actually separates. */}
-            <ellipse cx="200" cy="140" rx="46" ry="16" fill="url(#prism-glow)" />
-
-            {/* exit beams */}
-            <path d="M172 138 L200 138 L150 200 L14 200 Z" fill="url(#beam-left)" />
-            <path d="M228 138 L200 138 L250 200 L386 200 Z" fill="url(#beam-right)" />
-          </svg>
-
-          {/* The prism itself, drawn in its own square viewBox so the glass
-              keeps its proportions while the beams stretch with the column. */}
-          <svg
-            viewBox="0 0 100 80"
-            aria-hidden
-            className="absolute left-1/2 top-[33%] h-[5.25rem] w-[6.5rem] -translate-x-1/2 md:h-28 md:w-32"
-          >
-            <defs>
-              <linearGradient id="prism-body" x1="0" y1="0" x2="0.7" y2="1">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.22" />
-                <stop offset="100%" stopColor="#C075E4" stopOpacity="0.1" />
-              </linearGradient>
-            </defs>
+            <path d="M357 0 H363 V99 H357 Z" fill="url(#prism-in)" />
             <path
-              d="M50 6 L92 74 L8 74 Z"
+              d="M345 136 L355 153 L164 240 H72 Z"
+              fill="url(#prism-left)"
+              className="text-likq-beam3"
+            />
+            <path
+              d="M375 136 L365 153 L556 240 H648 Z"
+              fill="url(#prism-right)"
+              className="text-likq-beam6"
+            />
+            <path
+              d="M360 84 L408 164 H312 Z"
               fill="url(#prism-body)"
-              stroke="#ffffff"
-              strokeOpacity="0.9"
-              strokeWidth="2"
+              stroke="white"
+              strokeOpacity="0.75"
+              strokeWidth="1.5"
               strokeLinejoin="round"
             />
-            {/* The lit edge, where the beam enters. */}
             <path
-              d="M50 6 L8 74"
-              stroke="#ffffff"
-              strokeWidth="2.6"
+              d="M360 99 V129 L339 151 M360 129 L381 151"
+              stroke="white"
+              strokeOpacity="0.65"
+              strokeWidth="1.5"
               strokeLinecap="round"
-              fill="none"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M360 84 L312 164"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinecap="round"
             />
           </svg>
         </div>
@@ -144,9 +136,9 @@ const Prism = () => {
               }`}
             >
               <div>
-                <p className="display-lockup text-[clamp(2rem,4.4vw,3.25rem)]">
+                <h2 className="display-lockup max-w-[9ch] text-balance text-[clamp(2rem,4.4vw,3.25rem)]">
                   {path.en}
-                </p>
+                </h2>
                 <p
                   className={`copy-th mt-4 text-lg font-bold md:text-xl ${
                     path.lane === 'navy' ? 'text-white' : 'text-likq-ink'
@@ -164,7 +156,7 @@ const Prism = () => {
               </div>
               <span className="copy-th mt-8 inline-flex items-center gap-3 text-sm font-bold md:text-base">
                 {path.action}
-                <MarkArrow className="h-5 w-5 transition-transform duration-500 ease-out group-hover:translate-x-1.5 motion-reduce:transition-none" />
+                <MarkArrow className="h-5 w-5 transition-transform duration-500 ease-out group-hover:translate-x-1.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" />
               </span>
             </Link>
           ))}

@@ -455,17 +455,20 @@ body {
     background: linear-gradient(180deg, #2338cc 0%, #3646d6 62%, #4453d9 100%);
   }
 
-  /* The turn. No text lives here — this is the beam opening out, and the only
-     place the field crosses the band where neither white nor ink holds 4.5:1. */
+  /* Match the adjoining surfaces exactly. Eased blue-to-paper stops avoid
+     the saturated purple stripe and flatten gently at both ends. */
   .beam-turn {
     background: linear-gradient(
       180deg,
       #4453d9 0%,
-      #9b6be8 42%,
-      #c075e4 66%,
+      #4b59da 12%,
+      #6570df 28%,
+      #939be8 46%,
+      #c3c5f1 65%,
+      #e3dcf8 84%,
       #efe3fa 100%
     );
-    min-height: clamp(4rem, 8vw, 7rem);
+    min-height: clamp(6rem, 12vw, 10rem);
   }
 
   .beam-lane-label {

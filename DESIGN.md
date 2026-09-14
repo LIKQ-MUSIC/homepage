@@ -119,9 +119,10 @@ The existing blue–lavender palette, LINE Seed/Nunito type and Q/vinyl mark
 remain authoritative. This refinement supersedes the prism and large-spacing
 composition described below; it does not introduce a replacement brand world.
 
-- The prism illustration and fork cards are removed. `#home-intro` contains
-  the record wordmark alongside the existing Thai proposition, with direct
-  actions to work and trainees. At smaller widths these stack naturally.
+- The prism illustration and fork cards are removed. At the user’s request,
+  `#home-intro` restores the full-height centered Q record wordmark and original
+  tagline arrangement. The bottom scroll action leads directly to work (or
+  services when work is unavailable).
 - Work appears immediately after the hero, music first. Up to six items are
   visible initially; filters and “ดูผลงานทั้งหมด” keep the entire catalog
   accessible. Video thumbnails have a server-rendered YouTube fallback.
@@ -134,8 +135,9 @@ composition described below; it does not introduce a replacement brand world.
 - Portraits are two-up on mobile; four-up on desktop for the current four
   photographed trainees, three-up for other roster counts.
 - Section padding is `clamp(3rem, 6vw, 5.5rem)` per side; the text-free color
-  transition is `clamp(4rem, 8vw, 7rem)`. Repeated glints are removed from the
-  hero, destination panels and closing statement; the record remains in motion.
+  transition is `clamp(6rem, 12vw, 10rem)`, using eased blue-to-paper stops
+  without a saturated purple band. Glints remain in the restored hero but are
+  removed from destination panels and the closing statement.
 - The ending is team → creative partner statement → contact. Navigation uses
   the hero boundary rather than the removed `#prism` to switch its scroll state.
 

@@ -35,42 +35,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'TH Sarabun New';
-  src: url('/fonts/THSarabunNew.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'TH Sarabun New';
-  src: url('/fonts/THSarabunNew-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'TH Sarabun New';
-  src: url('/fonts/THSarabunNew-Italic.ttf') format('truetype');
-  font-weight: normal;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'TH Sarabun New';
-  src: url('/fonts/THSarabunNew-BoldItalic.ttf') format('truetype');
-  font-weight: bold;
-  font-style: italic;
-  font-display: swap;
-}
-
-.font-sarabun {
-  font-family: 'TH Sarabun New', sans-serif;
-}
-
 :root {
   --font-size-h1: 5.61rem; /* Desktop */
   --font-size-h2: 4.209rem;

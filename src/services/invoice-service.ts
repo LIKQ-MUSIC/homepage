@@ -25,25 +25,6 @@ export interface Invoice {
   items?: InvoiceItem[]
 }
 
-export interface CreateInvoiceDTO {
-  customer_name: string
-  customer_email: string
-  subtotal: number
-  is_wht_enabled?: boolean
-  wht_amount?: number
-  net_total: number
-  items: Array<{
-    service_id?: string
-    name: string
-    price: number
-  }>
-}
-
-export async function getInvoices() {
-  const response = await apiClient.get<Invoice[]>('/invoices')
-  return response.data
-}
-
 export async function getInvoice(id: string) {
   const response = await apiClient.get<Invoice>(`/invoices/${id}`)
   return response.data
@@ -53,11 +34,6 @@ export async function getInvoiceStatus(id: string) {
   const response = await apiClient.get<{ status: string }>(
     `/invoices/${id}/status`
   )
-  return response.data
-}
-
-export async function createInvoice(dto: CreateInvoiceDTO) {
-  const response = await apiClient.post<Invoice>('/invoices', dto)
   return response.data
 }
 
@@ -76,12 +52,5 @@ export async function payInvoice(
 // anywhere the account is on live Omise keys.
 export async function devMarkInvoicePaid(id: string) {
   const response = await apiClient.post(`/invoices/${id}/dev-mark-paid`)
-  return response.data
-}
-
-export async function deleteInvoice(id: string) {
-  const response = await apiClient.delete<{ success: boolean }>(
-    `/invoices/${id}`
-  )
   return response.data
 }

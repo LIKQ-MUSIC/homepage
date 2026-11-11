@@ -4,6 +4,7 @@ import Team from '@/components/Team'
 import Footer from '@/components/Footer'
 import BlogSection from '@/components/BlogSection'
 import HeroVideo from '@/components/home/HeroVideo'
+import EventBanner from '@/components/home/EventBanner'
 import AboutSplit from '@/components/home/AboutSplit'
 import TrackListServices from '@/components/home/TrackListServices'
 import CandidateRail from '@/components/home/CandidateRail'
@@ -126,6 +127,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-ink-deep text-ink-text font-sans overflow-x-hidden">
       <Navbar tone="dark" />
+      <EventBanner />
       <HeroVideo />
 
       <AboutSplit />

@@ -4,6 +4,7 @@ import Team from '@/components/Team'
 import Footer from '@/components/Footer'
 import BlogSection from '@/components/BlogSection'
 import Ignition from '@/components/home/Ignition'
+import EventBanner from '@/components/home/EventBanner'
 import MakeStation from '@/components/home/MakeStation'
 import AboutStation from '@/components/home/AboutStation'
 import ArtistStation from '@/components/home/ArtistStation'
@@ -96,6 +97,7 @@ export default async function Home() {
       <Navbar tone="dark" />
       <main>
         <div className="beam-source">
+          <EventBanner />
           <Ignition hasWorks={worksData.length > 0} />
         </div>
 
